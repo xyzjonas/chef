@@ -84,6 +84,12 @@ class Ingredient(Base):
     name = db.Column(db.String(80), nullable=False)
     approx_per_piece = db.Column(db.Float, nullable=True)
 
+    energy = db.Column(db.Float, default=0)
+    fats = db.Column(db.Float, default=0)
+    carbs = db.Column(db.Float, default=0)
+    protein = db.Column(db.Float, default=0)
+    salt = db.Column(db.Float, default=0)
+
     def __repr__(self) -> str:
         return self._repr(id=self.id, name=self.name)
 
