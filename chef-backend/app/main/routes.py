@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, request
 
 from app import db
@@ -15,6 +16,36 @@ def _assert_request_data(data: dict, required=None):
             return f"'{req}' field is required.", 400
 
 
+def _validate_type(val, typ3):
+    if type(val) is not typ3:
+        raise InvalidUsage(
+            f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
+    return True
+
+
+class InvalidUsage(Exception):
+    status_code = 400
+
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+
+
+@bp.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
 @bp.route('/', methods=['GET'])
 def root():
     data = {
@@ -25,7 +56,18 @@ def root():
 
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
-    recipes = [recipe.get_dictionary(depth=2, exclude=["body"]) for recipe in Recipe.query.all()]
+    i = "draft" in request.args
+    drafts = request.args.get("draft", default=False, type=json.loads)
+    ingredients = request.args.get("ingredients", default=None)
+
+    recipes = Recipe.query.filter_by(draft=drafts).all()
+    if ingredients:
+        for i in ingredients.split(","):
+            def has_ingredient(recipe):
+                return i in [ing.ingredient.name for ing in recipe.ingredients]
+            recipes = filter(has_ingredient, recipes)
+
+    recipes = [recipe.get_dictionary(depth=2, exclude=["body"]) for recipe in recipes]
     return jsonify(recipes), 200
 
 
@@ -90,27 +132,47 @@ def recipes_get_body(recipe_id):
     return str(recipe.body), 200
 
 
+# todo: rename to 'post'
 @bp.route('/recipes/new', methods=['POST'])
 def new_recipe():
     data = request.json or request.form
-    _assert_request_data(data, required=["title"])
-    recipe = Recipe(
-        title=data["title"],
-        subtitle=data.get("subtitle"),
-        source_name=data.get("source_name"),
-        source=data.get("source"),
-        ingredients=[],
-        tags=[],
-        body=data.get("body")
-    )
+
+    created = False
+
+    if data.get("id"):
+        recipe = Recipe.query.filter_by(id=data.get("id")).first_or_404()
+    else:
+        _assert_request_data(data, required=["title"])
+        _validate_type(data["title"], str)
+        recipe = Recipe(title=data["title"])
+        created = True
+
+    if data.get("title") and _validate_type(data.get("title"), str):
+        recipe.title = data["title"]
+    if data.get("subtitle") and _validate_type(data.get("subtitle"), str):
+        recipe.subtitle = data["subtitle"]
+    if data.get("source_name") and _validate_type(data.get("source_name"), str):
+        print("!!! SOURCE NAME: {}".format(data["source_name"]))
+        recipe.source_name = data["source_name"]
+    if data.get("source") and _validate_type(data.get("source"), str):
+        recipe.source = data["source"]
+    if data.get("body") and _validate_type(data.get("body"), str):
+        recipe.body = data["body"]
+    if data.get("draft") and _validate_type(data.get("draft"), bool):
+        recipe.draft = data["draft"]
 
     # ingredients
     ingredient_items = []
-    for i in (data.get("ingredients") or []):
-        ingredient = Ingredient.query.filter_by(name=i.get("name")).first()
-        if not ingredient and i.get("name"):
-            ingredient = Ingredient(name=i.get("name"))
-        ii = IngredientItem(ingredient=ingredient, amount=i.get("amount"), unit=i.get("unit"))
+    for item in (data.get("ingredients") or []):
+        if not item.get("ingredient") or not item["ingredient"].get("name"):
+            raise InvalidUsage(f"Malformed: one of the posted ingredients is missing 'name' field",
+                               status_code=404)
+        ingredient_name = item["ingredient"].get("name")
+        ingredient = Ingredient.query.filter_by(name=ingredient_name).first()
+        if not ingredient:
+            ingredient = Ingredient(name=ingredient_name)
+
+        ii = IngredientItem(ingredient=ingredient, amount=item.get("amount"), unit=item.get("unit"))
         ingredient_items.append(ii)
     recipe.ingredients = ingredient_items
 
@@ -125,7 +187,10 @@ def new_recipe():
 
     db.session.add(recipe)
     db.session.commit()
-    return f"{recipe.title} created.", 201
+    if created:
+        return f"{recipe.title} created.", 201
+    else:
+        return f"{recipe.title} modified.", 200
 
 
 @bp.route('/recipes/<int:recipe_id>', methods=['POST'])

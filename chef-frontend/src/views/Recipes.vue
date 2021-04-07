@@ -24,7 +24,7 @@
       </span>
     </p>
 
-    <!-- filter-tabs  -->
+    <!-- sort-tabs  -->
     <div class="tabs is-toggle is-fullwidth mt-2">
       <ul>
         <li class="p-0">
@@ -105,7 +105,28 @@ export default {
       this.refresh();
     },
 
+    replaceUnicode(str) {
+      // search without special czech chars
+      return str
+        .replaceAll("ě", "e")
+        .replaceAll("š", "s")
+        .replaceAll("č", "c")
+        .replaceAll("ř", "r")
+        .replaceAll("ž", "z")
+        .replaceAll("ý", "y")
+        .replaceAll("á", "a")
+        .replaceAll("í", "i")
+        .replaceAll("ů", "u")
+        .replaceAll("ú", "u")
+        .replaceAll("ť", "t")
+        .replaceAll("ď", "d")
+        .replaceAll("ó", "o")
+        .replaceAll("ň", "n")
+    },
+
     refresh() {
+      // refresh list of displayed recipes based on tag filters and search input
+      // 1) tags
       this.recipes = this.allRecipes.filter(r => {
         var recipeTags = r.tags.map(t => t.name);
         if (!recipeTags) return true; // if a recipe has no tags, always show
@@ -117,13 +138,15 @@ export default {
         }
         return true;
       });
-      // and now search & regex
+      // 2) search & regex
       if (!this.search || this.search === ""){
         return;
       }
-      var re = new RegExp(this.search.toUpperCase());
+      var re = new RegExp(
+        this.replaceUnicode(this.search.toLowerCase()));
       this.recipes = this.recipes.filter(r => {
-        var match = re.exec(r.title.toUpperCase())
+        var match = re.exec(
+          this.replaceUnicode(r.title.toLowerCase()))
         if (match) {
           return true;
         }

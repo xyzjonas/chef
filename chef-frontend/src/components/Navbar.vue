@@ -45,17 +45,14 @@ export default {
   },
   methods : {
     openMenu() {
-      console.log("opening menu...")
       this.$refs["nav-burger"].classList.add("is-active");
       this.$refs["nav-menu"].classList.add("is-active");
     },
     closeMenu() {
-      console.log("closing menu...")
       this.$refs["nav-burger"].classList.remove("is-active");
       this.$refs["nav-menu"].classList.remove("is-active");
     },
     toggleMenu() {
-      console.log("toggled");
       if (this.$refs["nav-burger"].classList.contains("is-active")) {
         this.$refs["nav-burger"].classList.remove("is-active");
         this.$refs["nav-menu"].classList.remove("is-active");

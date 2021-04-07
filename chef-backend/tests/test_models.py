@@ -1,7 +1,7 @@
 import pytest
 
 from app import db
-from app.models import Recipe, IngredientItem, Ingredient, Tag
+from app.models import Recipe, IngredientItem, Ingredient, Tag, Base
 
 
 def test_ingredient_dict(ingredient):
@@ -74,22 +74,47 @@ export default {
 def test_recipe_dictionary(recipe, ingredient, ingredient_item):
     i = ingredient(name="ingredient")
     ii = IngredientItem(ingredient=i)
+    t = Tag(name="tag")
 
-    title = "recipe_01"
-    subtitle = "recipe_01"
-    body = "asd"
-    source = "http://source.com"
-    recipe = recipe(title=title, subtitle=subtitle, ingredients=[ii], body=body, source=source)
+    test_items = {
+        "id": None,
+        "title": "recipe_01",
+        "subtitle": "recipe_01",
+        "body": "asd",
+        "source": "http://source.com",
+        "source_name": "source",
+        "ingredients": [ii],
+        "tags": [t],
+    }
+    assert len(test_items) == len(Recipe.__items__)
+
+    recipe = recipe(
+        title=test_items["title"],
+        subtitle=test_items["subtitle"],
+        body=test_items["body"],
+        source=test_items["source"],
+        source_name=test_items["source_name"],
+        ingredients=test_items["ingredients"],
+        tags=test_items["tags"],
+    )
+    db.session.add(recipe)
+    db.session.commit()
+    test_items['id'] = recipe.id
+
     assert recipe
     assert recipe.dictionary
-    assert len(recipe.dictionary) == 7
-    assert recipe.dictionary.get("id")
-    assert recipe.dictionary["title"] == title
-    assert recipe.dictionary["subtitle"] == subtitle
-    assert recipe.dictionary["source"] == source
-    assert recipe.dictionary["concat"] == body + "..."
+    assert recipe.dictionary["id"] == test_items["id"]
+    assert recipe.dictionary["title"] == test_items["title"]
+    assert recipe.dictionary["subtitle"] == test_items["subtitle"]
+    assert recipe.dictionary["body"] == test_items["body"]
+    assert recipe.dictionary["source"] == test_items["source"]
+    assert recipe.dictionary["source_name"] == test_items["source_name"]
+
     assert len(recipe.dictionary["ingredients"]) == len(recipe.ingredients) == 1
     assert recipe.dictionary["ingredients"][0] == ii.dictionary
+
+    assert len(recipe.dictionary["tags"]) == len(recipe.tags) == 1
+    assert recipe.dictionary["tags"][0] == t.dictionary
 
 
 def test_dictionary_exclude(simple_test_data):

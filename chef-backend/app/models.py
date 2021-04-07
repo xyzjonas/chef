@@ -107,7 +107,7 @@ class IngredientItem(Base):
 
 
 class Recipe(Base):
-    __items__ = ["id", "title", "subtitle", "ingredients", "body", "source", "tags"]
+    __items__ = ["id", "title", "subtitle", "ingredients", "body", "source", "source_name", "tags"]
 
     title = db.Column(db.String(80), nullable=False)
     subtitle = db.Column(db.String(50), nullable=True)
@@ -121,9 +121,3 @@ class Recipe(Base):
 
     # HTML content + rich text editor on the frontend
     body = db.Column(db.String(1000), nullable=True)
-
-    @property
-    def concat(self):
-        if self.body:
-            return f"{self.body[:50]}..."
-        return None

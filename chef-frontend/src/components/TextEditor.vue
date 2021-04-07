@@ -23,7 +23,7 @@
             <button
               class="menubar__button"
               :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-              @click="commands.heading({ level: 1 })"
+              @click="commands.heading({ level: 3 })"
             >
               <i class="fa fa-heading" aria-hidden="true"></i>
             </button>
@@ -87,7 +87,7 @@ export default {
           new CodeBlock(),
           new HardBreak(),
           new Heading({
-             levels: [1, 2, 3],
+             levels: [1, 2, 3, 4, 5],
              HTMLAttributes: {class: 'title'},
           }),
           new HorizontalRule(),

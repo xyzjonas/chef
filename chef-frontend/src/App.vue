@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="mb-5">
     <Navbar/>
     <section class="hero is-dark is-small">
       <div class="hero-body">
