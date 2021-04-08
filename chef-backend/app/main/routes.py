@@ -3,7 +3,7 @@ from flask import jsonify, request
 
 from app import db
 from app.main import bp
-from app.models import Recipe, Tag, Ingredient, IngredientItem
+from app.models import Recipe, Tag, Ingredient, IngredientItem, Unit
 
 
 def _assert_request_data(data: dict, required=None):
@@ -100,12 +100,15 @@ def get_ingredients():
 @bp.route('/ingredients/<int:ingredient_id>', methods=['GET'])
 def get_ingredient(ingredient_id):
     ingredient = Ingredient.query.filter_by(id=ingredient_id).first_or_404()
-    return jsonify(ingredient), 200
+    return jsonify(ingredient.dictionary), 200
 
 
-@bp.route('/tags/<int:ingredient_id>', methods=['DELETE'])
+@bp.route('/ingredients/<int:ingredient_id>', methods=['DELETE'])
 def delete_ingredient(ingredient_id):
     ingredient = Ingredient.query.filter_by(id=ingredient_id).first_or_404()
+    ingredient_items = IngredientItem.query.filter_by(ingredient=ingredient)
+    if ingredient_items.count() > 0:
+        return f"Some recipes are still using this ingredient, delete those first", 400
     db.session.delete(ingredient)
     db.session.commit()
     return f"{ingredient} deleted.", 200
@@ -156,6 +159,8 @@ def new_recipe():
         recipe.source_name = data["source_name"]
     if data.get("source") and _validate_type(data.get("source"), str):
         recipe.source = data["source"]
+    if data.get("portions") and _validate_type(data.get("portions"), int):
+        recipe.portions = data["portions"]
     if data.get("body") and _validate_type(data.get("body"), str):
         recipe.body = data["body"]
     if data.get("draft") and _validate_type(data.get("draft"), bool):
@@ -172,7 +177,15 @@ def new_recipe():
         if not ingredient:
             ingredient = Ingredient(name=ingredient_name)
 
-        ii = IngredientItem(ingredient=ingredient, amount=item.get("amount"), unit=item.get("unit"))
+        # unit (input format is same as output)
+        if item.get("unit") and item["unit"].get("name"):
+            unit = Unit.query.filter_by(name=item["unit"]["name"]).first()
+            if not unit:
+                unit = Unit(name=item["unit"]["name"])
+        else:  # default = piece
+            unit = Unit.query.filter_by(name="pcs").first() or Unit(name="pcs")
+
+        ii = IngredientItem(ingredient=ingredient, amount=item.get("amount"), unit=unit)
         ingredient_items.append(ii)
     recipe.ingredients = ingredient_items
 

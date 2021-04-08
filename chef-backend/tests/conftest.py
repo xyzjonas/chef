@@ -2,7 +2,7 @@ import pytest
 
 from app import create_app, db
 from app.config import TestConfig
-from app.models import Recipe, Ingredient, IngredientItem
+from app.models import Recipe, Ingredient, IngredientItem, Tag
 
 
 @pytest.fixture(autouse=True)
@@ -18,6 +18,18 @@ def test_db(test_app):
     db.create_all()
     yield
     db.drop_all()
+
+
+@pytest.fixture()
+def tag():
+    def _inner(**kwargs):
+        t = Tag(**kwargs)
+        db.session.add(t)
+        db.session.commit()
+        db.session.refresh(t)
+        return t
+
+    yield _inner
 
 
 @pytest.fixture()
@@ -57,8 +69,9 @@ def recipe():
 
 
 @pytest.fixture()
-def simple_test_data(ingredient, ingredient_item, recipe):
+def simple_test_data(tag, ingredient, ingredient_item, recipe):
     i = ingredient(name="ingredient")
     ii = IngredientItem(ingredient=i)
+    t = tag(name="tag")
     r = recipe(title="recipe_01", ingredients=[ii])
-    return r, ii, i
+    return r, ii, i, t

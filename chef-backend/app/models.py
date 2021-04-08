@@ -73,22 +73,31 @@ class Base(db.Model):
         return self._repr(**self.get_dictionary())
 
 
+class Unit(Base):
+    __items__ = ["name", "grams"]
+    name = db.Column(db.String(80), nullable=False, unique=True)
+    grams = db.Column(db.Float, default=0)
+
+
 class Tag(Base):
     __items__ = ["name"]
     name = db.Column(db.String(80), nullable=False)
 
 
 class Ingredient(Base):
-    __items__ = ["id", "name"]
+    __items__ = ["id", "name", "energy", "fats", "carbs", "protein", "salt", "is_liquid", "density"]
 
     name = db.Column(db.String(80), nullable=False)
-    approx_per_piece = db.Column(db.Float, nullable=True)
+    approx_per_piece = db.Column(db.Float, default=0)  # g / piece
 
-    energy = db.Column(db.Float, default=0)
-    fats = db.Column(db.Float, default=0)
-    carbs = db.Column(db.Float, default=0)
-    protein = db.Column(db.Float, default=0)
-    salt = db.Column(db.Float, default=0)
+    energy = db.Column(db.Float, default=0)  # kcal
+    fats = db.Column(db.Float, default=0)  # g / 100g
+    carbs = db.Column(db.Float, default=0)  # g / 100g
+    protein = db.Column(db.Float, default=0)  # g / 100g
+    salt = db.Column(db.Float, default=0)  # g / 100g
+
+    is_liquid = db.Column(db.Boolean, default=False)
+    density = db.Column(db.Float, default=1000)  # g / L
 
     def __repr__(self) -> str:
         return self._repr(id=self.id, name=self.name)
@@ -104,7 +113,9 @@ class IngredientItem(Base):
     ingredient_id = db.Column(db.Integer, db.ForeignKey(Ingredient.id))
     ingredient = db.relationship(Ingredient, uselist=False)
     amount = db.Column(db.Float, default=0)
-    unit = db.Column(db.String(10), default="pcs")
+    unit_id = db.Column(db.Integer, db.ForeignKey('unit.id'))
+    unit = db.relationship("Unit")
+
     note = db.Column(db.String(10), nullable=True)
     exclude = db.Column(db.Boolean(), default=False)  # todo: remove?
 
@@ -113,13 +124,15 @@ class IngredientItem(Base):
 
 
 class Recipe(Base):
-    __items__ = ["id", "title", "subtitle", "ingredients", "body", "source", "source_name", "tags"]
+    __items__ = ["id", "title", "subtitle", "ingredients", "body",
+                 "source", "source_name", "tags", "portions"]
 
     title = db.Column(db.String(80), nullable=False)
     subtitle = db.Column(db.String(50), nullable=True)
     source_name = db.Column(db.String(100), nullable=True)
     source = db.Column(db.String(100), nullable=True)
     draft = db.Column(db.Boolean(), default=False)
+    portions = db.Column(db.Integer, default=4)
     ingredients = db.relationship(IngredientItem, secondary=ingredients, lazy="subquery",
                                   backref=db.backref("recipes", lazy=False))
     tags = db.relationship(Tag, secondary=tags, lazy="subquery",

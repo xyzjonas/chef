@@ -25,7 +25,10 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     db.app = app
-    migrate.init_app(app, db)
+
+    database_uri = getattr(app.config, 'SQLALCHEMY_DATABASE_URI', '')
+    is_sqlite = database_uri.startswith('sqlite:')
+    migrate.init_app(app, db, render_as_batch=is_sqlite)
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
