@@ -12,6 +12,14 @@
             <span v-else>{{ recipe.source }}</span>
           </a>
         </p>
+
+        <nav class="level">
+          <div class="level-left">
+            <div class="tags my-0">
+                <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
+            </div>
+          </div>
+        </nav>
         
         <!-- chevron -->
         <div ref="chevron" class="tabs is-right is-boxed">
@@ -42,14 +50,18 @@
               class="level is-mobile">
               <div class="level-left">
                 <div class="level-item">
-                  <p>{{ingredient.ingredient.name}}
+                  <router-link :to="{ name: 'Ingredient', params: {id: ingredient.ingredient.id}}">
+                    {{ingredient.ingredient.name}}
                     <span v-if="ingredient.note">({{ingredient.note}})</span>
-                  </p>
+                  </router-link>
                 </div>
               </div>
               <div class="level-right">
                 <div class="level-item">
-                  <p><strong>{{ ingredient.amount *portions/4 }}</strong> {{ ingredient.unit }}</p>
+                  <p>
+                    <strong>{{ Math.round((ingredient.amount *portions/recipe.portions)*10)/10 }}</strong>
+                    {{ ingredient.unit.name }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -57,40 +69,58 @@
 
           <!-- portion counter  -->
           <div class="my-5">
-            <Counter @counterUpdate="updatePortions"></Counter>
+            <Counter :initialValue="recipe.portions" @counterUpdate="updatePortions"></Counter>
+            <label class="label">Enough for {{ Math.round((portions/recipe.portions)*10)/10 }} batch(es).</label>
           </div>
+      
+
+          <hr>
         </div>
 
-
-        <!-- <h1 v-if="recipe" class="title is-5">Postup</h1> -->
+        <!-- Steps -->
+        <h1 v-if="recipe" class="title is-5">Recipe</h1>
         <!-- HTML body -->
         <div ref="recipe-body" class="content section pt-1"/>
       </div>
 
       <hr>
 
-      <div v-if="!editMode" class="my-5 animate-icon">
-        <button v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
-          <i class="fas fa-pen"></i>
-          <span class="ml-2">update</span>
-        </button>
-        <button v-on:click="deleteRecipe" class="button is-fullwidth is-danger">
-          <i class="fas fa-trash-alt"></i>
-          <span class="ml-2">Delete</span>
-        </button>
+      <!-- buttons -->
+      <div v-if="!editMode" class="my-5">     
+        <div class="field is-grouped">
+          <p class="control mr-1">
+            <button v-on:click="youSurePrompt" class="button is-fullwidth is-danger">
+              <i class="fas fa-trash-alt"></i>
+              <!-- <span class="ml-2">Delete</span> -->
+            </button>
+          </p>
+          <p class="control is-expanded">
+            <button v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
+              <i class="fas fa-pen"></i>
+              <span class="ml-2">Edit</span>
+            </button>
+          </p>
+        </div>
       </div>
+
+      <!-- you sure? -->
+      <p v-if="deletePrompt" class="help is-danger">
+        You sure you want to delete this recipe?
+        <a v-on:click="deleteRecipe">Yes, absolutely!</a>
+      </p>
+      <div ref="yousure"/>
 
       <div v-if="editMode">
         <RecipeForm :recipe="recipe" @recipePosted="updateRecipe"></RecipeForm>
       </div>
 
       <div v-if="editMode">
-        <button v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
+        <button v-on:click="updateRecipe" class="button is-fullwidth is-danger mb-1">
           <span class="ml-2">Cancel</span>
         </button>
       </div>
     </div>
-    
+
     <!-- no recipe -->
     <div v-else class="p-5">
       <section class="section is-medium has-text-centered">
@@ -104,6 +134,7 @@
       </section>
     </div>
 
+    <hr>
   </div>
 </template>
 
@@ -125,8 +156,9 @@ export default {
       error: null,
       portions: 4,
       editMode: false,
+      deletePrompt: false,
 
-      ingredientsCollapsed: true,
+      ingredientsCollapsed: false,
     }
   },
 
@@ -138,7 +170,12 @@ export default {
     updateRecipe() {
       this.editMode = !this.editMode
       this.$refs["look-here"].scrollIntoView();
+      this.fetchRecipe();
+    },
 
+    youSurePrompt() {
+      this.deletePrompt=!this.deletePrompt;
+      this.$refs['yousure'].scrollIntoView()
     },
 
     deleteRecipe() {
@@ -158,6 +195,7 @@ export default {
           if (res.status !== "success") {
             if (res.data) {
               this.recipe = res.data;
+              this.portions = this.recipe.portions;
               // this.$refs["recipe-body"].innerHTML = this.recipe.body;
             }
           }
@@ -181,7 +219,7 @@ export default {
 
 <style>
   .animate-icon {
-    transition: 0.4s;
+    transition: 0.15s;
   }
   .rotate {
     transform:rotate(-90deg);

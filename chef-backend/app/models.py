@@ -85,7 +85,8 @@ class Tag(Base):
 
 
 class Ingredient(Base):
-    __items__ = ["id", "name", "energy", "fats", "carbs", "protein", "salt", "is_liquid", "density"]
+    __items__ = ["id", "name", "energy", "fats",
+                 "carbs", "proteins", "fibres", "salt", "is_liquid", "density"]
 
     name = db.Column(db.String(80), nullable=False)
     approx_per_piece = db.Column(db.Float, default=0)  # g / piece
@@ -93,7 +94,8 @@ class Ingredient(Base):
     energy = db.Column(db.Float, default=0)  # kcal
     fats = db.Column(db.Float, default=0)  # g / 100g
     carbs = db.Column(db.Float, default=0)  # g / 100g
-    protein = db.Column(db.Float, default=0)  # g / 100g
+    proteins = db.Column(db.Float, default=0)  # g / 100g
+    fibres = db.Column(db.Float, default=0)  # g / 100g
     salt = db.Column(db.Float, default=0)  # g / 100g
 
     is_liquid = db.Column(db.Boolean, default=False)
@@ -134,7 +136,7 @@ class Recipe(Base):
     draft = db.Column(db.Boolean(), default=False)
     portions = db.Column(db.Integer, default=4)
     ingredients = db.relationship(IngredientItem, secondary=ingredients, lazy="subquery",
-                                  backref=db.backref("recipes", lazy=False))
+                                  backref=db.backref("recipes", lazy=False), cascade="all")
     tags = db.relationship(Tag, secondary=tags, lazy="subquery",
                            backref=db.backref("recipes, lazy=False"))
 

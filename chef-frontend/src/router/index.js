@@ -4,6 +4,8 @@ import History from "../views/History.vue";
 import Recipes from "../views/Recipes.vue";
 import Recipe from "../views/Recipe.vue";
 import NewRecipe from "../views/NewRecipe.vue";
+import Ingredients from "../views/Ingredients.vue";
+import Ingredient from "../views/Ingredient.vue";
 
 Vue.use(VueRouter);
 
@@ -17,6 +19,16 @@ const routes = [
     path: "/recipes",
     name: "Recipes",
     component: Recipes
+  },
+  {
+    path: "/ingredients",
+    name: "Ingredients",
+    component: Ingredients
+  },
+  {
+    path: "/ingredients/:id",
+    name: "Ingredient",
+    component: Ingredient
   },
   {
     path: "/recipes/new",

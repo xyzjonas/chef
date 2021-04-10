@@ -17,7 +17,10 @@ def _assert_request_data(data: dict, required=None):
 
 
 def _validate_type(val, typ3):
-    if type(val) is not typ3:
+    try:
+        typ3(val)
+    except Exception as e:
+    # if type(val) is not typ3:
         raise InvalidUsage(
             f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
     return True
@@ -56,7 +59,6 @@ def root():
 
 @bp.route('/recipes', methods=['GET'])
 def get_recipes():
-    i = "draft" in request.args
     drafts = request.args.get("draft", default=False, type=json.loads)
     ingredients = request.args.get("ingredients", default=None)
 
@@ -103,6 +105,31 @@ def get_ingredient(ingredient_id):
     return jsonify(ingredient.dictionary), 200
 
 
+@bp.route('/ingredients/<int:ingredient_id>', methods=['POST'])
+def post_ingredient(ingredient_id):
+    ingredient = Ingredient.query.filter_by(id=ingredient_id).first_or_404()
+    data = request.json or request.form
+
+    if data.get("name") and _validate_type(data.get("name"), str):
+        ingredient.name = data.get("name")
+    if data.get("energy") and _validate_type(data.get("energy"), float):
+        ingredient.energy = data.get("energy")
+    if data.get("carbs") and _validate_type(data.get("carbs"), float):
+        ingredient.carbs = data.get("carbs")
+    if data.get("fats") and _validate_type(data.get("fats"), float):
+        ingredient.fats = data.get("fats")
+    if data.get("proteins") and _validate_type(data.get("proteins"), float):
+        ingredient.proteins = data.get("proteins")
+    if data.get("fibres") and _validate_type(data.get("fibres"), float):
+        ingredient.fibres = data.get("fibres")
+    if data.get("salt") and _validate_type(data.get("salt"), float):
+        ingredient.salt = data.get("salt")
+
+    db.session.add(ingredient)
+    db.session.commit()
+    return f"Ingredient '{ingredient.name}' modified", 200
+
+
 @bp.route('/ingredients/<int:ingredient_id>', methods=['DELETE'])
 def delete_ingredient(ingredient_id):
     ingredient = Ingredient.query.filter_by(id=ingredient_id).first_or_404()
@@ -144,6 +171,10 @@ def new_recipe():
 
     if data.get("id"):
         recipe = Recipe.query.filter_by(id=data.get("id")).first_or_404()
+        # a bit hackish :(
+        for ii in recipe.ingredients:
+            db.session.delete(ii)
+        db.session.commit()
     else:
         _assert_request_data(data, required=["title"])
         _validate_type(data["title"], str)
@@ -155,7 +186,6 @@ def new_recipe():
     if data.get("subtitle") and _validate_type(data.get("subtitle"), str):
         recipe.subtitle = data["subtitle"]
     if data.get("source_name") and _validate_type(data.get("source_name"), str):
-        print("!!! SOURCE NAME: {}".format(data["source_name"]))
         recipe.source_name = data["source_name"]
     if data.get("source") and _validate_type(data.get("source"), str):
         recipe.source = data["source"]
@@ -171,7 +201,7 @@ def new_recipe():
     for item in (data.get("ingredients") or []):
         if not item.get("ingredient") or not item["ingredient"].get("name"):
             raise InvalidUsage(f"Malformed: one of the posted ingredients is missing 'name' field",
-                               status_code=404)
+                               status_code=400)
         ingredient_name = item["ingredient"].get("name")
         ingredient = Ingredient.query.filter_by(name=ingredient_name).first()
         if not ingredient:
@@ -182,10 +212,13 @@ def new_recipe():
             unit = Unit.query.filter_by(name=item["unit"]["name"]).first()
             if not unit:
                 unit = Unit(name=item["unit"]["name"])
+                db.session.add(unit)
+                db.session.commit()
         else:  # default = piece
             unit = Unit.query.filter_by(name="pcs").first() or Unit(name="pcs")
 
-        ii = IngredientItem(ingredient=ingredient, amount=item.get("amount"), unit=unit)
+        ii = IngredientItem(ingredient=ingredient, amount=item.get("amount"),
+                            unit=unit, note=item.get("note"))
         ingredient_items.append(ii)
     recipe.ingredients = ingredient_items
 
@@ -204,16 +237,3 @@ def new_recipe():
         return f"{recipe.title} created.", 201
     else:
         return f"{recipe.title} modified.", 200
-
-
-@bp.route('/recipes/<int:recipe_id>', methods=['POST'])
-def modify_recipe(recipe_id):
-    recipe = Recipe.query.filter_by(id=recipe_id).first_or_404()
-    data = request.json or request.form
-    _assert_request_data(data, required=["title"])
-
-    recipe.title = data["title"]
-    recipe.body = data["body"]
-    db.session.add(recipe)
-    db.session.commit()
-    return f"{recipe.title} modified", 200

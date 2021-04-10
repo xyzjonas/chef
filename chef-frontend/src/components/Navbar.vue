@@ -31,18 +31,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      heroTitles: {
-        Home: { title: 'Chef', subtitle: '...only the best recipes manager' },
-        Recipes: { title: 'Recipe finder', subtitle: '' },
-        Roulette: { title: 'Roulette', subtitle: '' },
-        History: { title: 'History', subtitle: '' },
-        NewRecipe: { title: 'New', subtitle: '' },
-        Recipe: { title: 'Recipe detail', subtitle: '' },
-      }
-    }
-  },
   methods : {
     openMenu() {
       this.$refs["nav-burger"].classList.add("is-active");

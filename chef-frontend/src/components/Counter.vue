@@ -22,6 +22,9 @@
 
 <script>
 export default {
+
+  props: ["initialValue"],
+
   data() {
     return {
       counter: 4,
@@ -38,7 +41,12 @@ export default {
       this.$emit('counterUpdate', --this.counter);
     }
 
-  }
+  },
+  created() {
+    if (this.initialValue) {
+      this.counter = this.initialValue;
+    }
+  },
 }
 </script>
 

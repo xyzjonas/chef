@@ -100,6 +100,44 @@ def test_add_recipe(test_app):
     assert Ingredient.query.filter_by(name="rice").first()
     assert Unit.query.filter_by(name="g").first()
 
+    ii = IngredientItem.query.filter_by()
+
+
+@pytest.mark.parametrize("fist_unit", [None, {"name": "g"}])
+def test_add_recipe_no_unit(test_app, fist_unit):
+    data = {
+        "ingredients": [
+            {"amount": "100", "ingredient": {"name": "rice"}}
+        ],
+        "title": "Test",
+    }
+    if fist_unit:
+        data["ingredients"][0]["unit"] = fist_unit
+
+    with test_app.test_client() as client:
+        response = client.post("/recipes/new", json=data)
+        assert response.status_code == 201
+
+    r = Recipe.query.filter_by(title="Test").first()
+    assert r
+    assert r.title == "Test"
+    assert len(r.ingredients) == 1
+    assert r.ingredients[0].ingredient.name == "rice"
+    assert r.ingredients[0].unit.name == "pcs"
+
+    data["id"] = r.id
+    data["ingredients"][0]["unit"] = {}
+    with test_app.test_client() as client:
+        response = client.post("/recipes/new", json=data)
+        assert response.status_code == 200
+
+    r = Recipe.query.filter_by(title="Test").first()
+    assert r
+    assert r.title == "Test"
+    assert len(r.ingredients) == 1
+    assert r.ingredients[0].ingredient.name == "rice"
+    assert r.ingredients[0].unit.name == "pcs"
+
 
 def test_edit_recipe(test_app, simple_test_data):
     r, ii, i, t = simple_test_data

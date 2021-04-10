@@ -1,6 +1,6 @@
 <template>
   <div v-if="recipe">
-    {{recipe.source_name}}
+
     <!-- title -->
     <div class="field">
       <div class="control has-icons-left has-icons-right">
@@ -88,7 +88,7 @@
                 v-for="(i, index) in recipe.ingredients" :key="i+index"
                 class="tag"
               >
-              <p>{{ i.amount }}<strong>{{ i.unit }}</strong> {{ i.ingredient.name }}
+              <p>{{ i.amount }}<strong>{{ i.unit.name }}</strong> {{ i.ingredient.name }}
               <span v-if="i.note">({{ i.note }})</span>
               </p>
               <button v-on:click="removeIngredient(i)" class="delete is-small"></button>
@@ -125,7 +125,7 @@
           <span class="icon is-small is-left">
             <i class="fas fa-drumstick-bite"></i>
           </span>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+          <div class="dropdown-menu fullwidth" id="dropdown-menu" role="menu">
             <div class="dropdown-content">
               <a v-for="(item, index) in smartFieldAutocomplete" :key="index"
               v-on:click="autocomplete(item)"
@@ -164,9 +164,9 @@
     <!-- portions -->
     <!-- PORTIONS COUNTER -->
     <div class="mt-4">
-      <Counter @counterUpdate="updateCounter"/>
+      <Counter :initialValue="recipe.portions" @counterUpdate="updateCounter"/>
     </div>
-    <label class="label">Enough for {{ counter }} portions ({{ counter/4 }} batches).</label>
+    <label class="label has-text-centered">(1 batch)</label>
 
     <hr>
 
@@ -242,6 +242,14 @@ import Constants from "@/components/Constants.vue";
 import TextEditor from "@/components/TextEditor.vue";
 import Counter from "@/components/Counter.vue";
 
+const getOr = (val, def) => {
+  if(val) {
+    return val;
+  } else {
+    return def;
+  }
+}
+
 export default {
   props: ["recipe"],
 
@@ -286,7 +294,7 @@ export default {
     ingredientEnterPressed(event) {
       if (event.keyCode === 13) {
           this.confirmIngredient();
-      }
+      } 
     },
     
     confirmIngredient() {
@@ -297,7 +305,11 @@ export default {
 
     removeIngredient(ingredient) {
       this.recipe.ingredients = this.recipe.ingredients.filter(i => {
-        return i.ingredient.name !== ingredient.ingredient.name;
+        return !(
+          i.ingredient.name === ingredient.ingredient.name
+          && i.amount === ingredient.amount
+          && i.note === ingredient.note
+        );
       });
     },
 
@@ -327,34 +339,52 @@ export default {
       }
     },
 
+    filterAutocomplete(text) {
+      var re = new RegExp(
+        Constants.methods.replaceUnicode(text.toLowerCase()));
+
+      return this.ingredients.filter(i => {
+        var match = re.exec(
+          Constants.methods.replaceUnicode(i.toLowerCase()))
+        if (match) {
+          return true;
+        }
+        return false;
+      })
+    },
+
     parseSmartField(prefill) {
       this.resetSmartField();
 
       // group 1 = amount, 2 = unit, 3 = name, 4 = note
-      var re = /(\d+)([^\s\\/><)(}{]+)? +([^\\/><)(}{0-9]+) *(\([^\\/><)(}{]+\))?$/
-      if (prefill && prefill instanceof String && prefill != "") {
-        var splitted = this.addIngredientSmartField.trim().split(" ")
-        var match = splitted[splitted.length-1]
-        this.addIngredientSmartField = this.addIngredientSmartField.replace(match, prefill);
-      }
+      var re = /([\d.]+)([^\s\\/><)(}{]+)? +([^\\/><)(}{0-9]*) *(\([^\\/><)(}{]+\))?$/
 
-      match = re.exec(this.addIngredientSmartField);
+      var match = re.exec(this.addIngredientSmartField);
       if (!match) {
         this.smartFieldError = "Expected format: <amount><unit> <item> (<note>)";
         return;
       }
-      var amount = match[1];
-      var unit = match[2];
-      var name = match[3];
+      var amount = parseFloat(match[1]);
+      var name = match[3].trim();
       var note = match[4];
+      var unit = match[2];
+      if (isNaN(amount)) {
+        this.smartFieldError = `First item '${match[1]}' must be a number.`
+      }
+
+      if (typeof prefill === "string") {
+        console.log(`prefill: ${prefill}`)
+        console.log(`name: ${name}`)
+        // this.addIngredientSmartField = this.addIngredientSmartField.replace(name, prefill);
+        this.addIngredientSmartField = `${amount}${getOr(unit, "")} ${prefill} ${getOr(note, "")}`
+        name = prefill;
+      } else {
+        this.smartFieldAutocomplete = this.filterAutocomplete(name);
+      }
 
       if (note) {
         note = note.replace("(", "").replace(")", "");
       }
-
-      this.smartFieldAutocomplete = this.ingredients.filter(i => i.startsWith(name));
-      console.log(`${this.smartFieldAutocomplete}`);
-      this.smartFieldAutocomplete = this.smartFieldAutocomplete.filter(i => !name.endsWith(i));
 
       if (!this.ingredients.includes(name)) {
         this.smartFieldNewIngredient = name;
@@ -362,19 +392,32 @@ export default {
 
       this.parsedSmartField = {
         amount: amount,
-        unit: unit,
+        unit: {
+          name: unit,
+        },
         ingredient: {name: name},
         note: note,
       };
     },
 
     getRootData() {
-      const path = `${Constants.HOST_URL}`;
+      var path = `${Constants.HOST_URL}`;
       axios.get(path)
         .then(res => {
           if (res.status !== "success") {
             if (res.data) {
               this.availableTags = res.data.tags;
+            }
+          }
+        })
+        .catch((err) => this.error = err);
+
+      path = `${Constants.HOST_URL}/ingredients`;
+      axios.get(path)
+        .then(res => {
+          if (res.status !== "success") {
+            if (res.data) {
+              this.ingredients = res.data.map(i => i.name);
             }
           }
         })
@@ -398,10 +441,15 @@ export default {
     }
   },
   created() {
-    console.log("CREATED")
     this.getRootData();
-    // todo: remove
+    this.counter = this.recipe.portions;
   },
 
 };
 </script>
+
+<style>
+  .fullwidth {
+    width: 100%;
+  }
+</style>
