@@ -1,5 +1,0 @@
-*__pycache__
-.idea
-app/*.db
-
-*.pytest_cache
