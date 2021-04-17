@@ -1,0 +1,12 @@
+[Unit]
+Description=Chef backend
+After=network.target
+
+[Service]
+User=jonas
+WorkingDirectory=/opt/chef/chef-backend
+ExecStart=/opt/chef/chef-backend/venv/bin/gunicorn -b localhost:8001  chef:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
