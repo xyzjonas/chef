@@ -33,6 +33,9 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from app.image import bp as image_bp
+    app.register_blueprint(image_bp)
+
     if not app.debug and not app.testing:
         # ... no changes to logging setup
         pass

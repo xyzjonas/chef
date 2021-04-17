@@ -401,7 +401,7 @@ export default {
     },
 
     getRootData() {
-      var path = `${Constants.HOST_URL}`;
+      var path = `${Constants.HOST_URL}/`;
       axios.get(path)
         .then(res => {
           if (res.status !== "success") {

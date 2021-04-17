@@ -72,7 +72,6 @@
             <Counter :initialValue="recipe.portions" @counterUpdate="updatePortions"></Counter>
             <label class="label">Enough for {{ Math.round((portions/recipe.portions)*10)/10 }} batch(es).</label>
           </div>
-      
 
           <hr>
         </div>
@@ -94,6 +93,9 @@
               <!-- <span class="ml-2">Delete</span> -->
             </button>
           </p>
+          <p class="control mr-1">
+            <ImageUpload :recipe=recipe></ImageUpload>
+          </p>
           <p class="control is-expanded">
             <button v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
               <i class="fas fa-pen"></i>
@@ -102,6 +104,7 @@
           </p>
         </div>
       </div>
+
 
       <!-- you sure? -->
       <p v-if="deletePrompt" class="help is-danger">
@@ -143,11 +146,14 @@ import axios from "axios";
 import Constants from "@/components/Constants.vue";
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
+import ImageUpload from "@/components/ImageUpload.vue";
+
 
 export default {
   components: {
     Counter,
     RecipeForm,
+    ImageUpload,
   },
 
   data() {

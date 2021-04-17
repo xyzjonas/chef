@@ -176,8 +176,6 @@
       </div>
     </article>
 
-    {{ ingredient }}
-
     <!-- buttons -->
     <div class="field has-addons">
       <p class="control is-expanded">

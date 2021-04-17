@@ -9,7 +9,7 @@
               :src="getImageUrl()"
               alt="recipe image"
               class="is-rounded p-2"
-              onerror="this.src='http://www.recepty.home/images/not-found.png';"
+              onerror="this.src='http://www.chef.home/images/not-found.png';"
             >
           </p>
         </figure>
@@ -46,7 +46,7 @@ export default {
   methods: {
     getImageUrl() {
       // todo: check if image exists, replace with unknown if yes
-      return `http://www.recepty.home/images/${this.recipe.id}.jpeg`
+      return `http://www.chef.home/images/${this.recipe.id}/thumb.jpeg`
     }
   }
 };

@@ -2,6 +2,7 @@ import json
 from flask import jsonify, request
 
 from app import db
+from app.exceptions import InvalidUsage
 from app.main import bp
 from app.models import Recipe, Tag, Ingredient, IngredientItem, Unit
 
@@ -17,29 +18,13 @@ def _assert_request_data(data: dict, required=None):
 
 
 def _validate_type(val, typ3):
+    """Validate incoming data types."""
     try:
         typ3(val)
     except Exception as e:
-    # if type(val) is not typ3:
         raise InvalidUsage(
             f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
     return True
-
-
-class InvalidUsage(Exception):
-    status_code = 400
-
-    def __init__(self, message, status_code=None, payload=None):
-        Exception.__init__(self)
-        self.message = message
-        if status_code is not None:
-            self.status_code = status_code
-        self.payload = payload
-
-    def to_dict(self):
-        rv = dict(self.payload or ())
-        rv['message'] = self.message
-        return rv
 
 
 @bp.errorhandler(InvalidUsage)

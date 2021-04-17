@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from app import create_app, db
@@ -75,3 +76,10 @@ def simple_test_data(tag, ingredient, ingredient_item, recipe):
     t = tag(name="tag")
     r = recipe(title="recipe_01", ingredients=[ii])
     return r, ii, i, t
+
+
+@pytest.fixture()
+def test_image():
+    path = os.path.join(os.path.dirname(__file__), "props", "test_image.jpg")
+    assert os.path.isfile(path)
+    return path
