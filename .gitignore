@@ -1,6 +1,6 @@
 *__pycache__
 .idea
-app/*.db
+*.db
 
 *.pytest_cache
 
