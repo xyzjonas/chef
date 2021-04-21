@@ -6,10 +6,10 @@
         <figure class="media-left">
           <p class="image is-96x96" style="display: flex;">
             <img
+              ref="r-img"
               :src="getImageUrl()"
               alt="recipe image"
               class="is-rounded p-2"
-              onerror="this.src='http://www.chef.home/images/not-found.png';"
             >
           </p>
         </figure>
@@ -39,14 +39,36 @@
 </template>
 
 <script>
+import Constants from '@/components/Constants.vue';
 // import axios from 'axios';
 
 export default {
   props: ["recipe"],
+
+  data() {
+    return {
+      imageFailedToLoad: false,
+    }
+  },
+
   methods: {
     getImageUrl() {
       // todo: check if image exists, replace with unknown if yes
-      return `http://www.chef.home/images/${this.recipe.id}/thumb.jpeg`
+      return "http://watchfit.com/wp-content/uploads/2016/01/processed-food-meaning_1-1024x687.jpg"
+      // return `${Constants.IMAGES_URL}/${this.recipe.id}/thumb.jpeg`
+    },
+  },
+
+  mounted() {
+
+    // Failsafe for images
+    this.$refs["r-img"].onerror = el => {
+      if (this.imageFailedToLoad) {
+        el.target.src = "";
+        return;
+      }
+      this.imageFailedToLoad = true;
+      el.target.src = `${Constants.IMAGES_URL}/not-found.png`;
     }
   }
 };

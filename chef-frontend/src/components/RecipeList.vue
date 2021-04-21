@@ -1,0 +1,160 @@
+<template>
+  <div>
+
+    <!-- RECIPE COUNT -->
+    <div v-if="isInitState()">
+      <h1 class="title is-4">{{ allRecipes.length }} Recipes</h1>
+    </div>
+    <div v-else>
+      <h1 class="title is-4">{{ recipes.length }} Recipes</h1>
+    </div>
+
+    <!-- TAGS -->
+    <div class="tags">
+      <a v-for="(tag) in new Set(allRecipes.map(r => r.tags.map(t => t.name)).flat())" :key="'tag_key' + tag"
+        v-on:click="toggleFilter(tag)"
+        :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
+        style="text-decoration:none;"
+      >{{ tag }}</a>
+    </div>
+
+    <!-- search -->
+    <p class="control has-icons-left">
+      <input 
+        v-model="search"
+        @input="refresh"
+        class="input is-rounded"
+        type="text"
+        placeholder="search">
+      <span class="icon is-small is-left">
+        <i class="fas fa-search"></i>
+      </span>
+    </p>
+
+    <!-- sort-tabs  -->
+    <div class="tabs is-toggle is-fullwidth mt-2">
+      <ul>
+        <li class="p-0">
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-alpha-up" aria-hidden="true"></i></span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-alpha-down" aria-hidden="true"></i></span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-numeric-up" aria-hidden="true"></i></span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-numeric-down" aria-hidden="true"></i></span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-amount-up" aria-hidden="true"></i></span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <span class="icon m-0"><i class="fas fa-sort-amount-down" aria-hidden="true"></i></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- LIST -->
+    <div id="init-list" v-if="isInitState()">
+      <div v-for="(recipe) in allRecipes" :key="'recipe_key+' + recipe.id">
+        <RecipeListItem :recipe="recipe"/>
+      </div>
+    </div>
+    <div v-else>
+      <div v-for="(recipe) in recipes" :key="'recipe_a_key+' + recipe.id">
+        <RecipeListItem :recipe="recipe"/>
+      </div>
+    </div>
+
+  </div>  
+</template>
+
+<script>
+// import axios from "axios";
+import RecipeListItem from "../components/RecipeListItem.vue";
+import Constants from "../components/Constants.vue";
+
+export default {
+  props: ["allRecipes"],
+
+  data() {
+    return {
+      // allRecipes: [],
+      recipes: [],
+      activeTags: [],
+      search: null,
+
+      recipesInitiated: false,
+    };
+  },
+
+  components: {
+    RecipeListItem,
+  },
+
+  methods: {
+    
+    isInitState() {
+      // a bit hack-ish :(
+      return (this.recipes.length === 0) && !this.recipesInitiated;
+    },
+
+    toggleFilter(filter) {
+      // filter based on tags
+      if (this.activeTags.includes(filter)) {
+        this.activeTags = this.activeTags.filter(t => t != filter);
+      } else {
+        this.activeTags.push(filter);
+      }
+      this.refresh();
+    },
+
+    refresh() {
+      // Refresh list of displayed recipes based on tag filters and search input.
+
+      // Since the prop gets populated asynchronously (axios),
+      // recipe list gets initialized here.
+      this.recipesInitiated = true;
+
+      // 1) Tags
+        this.recipes = this.allRecipes.filter(r => {
+        var recipeTags = r.tags.map(t => t.name);
+        if (!recipeTags) return true; // if a recipe has no tags, always show
+        for (let i = 0; i < this.activeTags.length; i++) {
+          const tag = this.activeTags[i];
+          if (!recipeTags.includes(tag)) {
+            return false;
+          }
+        }
+        return true;
+      });
+      // 2) Search (regex)
+      if (!this.search || this.search === "") return;
+      var re = new RegExp(
+        Constants.methods.replaceUnicode(this.search.toLowerCase()));
+
+      this.recipes = this.recipes.filter(r => {
+        var match = re.exec(
+          Constants.methods.replaceUnicode(r.title.toLowerCase()))
+        if (match) {
+          return true;
+        }
+        return false;
+      })
+    },
+  },
+};
+</script>

@@ -4,7 +4,7 @@ from flask import jsonify, request
 from app import db
 from app.exceptions import InvalidUsage
 from app.main import bp
-from app.models import Recipe, Tag, Ingredient, IngredientItem, Unit
+from app.models import Recipe, Tag, Ingredient, IngredientItem, Unit, Category
 
 
 def _assert_request_data(data: dict, required=None):
@@ -19,11 +19,17 @@ def _assert_request_data(data: dict, required=None):
 
 def _validate_type(val, typ3):
     """Validate incoming data types."""
-    try:
-        typ3(val)
-    except Exception as e:
-        raise InvalidUsage(
-            f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
+    if typ3 == float:
+        try:
+            typ3(val)
+            return True
+        except Exception as e:
+            raise InvalidUsage(
+                f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
+    else:
+        if type(val) != typ3:
+            raise InvalidUsage(
+                f"{val} is of type {type(val)} instead of required '{typ3}'", status_code=400)
     return True
 
 
@@ -210,9 +216,12 @@ def new_recipe():
     # tags
     tags = set()
     for t in (data.get("tags") or []):
-        tag = Tag.query.filter_by(name=t.get("name")).first()
-        if not tag and t.get("name"):
-            tag = Tag(name=t.get("name"))
+        tag_name = t.get("name")
+        if not tag_name:
+            continue
+        tag = Tag.query.filter_by(name=tag_name).first()
+        if not tag:
+            tag = Tag(name=tag_name)
         tags.add(tag)
     recipe.tags = list(tags)
 
@@ -222,3 +231,56 @@ def new_recipe():
         return f"{recipe.title} created.", 201
     else:
         return f"{recipe.title} modified.", 200
+
+
+@bp.route('/categories', methods=['GET'])
+def get_categories():
+    categories = Category.query.all()
+    return jsonify([c.dictionary for c in categories])
+
+
+@bp.route('/categories/<int:category_id>', methods=['DELETE'])
+def delete_category(category_id):
+    category = Category.query.filter_by(id=category_id).first_or_404()
+    category_repr = str(category)
+    db.session.delete(category)
+    db.session.commit()
+    return f"{category_repr} deleted.", 200
+
+
+@bp.route('/categories', methods=['POST'])
+def post_category():
+    data = request.json or request.form
+
+    created = False
+
+    if data.get("id"):
+        category = Category.query.filter_by(id=data.get("id")).first_or_404()
+    else:
+        _assert_request_data(data, required=["name"])
+        _validate_type(data["name"], str)
+        category = Category(name=data["name"])
+        created = True
+
+    if data.get("name") and _validate_type(data.get("name"), str):
+        category.name = data["name"]
+
+    # tags
+    tags = set()
+    if data.get("tags") and _validate_type(data.get("tags"), list):
+        for t in (data.get("tags") or []):
+            tag_name = t.get("name")
+            if not tag_name:
+                continue
+            tag = Tag.query.filter_by(name=tag_name).first()
+            if not tag:
+                tag = Tag(name=tag_name)
+            tags.add(tag)
+    category.tags = list(tags)
+
+    db.session.add(category)
+    db.session.commit()
+    if created:
+        return f"{category.name} created.", 201
+    else:
+        return f"{category.name} modified.", 200
