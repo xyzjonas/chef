@@ -58,7 +58,7 @@ def test_add_recipe_minimal(test_app):
     {"title": "test", "source_name": 123},
     {"title": "test", "draft": "true"},
     {"title": "test", "body": 123},
-])
+], ids=["title", "subtitle", "source", "source_name", "draft", "body"])
 def test_add_recipe_invalid_type(test_app, data):
     with test_app.test_client() as client:
         response = client.post("/recipes/new", json=data)
@@ -100,10 +100,8 @@ def test_add_recipe(test_app):
     assert Ingredient.query.filter_by(name="rice").first()
     assert Unit.query.filter_by(name="g").first()
 
-    ii = IngredientItem.query.filter_by()
 
-
-@pytest.mark.parametrize("fist_unit", [None, {"name": "g"}])
+@pytest.mark.parametrize("fist_unit", [None, {"name": "g"}], ids=["none", "g"])
 def test_add_recipe_no_unit(test_app, fist_unit):
     data = {
         "ingredients": [
@@ -118,12 +116,13 @@ def test_add_recipe_no_unit(test_app, fist_unit):
         response = client.post("/recipes/new", json=data)
         assert response.status_code == 201
 
-    r = Recipe.query.filter_by(title="Test").first()
+    r = Recipe.query.filter_by(title=data["title"]).first()
     assert r
-    assert r.title == "Test"
+    assert r.title == data["title"]
     assert len(r.ingredients) == 1
-    assert r.ingredients[0].ingredient.name == "rice"
-    assert r.ingredients[0].unit.name == "pcs"
+    assert r.ingredients[0].ingredient.name == data["ingredients"][0]["ingredient"]["name"]
+    assert r.ingredients[0].unit.name == data["ingredients"][0]["unit"]["name"] \
+        if fist_unit else "pcs"
 
     data["id"] = r.id
     data["ingredients"][0]["unit"] = {}

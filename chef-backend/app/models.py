@@ -13,6 +13,12 @@ tags = db.Table(
     db.Column("tag_id", db.Integer, db.ForeignKey("tag.id"), primary_key=True)
 )
 
+category_tags = db.Table(
+    'category_tags',
+    db.Column("category_id", db.Integer, db.ForeignKey("category.id"), primary_key=True),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tag.id"), primary_key=True)
+)
+
 
 def _dictify(obj, depth=100):
     if obj is None:
@@ -123,6 +129,13 @@ class IngredientItem(Base):
 
     def __repr__(self):
         return self._repr(ingredient=self.ingredient.name, amount=self.amount, unit=self.unit)
+
+
+class Category(Base):
+    __items__ = ["id", "name", "tags"]
+    name = db.Column(db.String(80), nullable=False)
+    tags = db.relationship(Tag, secondary=category_tags, lazy="subquery",
+                           backref=db.backref("categories, lazy=True"))
 
 
 class Recipe(Base):

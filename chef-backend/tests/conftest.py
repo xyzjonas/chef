@@ -3,7 +3,7 @@ import pytest
 
 from app import create_app, db
 from app.config import TestConfig
-from app.models import Recipe, Ingredient, IngredientItem, Tag
+from app.models import Recipe, Ingredient, IngredientItem, Tag, Category
 
 
 @pytest.fixture(autouse=True)
@@ -29,7 +29,6 @@ def tag():
         db.session.commit()
         db.session.refresh(t)
         return t
-
     yield _inner
 
 
@@ -41,7 +40,6 @@ def ingredient():
         db.session.commit()
         db.session.refresh(i)
         return i
-
     yield _inner
 
 
@@ -53,7 +51,6 @@ def ingredient_item():
         db.session.commit()
         db.session.refresh(i)
         return i
-
     yield _inner
 
 
@@ -65,6 +62,17 @@ def recipe():
         db.session.commit()
         db.session.refresh(r)
         return r
+    yield _inner
+
+
+@pytest.fixture()
+def category():
+    def _inner(**kwargs):
+        c = Category(**kwargs)
+        db.session.add(c)
+        db.session.commit()
+        db.session.refresh(c)
+        return c
 
     yield _inner
 
@@ -76,6 +84,13 @@ def simple_test_data(tag, ingredient, ingredient_item, recipe):
     t = tag(name="tag")
     r = recipe(title="recipe_01", ingredients=[ii])
     return r, ii, i, t
+
+
+@pytest.fixture()
+def category_with_tag(category, tag):
+    t = tag(name="tag")
+    c = category(name="italian food", tags=[t])
+    return c, t
 
 
 @pytest.fixture()

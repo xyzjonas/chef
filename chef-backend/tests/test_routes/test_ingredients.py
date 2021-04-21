@@ -79,3 +79,20 @@ def test_modify(test_app, simple_test_data):
     assert i.proteins == data["proteins"]
     assert i.fibres == data["fibres"]
     assert i.salt == data["salt"]
+
+
+@pytest.mark.parametrize("data", [
+    {"name": 123},
+    {"name": "new and better name", "energy": "asd"},
+    {"name": "new and better name", "carbs": "asd"},
+    {"name": "new and better name", "fats": "asd"},
+    {"name": "new and better name", "proteins": "asd"},
+    {"name": "new and better name", "fibres": "asd"},
+    {"name": "new and better name", "salt": "asd"},
+])
+def test_add_ingredient_invalid_data_type(test_app, simple_test_data, data):
+    r, ii, i, t = simple_test_data
+    data["id"] = i.id
+    with test_app.test_client() as client:
+        response = client.post(f"/ingredients/{i.id}", json=data)
+        assert response.status_code == 400
