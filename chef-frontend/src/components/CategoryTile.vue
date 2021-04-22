@@ -32,7 +32,7 @@
         <div v-if="editable" class="level-item level-right">
           <p class="control mr-1">
             <ImageUpload
-              :recipe=category :small="true"
+              :category=category :small="true"
               @uploadFailed="imageUploadFailed"
             />
           </p>

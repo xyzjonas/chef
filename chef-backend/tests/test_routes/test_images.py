@@ -1,5 +1,4 @@
 import os
-from io import StringIO
 import pytest
 
 
@@ -14,4 +13,12 @@ def test_upload(test_app, simple_test_data, image):
     with test_app.test_client() as client:
         data = {"image": (image, "test_image.jpg")}
         res = client.post(f"/recipes/{r.id}/image", content_type='multipart/form-data', data=data)
+        assert res.status_code == 200
+
+
+def test_upload_category(test_app, category_with_tag, image):
+    c, t = category_with_tag
+    with test_app.test_client() as client:
+        data = {"image": (image, "test_image.jpg")}
+        res = client.post(f"/categories/{c.id}/image", content_type='multipart/form-data', data=data)
         assert res.status_code == 200

@@ -54,8 +54,7 @@ export default {
   methods: {
     getImageUrl() {
       // todo: check if image exists, replace with unknown if yes
-      return "http://watchfit.com/wp-content/uploads/2016/01/processed-food-meaning_1-1024x687.jpg"
-      // return `${Constants.IMAGES_URL}/${this.recipe.id}/thumb.jpeg`
+      return `${Constants.IMAGES_URL}/${this.recipe.id}/medium.jpeg`
     },
   },
 
