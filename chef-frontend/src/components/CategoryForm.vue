@@ -1,6 +1,5 @@
 <template>
-  <div v-if="category">
-
+  <div>
     <!-- title -->
     <div class="field">
       <div class="control has-icons-left has-icons-right">
@@ -21,24 +20,7 @@
           <i class="fas fa-check"></i>
         </span>
       </div>
-      <p v-if="!category.name" class="help is-danger">
-        Name is required
-      </p>
-    </div>
-
-    <!-- source (url) -->
-    <div class="field">
-      <div class="control has-icons-left has-icons-right">
-        <input
-          v-model="category.source"
-          class="input"
-          type="text"
-          placeholder="image link"
-        />
-        <span class="icon is-small is-left">
-          <i class="fas fa-link"></i>
-        </span>
-      </div>
+      <p v-if="!category.name" class="help is-danger">Name is required</p>
     </div>
 
     <!-- tags -->
@@ -72,13 +54,14 @@
       <div class="field is-grouped">
         <p class="control mr-1 is-expanded">
           <button
-            class="button is-fullwidth is-success"
+            class="button is-success mr-1"
             :disabled="!category.name"
             v-on:click="postCategory"
           >
             <i class="fas fa-save"></i>
             <span class="ml-2">Save</span>
           </button>
+          <button class="button" @click="$emit('cancel')">Cancel</button>
         </p>
       </div>
     </div>
@@ -98,7 +81,7 @@ import axios from "axios";
 import Constants from "@/components/Constants.vue";
 
 export default {
-  props: ["category"],
+  props: ["inputCategory"],
 
   data() {
     return {
@@ -107,12 +90,16 @@ export default {
 
       postSuccess: null,
       postError: null,
+      category: {
+        tags: [],
+      },
     };
   },
   methods: {
 
     toggleTag(tag) {
-      var tagNames = this.category.tags.map(t => t.name)
+      console.log(this.category.tags)
+      const tagNames = this.category.tags.map(t => t.name)
       if (!tagNames.includes(tag.name)) {
         this.category.tags.push(tag);
       } else {
@@ -162,6 +149,9 @@ export default {
     }
   },
   created() {
+    if (this.inputCategory) {
+      this.category = { ...this.inputCategory };
+    }
     this.getRootData();
   },
 

@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import History from "../views/History.vue";
 import Home from "../views/Home.vue";
 import Recipes from "../views/Recipes.vue";
 import Recipe from "../views/Recipe.vue";
+import CategoryView from "../views/CategoryView.vue";
 import NewRecipe from "../views/NewRecipe.vue";
 import Ingredients from "../views/Ingredients.vue";
 import Ingredient from "../views/Ingredient.vue";
@@ -13,7 +13,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "home",
     component: Home
   },
   {
@@ -33,28 +33,22 @@ const routes = [
   },
   {
     path: "/recipes/new",
-    name: "NewRecipe",
+    name: "new",
     component: NewRecipe
   },
   {
     path: "/recipes/:id",
-    name: "Recipe",
+    name: "recipe",
     component: Recipe
   },
   {
-    path: "/",
-    name: "Roulette",
-    component: History
-  },
-  {
-    path: "/",
-    name: "History",
-    component: History
+    path: "/categories/:id",
+    name: "category",
+    component: CategoryView
   },
 ];
 
 const router = new VueRouter({
-  mode: "history",
   base: process.env.BASE_URL,
   routes
 });

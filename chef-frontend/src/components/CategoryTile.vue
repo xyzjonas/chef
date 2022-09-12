@@ -1,19 +1,14 @@
 <template>
-  <div class="tile is-parent noselect">
+  <div class="m-1">
     
     <!-- EDIT -->
-    <div v-if="edit" style="width: 100%">
-      <div class="level mb-1">
-        <div class="level-item level-right">
-          <a v-on:click="edit=!edit" class="tag is-delete"></a>
-        </div>
-      </div>
-      <CategoryForm
-        :category="category"
-        @categoryPosted="edited()"
-      />
-    </div>
-    <!-- ACTUAL TILE -->
+    <transition name="slide-fade" mode="out-in">
+    <CategoryForm
+      v-if="edit"
+      :inputCategory="category"
+      @categoryPosted="edited()"
+      @cancel="edit = !edit"
+    />
     <a
       v-else
       v-on:click="clicked"
@@ -41,11 +36,9 @@
               <i class="fas fa-pen"></i>
             </button>
           </div>
-          <div class="ml-1">
-            <button v-on:click="youSure=!youSure" class="button is-danger is-small is-rounded clickable-link">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
+
+          <DeleteButton @delete="deleteCategory"/>
+          
         </div>
       </div>
       <span v-if="uploadError" class="help is-danger">
@@ -57,6 +50,7 @@
         <a v-on:click="deleteCategory">Yep, let's do this!</a>
       </span>
     </a>
+    </transition>
     
   </div>
 </template>
@@ -66,6 +60,7 @@ import axios from "axios";
 import Constants from "@/components/Constants.vue";
 import CategoryForm from "@/components/CategoryForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
+import DeleteButton from "@/components/DeleteButton.vue";
 
 export default {  
 
@@ -79,10 +74,7 @@ export default {
 
   props: ["category", "editable"],
 
-  components: {
-    CategoryForm,
-    ImageUpload
-  },
+  components: { CategoryForm, ImageUpload, DeleteButton },
 
   methods: {
 
@@ -158,7 +150,6 @@ export default {
     bottom: 0;
   }
   .image-background {
-    background-color: tomato;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -168,20 +159,18 @@ export default {
   .tile-title {
     background-color: #FFFFFFBB;
     width: fit-content;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
+    padding-left: 1em;
+    padding-right: 1em;
     border-radius: 0.1em;
-    border-style: solid;
-    border-width: 1px;
+    border: solid 1px #999;
   }
   .mytag {
-    margin: 0.1em;
-    border-radius: 0.3em;
-    border-style: solid;
-    border-width: 1px;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
     background-color: #FFFFFFBB;
+    margin: 0.1em;
+    border-radius: 0.2em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    border: solid 1px #999;
   }
 
   .noselect {

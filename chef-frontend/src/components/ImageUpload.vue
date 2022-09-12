@@ -26,18 +26,9 @@
         :class="{
           button: true, file: true, 'is-info': true, 'is-rounded': small, 'is-small': small
         }"
-        >
-        <!-- <i class="fas fa-image"></i> -->
-        <span>
-          <i class="fas fa-upload"></i>
-        </span>
+      >
+        <span><i class="fas fa-upload"></i></span>
         <input v-on:change="handleFile" id="file" class="file-input" type="file" name="resume">
-        <!-- <label class="file-label">
-          <input v-on:change="handleFile" id="file" class="file-input" type="file" name="resume">
-          <span class="file-cta">
-            <span class="file-icon"></span>
-          </span>
-        </label> -->
       </button>
     </div>
 

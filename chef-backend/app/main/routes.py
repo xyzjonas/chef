@@ -52,6 +52,7 @@ def root():
 def get_recipes():
     drafts = request.args.get("draft", default=False, type=json.loads)
     ingredients = request.args.get("ingredients", default=None)
+    category = request.args.get("category", default=None)
 
     recipes = Recipe.query.filter_by(draft=drafts).all()
     if ingredients:
@@ -59,6 +60,13 @@ def get_recipes():
             def has_ingredient(recipe):
                 return i in [ing.ingredient.name for ing in recipe.ingredients]
             recipes = filter(has_ingredient, recipes)
+
+    if category:
+        category = Category.query.filter_by(id=category).first_or_404()
+        tags = {tag.name for tag in category.tags}
+        recipes = [
+            recipe for recipe in recipes if tags.issubset({tag.name for tag in recipe.tags})
+        ]
 
     recipes = [recipe.get_dictionary(depth=2, exclude=["body"]) for recipe in recipes]
     return jsonify(recipes), 200
@@ -237,6 +245,12 @@ def new_recipe():
 def get_categories():
     categories = Category.query.all()
     return jsonify([c.dictionary for c in categories])
+
+
+@bp.route('/categories/<int:category_id>', methods=['GET'])
+def get_category(category_id):
+    category = Category.query.filter_by(id=category_id).first_or_404()
+    return jsonify(category.dictionary)
 
 
 @bp.route('/categories/<int:category_id>', methods=['DELETE'])

@@ -1,7 +1,7 @@
 <template>
   <div>
     
-    <router-link :to="{ name: 'Recipe', params: {id: recipe.id}}">
+    <router-link :to="{ name: 'recipe', params: {id: recipe.id}}">
       <article class="media my-1 box boxhov p-0">
         <figure class="media-left">
           <p class="image is-96x96" style="display: flex;">

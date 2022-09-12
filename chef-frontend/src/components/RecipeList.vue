@@ -10,7 +10,7 @@
     </div>
 
     <!-- TAGS -->
-    <div class="tags">
+    <div class="tags mt-2">
       <a v-for="(tag) in new Set(allRecipes.map(r => r.tags.map(t => t.name)).flat())" :key="'tag_key' + tag"
         v-on:click="toggleFilter(tag)"
         :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
@@ -19,7 +19,7 @@
     </div>
 
     <!-- search -->
-    <p class="control has-icons-left">
+    <p class="control has-icons-left mb-4">
       <input 
         v-model="search"
         @input="refresh"
@@ -30,42 +30,6 @@
         <i class="fas fa-search"></i>
       </span>
     </p>
-
-    <!-- sort-tabs  -->
-    <div class="tabs is-toggle is-fullwidth mt-2">
-      <ul>
-        <li class="p-0">
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-alpha-up" aria-hidden="true"></i></span>
-          </a>
-        </li>
-        <li>
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-alpha-down" aria-hidden="true"></i></span>
-          </a>
-        </li>
-        <li>
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-numeric-up" aria-hidden="true"></i></span>
-          </a>
-        </li>
-        <li>
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-numeric-down" aria-hidden="true"></i></span>
-          </a>
-        </li>
-        <li>
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-amount-up" aria-hidden="true"></i></span>
-          </a>
-        </li>
-        <li>
-          <a>
-            <span class="icon m-0"><i class="fas fa-sort-amount-down" aria-hidden="true"></i></span>
-          </a>
-        </li>
-      </ul>
-    </div>
 
     <!-- LIST -->
     <div id="init-list" v-if="isInitState()">

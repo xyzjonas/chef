@@ -225,6 +225,9 @@
         :disabled="!recipe.title"
       >Save</button>
     </div>
+    <div class="my-1">
+      <button @click="$router.push({ name: 'home' })" class="button is-fullwidth">Cancel</button>
+    </div>
 
     <!-- msg -->
     <article v-if="postSuccess" class="message is-success">

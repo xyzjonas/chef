@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="mx-3">
     <div ref="look-here"></div>
+    <transition name="slide-fade" mode="out-in">
     <div ref="recipeTitle" v-if="recipe">
       <div v-if="!editMode">
         <h1 v-if="recipe" class="title is-4">{{ recipe.title.toUpperCase() }}</h1>
@@ -125,19 +126,10 @@
     </div>
 
     <!-- no recipe -->
-    <div v-else class="p-5">
-      <section class="section is-medium has-text-centered">
-        <h1 class="title">Oooops...</h1>
-        <h2 class="subtitle">
-          404 recipe <strong>not</strong> found
-        </h2>
-        <span class="icon is-large">
-          <i class="fas fa-2x fa-dizzy"></i>
-        </span>
-      </section>
-    </div>
+    <LoadingSection v-else-if="loading" class="p-5" :loading="loading"/>
+    <NotFound v-else message="Recipe not found" />
+    </transition>
 
-    <hr>
   </div>
 </template>
 
@@ -147,14 +139,12 @@ import Constants from "@/components/Constants.vue";
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
+import LoadingSection from "@/components/LoadingSection.vue";
+import NotFound from "@/components/NotFound.vue";
 
 
 export default {
-  components: {
-    Counter,
-    RecipeForm,
-    ImageUpload,
-  },
+  components: { Counter, RecipeForm, ImageUpload, LoadingSection, NotFound },
 
   data() {
     return {
@@ -163,6 +153,7 @@ export default {
       portions: 4,
       editMode: false,
       deletePrompt: false,
+      loading: false,
 
       ingredientsCollapsed: false,
     }
@@ -194,6 +185,7 @@ export default {
     },
 
     fetchRecipe() {
+      this.loading = true;
       const path = `${Constants.HOST_URL}/recipes/${this.$route.params.id}`;
       console.info(`Getting: ${path}`);
       axios.get(path)
@@ -206,7 +198,8 @@ export default {
             }
           }
         })
-        .catch((err) => this.error = err);
+        .catch((err) => this.error = err)
+        .finally(() => (this.loading = false));
     },
   },
 

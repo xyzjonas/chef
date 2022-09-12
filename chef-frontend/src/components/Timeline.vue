@@ -15,23 +15,18 @@
 <script>
 export default {
   props: [
-    // items: date/recipe
     "items"
   ]
 }
 </script>
-
+<!--
 <style lang="scss">
-
-// ----------------  LAYOUT
 
 .timeline {
 	max-width: 1024px;
 	width: 90%;
 	margin: 0 auto;
 }
-
-// ----------------  THE FONTS
 
 $border-color: rgba(black, .3);
 
@@ -79,3 +74,4 @@ $border-color: rgba(black, .3);
 	}
 }
 </style>
+-->

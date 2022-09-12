@@ -1,8 +1,7 @@
 <template>
-  <div>
-    
+  <div class="mx-3">
   <h1 class="title is-3">Add</h1>
-  <h2 class="subtitle is-5">...a new recipe</h2>
+  <h2 class="subtitle is-5">a new recipe</h2>
 
     <RecipeForm :recipe="recipe" @recipePosted="route"></RecipeForm>
     
