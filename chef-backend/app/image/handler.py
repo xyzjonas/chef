@@ -1,8 +1,7 @@
-import threading
-
-from flask import current_app
-from PIL import Image
 import os
+
+from PIL import Image
+from flask import current_app
 
 
 class Handler:
@@ -51,6 +50,7 @@ class CategoryHandler(Handler):
 
     def _create_folder(self):
         if not os.path.isdir(self.target):
+            current_app.logger.error(f"Images base DIR does not exist: {self.target}")
             raise Exception(f"Images base DIR does not exist: {self.target}")
 
         categories_folder = os.path.join(self.target, "categories")
@@ -67,4 +67,3 @@ class CategoryHandler(Handler):
         return [
             ("landscape", self.LANDSCAPE)
         ]
-

@@ -28,9 +28,12 @@ def create_app(config_class=Config):
         file_handler = logging.FileHandler(filename=app.config['LOG_FILE'], mode='a')
         file_handler.setFormatter(logging.Formatter(log_format))
         app.logger.addHandler(file_handler)
+    else:
+        app.logger.warning("Logging: file handler not configured, use 'LOG_FILE' to set it up.")
 
     app.logger.info("""
-    ██████╗██╗  ██╗███████╗███████╗
+
+    ███████╗██╗  ██╗███████╗███████╗
     ██╔════╝██║  ██║██╔════╝██╔════╝
     ██║     ███████║█████╗  █████╗  
     ██║     ██╔══██║██╔══╝  ██╔══╝  
