@@ -1,3 +1,4 @@
+import logging
 import os
 from flask import jsonify, request, current_app
 from datetime import datetime
@@ -66,6 +67,10 @@ def post_category_image(category_id):
     current_app.logger.debug(f"Category image uploaded: {image_path}")
 
     handler = CategoryHandler(image_path, category_id)
-    handler.create_images_set()
+    try:
+        handler.create_images_set()
+    except Exception as e:
+        current_app.logger.error("Image processing failed")
+        current_app.logger.error(e, exc_info=True)
 
     return f"Images sent for processing...", 200
