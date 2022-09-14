@@ -1,5 +1,5 @@
 import json
-from flask import jsonify, request
+from flask import jsonify, request, current_app
 
 from app import db
 from app.exceptions import InvalidUsage
@@ -64,6 +64,7 @@ def get_recipes():
     if category:
         category = Category.query.filter_by(id=category).first_or_404()
         tags = {tag.name for tag in category.tags}
+        current_app.logger.debug(f"Filtering by tags: {tags}")
         recipes = [
             recipe for recipe in recipes if tags.issubset({tag.name for tag in recipe.tags})
         ]
