@@ -79,7 +79,6 @@ export default {
         content: this.text,
         onUpdate: ({getHTML}) => { 
           this.$emit('editorUpdate', getHTML() );
-          // this.text = getHTML() 
           },
         extensions: [
           new Blockquote(),

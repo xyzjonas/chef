@@ -8,6 +8,28 @@
           <strong>CHEF</strong></span>
         </router-link>
       </div>
+
+      <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <router-link :to="{ name: 'recipes'}" class="button is-primary mx-0">
+            <span class="icon is-small">
+              <i class="fas fa-list"></i>
+            </span>
+            <strong>All</strong>
+          </router-link>
+          <router-link :to="{ name: 'newcategory'}" class="button is-primary mx-0 pl-0">
+            <strong>Add Category</strong>
+          </router-link>
+          <router-link :to="{ name: 'new'}" class="button is-light">
+            <span class="icon is-small">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Recipe</span>
+          </router-link>
+        </div>
+      </div>
+      </div>
     </nav>
 
   </div>

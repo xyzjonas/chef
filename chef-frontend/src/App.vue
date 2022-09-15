@@ -1,15 +1,16 @@
 <template>
   <div id="app">
 
-    <Navbar class="mb-5" />
+    <Navbar class="mb-4" />
 
-    <div class="container">
+    <div class="container pb-4">
       <transition mode="out-in">
         <router-view/>
       </transition>
     </div>
 
   </div>
+
 </template>
 
 <script>
@@ -23,21 +24,6 @@ export default {
 </script>
 
 <style>
-html {
-  height: 100%;
-}
-
-body {
-  height: 100%;
-}
-
-#app {
-  height: 100%;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 
 .v-enter-from,
 .v-leave-to {
@@ -53,6 +39,24 @@ body {
   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
+/* ----------------- */
+
+
+.loading-leave-to {
+  opacity: 0;
+}
+
+.loading-enter {
+  opacity: 0;
+  translate: -120px;
+}
+
+.loading-leave-active,
+.loading-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+/* ----------------- */
 
 .fade-leave-to {
   opacity: 0;
@@ -68,17 +72,35 @@ body {
   transition: all 0.3s ease-out;
 }
 
-.slide-fade-leave-active,
-.slide-fade-enter-active {
-  transition: all 0.2s ease-out;
+/* ----------------- */
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: all 0.15s ease-out;
 }
 
-.slide-fade-enter-from {
+.slide-enter {
   transform: translateX(-30px);
   opacity: 0;
 }
-.slide-fade-leave-to {
+.slide-leave-to {
   transform: translateX(30px);
+  opacity: 0;
+}
+
+/* ----------------- */
+
+.slide-up-leave-active,
+.slide-up-enter-active {
+  transition: all 0.15s ease-out;
+}
+
+.slide-up-enter {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+.slide-up-leave-to {
+  transform: translateY(-30px);
   opacity: 0;
 }
 </style>

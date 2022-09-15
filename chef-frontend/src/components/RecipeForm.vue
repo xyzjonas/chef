@@ -226,7 +226,7 @@
       >Save</button>
     </div>
     <div class="my-1">
-      <button @click="$router.push({ name: 'home' })" class="button is-fullwidth">Cancel</button>
+      <button @click="$emit('cancel')" class="button is-fullwidth">Cancel</button>
     </div>
 
     <!-- msg -->

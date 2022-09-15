@@ -1,7 +1,7 @@
 <template>
   <div class="mx-3 py-0">
 
-    <transition name="fade-slide" mode="out-in">
+    <transition name="loading" mode="out-in">
     <LoadingSection v-if="loadingCategory" :loading="loadingCategory"/>
     <CategoryTile
       v-else
@@ -19,7 +19,7 @@
     </div>
 
     <div v-else>
-    <transition name="fade-slide" mode="out-in">
+    <transition name="loading" mode="out-in">
     <LoadingSection v-if="loadingRecipes" :loading="loadingRecipes"/>
     <div v-else-if="errorRecipes">
       <article class="message is-danger my-5">

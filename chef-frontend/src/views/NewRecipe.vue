@@ -1,9 +1,13 @@
 <template>
-  <div class="mx-3">
+  <div class="px-3">
   <h1 class="title is-3">Add</h1>
   <h2 class="subtitle is-5">a new recipe</h2>
 
-    <RecipeForm :recipe="recipe" @recipePosted="route"></RecipeForm>
+    <RecipeForm
+      :recipe="recipe"
+      @recipePosted="$router.push({ name: 'recipes' })"
+      @cancel="$router.push({ name: 'home' })"
+    />
     
   </div>
 </template>
@@ -25,10 +29,5 @@ export default {
       },
     };
   },
-  methods: {
-    route() {
-      this.$router.push("/recipes");
-    }
-  }
 };
 </script>

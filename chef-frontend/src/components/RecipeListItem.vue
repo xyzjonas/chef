@@ -3,7 +3,7 @@
     
     <router-link :to="{ name: 'recipe', params: {id: recipe.id}}">
       <article class="media my-1 box boxhov p-0">
-        <figure class="media-left">
+        <figure class="media-left m-0">
           <p class="image is-96x96" style="display: flex;">
             <img
               ref="r-img"
@@ -13,7 +13,7 @@
             >
           </p>
         </figure>
-        <div class="media-content p-4">
+        <div class="media-content p-3">
           <div class="content">
             <p class="title is-5">
               {{ recipe.title.toUpperCase() }}
@@ -54,7 +54,7 @@ export default {
   methods: {
     getImageUrl() {
       // todo: check if image exists, replace with unknown if yes
-      return `${Constants.IMAGES_URL}/${this.recipe.id}/medium.jpeg`
+      return `${Constants.IMAGES_URL}/${this.recipe.id}/small.jpeg`
     },
   },
 

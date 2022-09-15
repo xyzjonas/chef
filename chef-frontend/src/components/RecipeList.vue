@@ -3,10 +3,10 @@
 
     <!-- RECIPE COUNT -->
     <div v-if="isInitState()">
-      <h1 class="title is-4">{{ allRecipes.length }} Recipes</h1>
+      <h1 class="title is-4 has-text-primary">{{ allRecipes.length }} Recipes</h1>
     </div>
     <div v-else>
-      <h1 class="title is-4">{{ recipes.length }} Recipes</h1>
+      <h1 class="title is-4 has-text-primary">{{ recipes.length }} Recipes</h1>
     </div>
 
     <!-- TAGS -->

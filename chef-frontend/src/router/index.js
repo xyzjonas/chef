@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Recipes from "../views/Recipes.vue";
 import Recipe from "../views/Recipe.vue";
 import CategoryView from "../views/CategoryView.vue";
+import NewCategoryView from "../views/NewCategoryView.vue";
 import NewRecipe from "../views/NewRecipe.vue";
 import Ingredients from "../views/Ingredients.vue";
 import Ingredient from "../views/Ingredient.vue";
@@ -18,7 +19,7 @@ const routes = [
   },
   {
     path: "/recipes",
-    name: "Recipes",
+    name: "recipes",
     component: Recipes
   },
   {
@@ -35,6 +36,11 @@ const routes = [
     path: "/recipes/new",
     name: "new",
     component: NewRecipe
+  },
+  {
+    path: "/recipes/newcategory",
+    name: "newcategory",
+    component: NewCategoryView
   },
   {
     path: "/recipes/:id",

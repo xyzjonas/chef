@@ -15,7 +15,11 @@
       <!-- upload -->
       <button v-if="file" v-on:click="upload"
         :class="{
-          button: true, 'is-success': true, 'is-small': small, 'is-rounded': small
+          button: true,
+          'is-success': true,
+          'is-small': small,
+          'is-rounded': small,
+          'is-loading': loading,
         }"
       >
         <i class="fas fa-upload"></i>
@@ -48,6 +52,7 @@ export default {
       file: null,
       error: null,
       success: null,
+      loading: false,
 
       url: null,
     };
@@ -60,6 +65,7 @@ export default {
     },
 
     upload() {
+      this.loading = true;
       var formData = new FormData();
       formData.append("image", this.file);
       axios
@@ -78,6 +84,7 @@ export default {
           this.error = err;
           this.$emit("uploadFailed", err);
         })
+        .finally(() => ( this.loading = false ))
     }
 
   },

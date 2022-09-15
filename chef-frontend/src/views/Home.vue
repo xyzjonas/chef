@@ -1,6 +1,6 @@
 <template>
   <div class="mx-3 py-0">
-    <transition name="fade" mode="out-in">
+    <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
     <div v-else class="columns">
       <div
@@ -15,17 +15,6 @@
       </div>
     </div>
     </transition>
-    
-    <!-- ADD CATEGORY -->
-    <transition name="slide-fade" mode="out-in">
-    <div v-if="newCategory">
-      <CategoryForm
-        @categoryPosted="newCategory = false; getAllCategories()"
-        @cancel="newCategory = !newCategory"
-      />
-    </div>
-    <AddTile v-else @category="newCategory = !newCategory" class="mt-5" />
-    </transition>
 
   </div>
 </template>
@@ -34,12 +23,10 @@
 import axios from "axios";
 import Constants from "../components/Constants.vue";
 import CategoryTile from "../components/CategoryTile.vue";
-import AddTile from "../components/AddTile.vue";
-import CategoryForm from "../components/CategoryForm.vue";
 import LoadingSection from "../components/LoadingSection.vue"
 
 export default {
-  components: { CategoryTile, CategoryForm, AddTile, LoadingSection },
+  components: { CategoryTile, LoadingSection },
 
   data() {
     return {

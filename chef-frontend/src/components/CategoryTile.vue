@@ -2,7 +2,7 @@
   <div class="m-1">
     
     <!-- EDIT -->
-    <transition name="slide-fade" mode="out-in">
+    <transition name="slide" mode="out-in">
     <CategoryForm
       v-if="edit"
       :inputCategory="category"
@@ -37,7 +37,7 @@
             </button>
           </div>
 
-          <DeleteButton @delete="deleteCategory"/>
+          <DeleteButton @delete="deleteCategory" :small="true" :rounded="true"/>
           
         </div>
       </div>

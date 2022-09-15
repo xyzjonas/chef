@@ -1,6 +1,9 @@
 <template>
-  <div class="recipes">
-    <RecipeList :allRecipes="recipes"/>
+  <div class="recipes px-3">
+    <transition name="loading" mode="out-in">
+    <LoadingSection v-if="loading" :loading="loading" />
+    <RecipeList v-else :allRecipes="recipes"/>
+    </transition>
   </div>  
 </template>
 
@@ -8,20 +11,21 @@
 import axios from "axios";
 import RecipeList from "@/components/RecipeList.vue";
 import Constants from "../components/Constants.vue";
+import LoadingSection from "../components/LoadingSection.vue"
 
 export default {
   data() {
     return {
       recipes: [],
+      loading: false,
       error: null,
     };
   },
 
-  components: {
-    RecipeList
-  },
+  components: { RecipeList, LoadingSection },
 
   created() {
+    this.loading = true;
     const path = `${Constants.HOST_URL}/recipes`;
     axios
       .get(path)
@@ -34,7 +38,8 @@ export default {
           }
         }
       })
-      .catch((err) => this.error = err);
+      .catch((err) => this.error = err)
+      .finally(() => (this.loading = false));
   }
 };
 </script>
