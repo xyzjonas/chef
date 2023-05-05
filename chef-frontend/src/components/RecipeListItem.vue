@@ -2,7 +2,7 @@
   <div>
     
     <router-link :to="{ name: 'recipe', params: {id: recipe.id}}">
-      <article class="media my-1 box boxhov p-0">
+      <article class="media box boxhov p-0">
         <figure class="media-left m-0">
           <p class="image is-96x96" style="display: flex;">
             <img
@@ -73,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
   .breakline {
     display: block;
     max-width: 1em;
@@ -89,5 +89,8 @@ export default {
   .vertical {
     display: flex;
     align-items: center;
+  }
+  .title {
+    font-weight: 500;
   }
 </style>

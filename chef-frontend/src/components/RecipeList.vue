@@ -32,12 +32,12 @@
     </p>
 
     <!-- LIST -->
-    <div id="init-list" v-if="isInitState()">
+    <div id="init-list" v-if="isInitState()" class="recipe-list">
       <div v-for="(recipe) in allRecipes" :key="'recipe_key+' + recipe.id">
         <RecipeListItem :recipe="recipe"/>
       </div>
     </div>
-    <div v-else>
+    <div v-else class="recipe-list">
       <div v-for="(recipe) in recipes" :key="'recipe_a_key+' + recipe.id">
         <RecipeListItem :recipe="recipe"/>
       </div>
@@ -124,3 +124,10 @@ export default {
 
 };
 </script>
+<style scoped lang="scss">
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+</style>
