@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-3 py-0">
+  <div>
 
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loadingCategory" :loading="loadingCategory"/>

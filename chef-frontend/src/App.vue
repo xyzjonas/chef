@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <Navbar class="mb-4" />
+    <Navbar class="mb-2" />
 
     <div class="container pb-4">
       <transition mode="out-in">

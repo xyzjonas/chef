@@ -56,8 +56,6 @@ export default {
 
   data() {
     return {
-      // allRecipes: [],
-      recipes: [],
       activeTags: [],
       search: null,
 
@@ -67,6 +65,42 @@ export default {
 
   components: {
     RecipeListItem,
+  },
+
+  computed: {
+
+    recipes() {
+      this.recipesInitiated = true;
+
+      const recipes = this.allRecipes.filter(r => {
+        var recipeTags = r.tags.map(t => t.name);
+        if (!recipeTags) return true; // if a recipe has no tags, always show
+        for (let i = 0; i < this.activeTags.length; i++) {
+            const tag = this.activeTags[i];
+            if (!recipeTags.includes(tag)) {
+              return false;
+            }
+          }
+          return true;
+      }).sort((a, b) => {
+        if (a.title > b.title) {
+          return 1
+        } else {
+          return -1
+        }
+      });
+      // 2) Search (regex)
+      if (!this.search || this.search === "") return recipes;
+      var re = new RegExp(Constants.methods.replaceUnicode(this.search.toLowerCase()));
+      return recipes.filter(r => {
+        var match = re.exec(
+          Constants.methods.replaceUnicode(r.title.toLowerCase()))
+        if (match) {
+          return true;
+        }
+        return false;
+      })
+    }
   },
 
   methods: {
@@ -86,39 +120,7 @@ export default {
       this.refresh();
     },
 
-    refresh() {
-      // Refresh list of displayed recipes based on tag filters and search input.
-
-      // Since the prop gets populated asynchronously (axios),
-      // recipe list gets initialized here.
-      this.recipesInitiated = true;
-
-      // 1) Tags
-        this.recipes = this.allRecipes.filter(r => {
-        var recipeTags = r.tags.map(t => t.name);
-        if (!recipeTags) return true; // if a recipe has no tags, always show
-        for (let i = 0; i < this.activeTags.length; i++) {
-          const tag = this.activeTags[i];
-          if (!recipeTags.includes(tag)) {
-            return false;
-          }
-        }
-        return true;
-      });
-      // 2) Search (regex)
-      if (!this.search || this.search === "") return;
-      var re = new RegExp(
-        Constants.methods.replaceUnicode(this.search.toLowerCase()));
-
-      this.recipes = this.recipes.filter(r => {
-        var match = re.exec(
-          Constants.methods.replaceUnicode(r.title.toLowerCase()))
-        if (match) {
-          return true;
-        }
-        return false;
-      })
-    },
   },
+
 };
 </script>

@@ -1,18 +1,12 @@
 <template>
-  <div class="mx-3 py-0">
+  <div>
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
-    <div v-else class="columns">
-      <div
-        v-for="(row, index) in categoryRows" :key="'row' + index"
-        class="column p-0"
-      >
-        <CategoryTile
-          v-for="(category, index) in row" :key="'category' + index"
-          :category="category"
+    <div v-else class="category-tiles">
+      <CategoryTile
+          v-for="category in categories" :category="category"
           @clicked="$router.push({ name: 'category', params: { id: category.id } })"
         />
-      </div>
     </div>
     </transition>
 
@@ -37,17 +31,6 @@ export default {
       newCategory: false,
       loading: false,
     };
-  },
-
-  computed: {
-    categoryRows() {
-      // split all categories into three-item partitions to be displayed as tiles.
-      var rows = []
-      for (let index = 0; index < this.categories.length; index+=this.columns) {
-        rows[rows.length] = this.categories.slice(index, index + this.columns);
-      }
-      return rows;
-    }
   },
 
   methods: {
@@ -80,3 +63,24 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.category-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.3em;
+}
+
+@media only screen and (max-width: 900px) {
+  .category-tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .category-tiles {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>

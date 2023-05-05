@@ -32,7 +32,7 @@ export default {
       .then(res => {
         if (res.status !== "success") {
           if (res.data) {
-            this.recipes = res.data;
+            this.recipes = res.data.sort((a, b) => a.name > b.name);
           } else {
             this.error = "No recipes received."
           }

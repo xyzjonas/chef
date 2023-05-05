@@ -1,10 +1,10 @@
 <template>
-  <div class="m-1">
-    
+  <div>
     <!-- EDIT -->
     <transition name="slide" mode="out-in">
     <CategoryForm
       v-if="edit"
+      class="p-3"
       :inputCategory="category"
       @categoryPosted="edited()"
       @cancel="edit = !edit"
@@ -131,7 +131,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
   .disabled {
     pointer-events: none;
     cursor: default;
@@ -157,12 +157,12 @@ export default {
     border-radius: 0.3em;
   }
   .tile-title {
-    background-color: #FFFFFFBB;
+    padding: 3px 10px;
+    // background-color: #FFFFFFBB;
     width: fit-content;
-    padding-left: 1em;
-    padding-right: 1em;
-    border-radius: 0.1em;
-    border: solid 1px #999;
+    border-radius: 5px;
+    text-shadow: 2px 2px 5px black;
+    color: white;
   }
   .mytag {
     background-color: #FFFFFFBB;
@@ -170,7 +170,11 @@ export default {
     border-radius: 0.2em;
     padding-left: 0.3em;
     padding-right: 0.3em;
-    border: solid 1px #999;
+    border: solid 1px #99999958;
+  }
+
+  .tile {
+    min-height: 12em;
   }
 
   .noselect {
