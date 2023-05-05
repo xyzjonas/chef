@@ -159,7 +159,7 @@ export default {
       loading: false,
       missingImage: false,
 
-      ingredientsCollapsed: true,
+      ingredientsCollapsed: false,
     }
   },
 
