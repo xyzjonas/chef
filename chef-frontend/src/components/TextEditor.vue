@@ -2,7 +2,7 @@
   <div>
     <div class="editor-wrapper content">
         <!-- MENU -->
-        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+        <!-- <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
           <div class="menubar">
             <button
                 class="menubar__button"
@@ -36,7 +36,7 @@
               <i class="fa fa-list" aria-hidden="true"></i>
             </button>
           </div>
-        </editor-menu-bar>
+        </editor-menu-bar> -->
 
         <!-- EDITOR -->
         <editor-content :editor="editor"/>
@@ -44,72 +44,84 @@
   </div>
 </template>
 
-<script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-import { 
-  Blockquote,
-  CodeBlock,
-  HardBreak,
-  Heading,
-  HorizontalRule,
-  OrderedList,
-  BulletList,
-  ListItem,
-  TodoItem,
-  TodoList,
-  Bold,
-  Code,
-  Italic,
-  Link,
-  Strike,
-  Underline,
-  History,
-} from 'tiptap-extensions'
+<script setup lang="ts">
+// import { Editor, EditorContent, EditorMenuBar } from '@tiptap/vue-3'
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+// import { text } from 'stream/consumers';
+// import { 
+//   Blockquote,
+//   CodeBlock,
+//   HardBreak,
+//   Heading,
+//   HorizontalRule,
+//   OrderedList,
+//   BulletList,
+//   ListItem,
+//   TodoItem,
+//   TodoList,
+//   Bold,
+//   Code,
+//   Italic,
+//   Link,
+//   Strike,
+//   Underline,
+//   History,
+// } from '@tiptap/vue-3'
+const props = defineProps(["text"])
+const editor = useEditor({
+  content: props.text,
+  // onUpdate: ({getHTML}) => { 
+  //   $emit('editorUpdate', getHTML() );
+  // }),
+  extensions: [
+    StarterKit,
+  ],
+})
+// export default {
+//   components: {
+//     EditorContent,
+//     EditorMenuBar,
+//   },
 
-export default {
-  components: {
-    EditorContent,
-    EditorMenuBar,
-  },
-
-  props: ["text"],
-  data() {
-    return {
-      editor: new Editor({
-        content: this.text,
-        onUpdate: ({getHTML}) => { 
-          this.$emit('editorUpdate', getHTML() );
-          },
-        extensions: [
-          new Blockquote(),
-          new BulletList(),
-          new CodeBlock(),
-          new HardBreak(),
-          new Heading({
-             levels: [1, 2, 3, 4, 5],
-             HTMLAttributes: {class: 'title'},
-          }),
-          new HorizontalRule(),
-          new ListItem(),
-          new OrderedList(),
-          new TodoItem(),
-          new TodoList(),
-          new Link(),
-          new Bold(),
-          new Code(),
-          new Italic(),
-          new Strike(),
-          new Underline(),
-          new History(),
-        ]
-      }),
-    };
-  },
-  beforeDestroy() {
-    // Always destroy your editor instance when it's no longer needed
-    this.editor.destroy()
-  },
-};
+//   props: ["text"],
+//   data() {
+//     return {
+//       editor: new Editor({
+//         content: this.text,
+//         onUpdate: ({getHTML}) => { 
+//           this.$emit('editorUpdate', getHTML() );
+//           },
+//         // extensions: [
+//         //   new Blockquote(),
+//         //   new BulletList(),
+//         //   new CodeBlock(),
+//         //   new HardBreak(),
+//         //   new Heading({
+//         //      levels: [1, 2, 3, 4, 5],
+//         //      HTMLAttributes: {class: 'title'},
+//         //   }),
+//         //   new HorizontalRule(),
+//         //   new ListItem(),
+//         //   new OrderedList(),
+//         //   new TodoItem(),
+//         //   new TodoList(),
+//         //   new Link(),
+//         //   new Bold(),
+//         //   new Code(),
+//         //   new Italic(),
+//         //   new Strike(),
+//         //   new Underline(),
+//         //   new History(),
+//         // ]
+//       }),
+//     };
+//   },
+//   beforeDestroy() {
+//     // Always destroy your editor instance when it's no longer needed
+//     this.editor.destroy()
+//   },
+// };
 </script>
 
 <style>
