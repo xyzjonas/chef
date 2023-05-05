@@ -1,130 +1,79 @@
 <template>
   <div>
     <div class="editor-wrapper content">
-        <!-- MENU -->
-        <!-- <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-          <div class="menubar">
-            <button
-                class="menubar__button"
-                :class="{ 'is-active': isActive.bold() }"
-                @click="commands.bold"
-            >
-              <i class="fa fa-bold" aria-hidden="true"></i>
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.italic() }"
-              @click="commands.italic"
-            >
-              <i class="fa fa-italic" aria-hidden="true"></i>
-            </button>
-            
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-              @click="commands.heading({ level: 3 })"
-            >
-              <i class="fa fa-heading" aria-hidden="true"></i>
-            </button>
-
-            <button
-              class="menubar__button"
-              :class="{ 'is-active': isActive.ordered_list() }"
-              @click="commands.ordered_list"
-            >
-              <i class="fa fa-list" aria-hidden="true"></i>
-            </button>
-          </div>
-        </editor-menu-bar> -->
-
-        <!-- EDITOR -->
-        <editor-content :editor="editor"/>
+      <div v-if="editor" class="buttons">
+        <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
+          <i class="fa fa-paragraph" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleBold().run()" :disabled="!editor.can().chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
+          <i class="fa fa-bold" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleItalic().run()" :disabled="!editor.can().chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
+          <i class="fa fa-italic" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleStrike().run()" :disabled="!editor.can().chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">
+          <i class="fa fa-strikethrough" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }">
+          <i class="fa fa-heading" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }">
+          <i class="fa fa-heading" aria-hidden="true"></i>2
+        </button>
+        <button @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }">
+          <i class="fa fa-heading" aria-hidden="true"></i>3
+        </button>
+        <button @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }">
+          <i class="fa fa-heading" aria-hidden="true"></i>4
+        </button>
+        <button @click="editor.chain().focus().toggleHeading({ level: 5 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }">
+          <i class="fa fa-heading" aria-hidden="true"></i>5
+        </button>
+        <button @click="editor.chain().focus().toggleBulletList().run()" :class="{ 'is-active': editor.isActive('bulletList') }">
+          <i class="fa fa-list-ul" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleOrderedList().run()" :class="{ 'is-active': editor.isActive('orderedList') }">
+          <i class="fa fa-list-ol" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleCodeBlock().run()" :class="{ 'is-active': editor.isActive('codeBlock') }">
+          <i class="fa fa-code" aria-hidden="true"></i>
+        </button>
+        <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
+          <i class="fa-solid fa-comment-dots"></i>
+        </button>
+        <button @click="editor.chain().focus().setHorizontalRule().run()">
+          <i class="fa-solid fa-ruler-horizontal"></i>
+        </button>
+        <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+      <editor-content :editor="editor" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// import { Editor, EditorContent, EditorMenuBar } from '@tiptap/vue-3'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-// import { text } from 'stream/consumers';
-// import { 
-//   Blockquote,
-//   CodeBlock,
-//   HardBreak,
-//   Heading,
-//   HorizontalRule,
-//   OrderedList,
-//   BulletList,
-//   ListItem,
-//   TodoItem,
-//   TodoList,
-//   Bold,
-//   Code,
-//   Italic,
-//   Link,
-//   Strike,
-//   Underline,
-//   History,
-// } from '@tiptap/vue-3'
+
+import { onBeforeUnmount } from 'vue';
+
 const props = defineProps(["text"])
 const editor = useEditor({
   content: props.text,
-  // onUpdate: ({getHTML}) => { 
-  //   $emit('editorUpdate', getHTML() );
-  // }),
   extensions: [
-    StarterKit,
+    StarterKit
   ],
 })
-// export default {
-//   components: {
-//     EditorContent,
-//     EditorMenuBar,
-//   },
 
-//   props: ["text"],
-//   data() {
-//     return {
-//       editor: new Editor({
-//         content: this.text,
-//         onUpdate: ({getHTML}) => { 
-//           this.$emit('editorUpdate', getHTML() );
-//           },
-//         // extensions: [
-//         //   new Blockquote(),
-//         //   new BulletList(),
-//         //   new CodeBlock(),
-//         //   new HardBreak(),
-//         //   new Heading({
-//         //      levels: [1, 2, 3, 4, 5],
-//         //      HTMLAttributes: {class: 'title'},
-//         //   }),
-//         //   new HorizontalRule(),
-//         //   new ListItem(),
-//         //   new OrderedList(),
-//         //   new TodoItem(),
-//         //   new TodoList(),
-//         //   new Link(),
-//         //   new Bold(),
-//         //   new Code(),
-//         //   new Italic(),
-//         //   new Strike(),
-//         //   new Underline(),
-//         //   new History(),
-//         // ]
-//       }),
-//     };
-//   },
-//   beforeDestroy() {
-//     // Always destroy your editor instance when it's no longer needed
-//     this.editor.destroy()
-//   },
-// };
+onBeforeUnmount(() => editor.value?.destroy())
 </script>
 
-<style>
+<style lang="scss">
 .ProseMirror {
   padding-top: 0.5em;
   padding-left: 0.5em;
@@ -142,31 +91,25 @@ const editor = useEditor({
   outline-width: 1px;
 }
 
-/* .editor-wrapper ol {
-  list-style: square;
-  padding: 0 1em;
+.editor-wrapper {
+  button {
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    flex: auto;
+
+    &.is-active {
+      background-color: darkgray;
+      border-radius: 1px;
+    }
+
+    &:hover {
+      background-color: lightgray; 
+    }
+  }
 }
 
-.editor-wrapper h1 {
-  font-weight: bold;
-  font-size: 1.5em;
-} */
-
-.editor-wrapper button {
-  border: none;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
-
-.editor-wrapper button:hover {
-  background-color: lightgray;
-}
-
-.editor-wrapper button.is-active  {
-  background-color: darkgray;
-  border-radius: 1px;
-}
 </style>
