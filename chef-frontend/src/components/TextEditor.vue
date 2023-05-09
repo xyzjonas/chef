@@ -62,9 +62,13 @@ import StarterKit from '@tiptap/starter-kit'
 
 import { onBeforeUnmount } from 'vue';
 
+const textUpdated = defineEmits(['editorUpdate'])
 const props = defineProps(["text"])
 const editor = useEditor({
   content: props.text,
+  onUpdate: ({ editor }) => { 
+    textUpdated('editorUpdate', editor.getHTML() );
+  },
   extensions: [
     StarterKit
   ],
