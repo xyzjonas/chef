@@ -3,7 +3,7 @@
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
     <div v-else>
-      <RecipeList v-if="current_recipes.length > 0" :allRecipes="current_recipes" :hideSearch="true" :hideFilters="true" title="Planned"/>
+      <RecipeList v-if="current_recipes.length > 0" class="mb-4 mt-5" :allRecipes="current_recipes" :hideSearch="true" :hideFilters="true" title="Planned"/>
       <div class="category-tiles">
         <CategoryTile
             v-for="category in categories" :category="category"

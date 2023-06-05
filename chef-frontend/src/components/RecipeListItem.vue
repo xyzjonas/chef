@@ -1,5 +1,5 @@
 <template>
-  <div :ref="recipe.id">
+  <div>
     
     <router-link :to="{ name: 'recipe', params: {id: recipe.id}}">
       <article class="media box boxhov p-0">

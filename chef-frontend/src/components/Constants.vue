@@ -1,8 +1,8 @@
 <script>
 
 export default {
-  // HOST_URL: 'http://chef.home/rest',
-  HOST_URL: 'http://localhost:5000',
+  HOST_URL: 'http://chef.home/rest',
+  // HOST_URL: 'http://localhost:5000',
   IMAGES_URL: 'http://chef.home/images',
 
   methods: {
