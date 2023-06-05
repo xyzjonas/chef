@@ -51,7 +51,16 @@ const router = createRouter({
       name: "category",
       component: CategoryView
     },
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    console.info(`saved: ${savedPosition}`)
+    console.info(savedPosition)
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
 })
 
 export default router

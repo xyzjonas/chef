@@ -26,7 +26,7 @@
       <div class="message-body">{{ errorRecipes }}</div>
       </article>
     </div>
-    <div v-else class="px-2 pt-3">
+    <div v-else class="px-2 pt-3 recipe-list">
       <RecipeList :allRecipes="recipes" />
     </div>
     </transition>
@@ -57,6 +57,7 @@ export default {
   },
 
   created() {
+    console.log('created')
     const category = `${Constants.HOST_URL}/categories/${this.$route.params.id}`;
     const recipes = `${Constants.HOST_URL}/recipes?category=${this.$route.params.id}`;
 
@@ -77,4 +78,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.recipe-list {
+  min-height: 1800px;
+}
+</style>

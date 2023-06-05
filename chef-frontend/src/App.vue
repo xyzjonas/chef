@@ -5,7 +5,9 @@
 
     <div class="container pb-4">
       <transition mode="out-in">
-        <router-view/>
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
       </transition>
     </div>
 

@@ -17,9 +17,9 @@
             </p>
           </div>
           <div class="level-item">
-            <div class="has-text-centered-mobile">
-              <h1 v-if="recipe" class="title is-4">{{ recipe.title.toUpperCase() }}</h1>
-              <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle.toUpperCase() }}</h2>
+            <div class="has-text-centered-mobile title-header">
+              <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
+              <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
 
               <p v-if="recipe && recipe.source">
                 <a :href="recipe.source">
@@ -218,11 +218,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
   .animate-icon {
     transition: 0.15s;
   }
   .rotate {
     transform:rotate(-90deg);
+  }
+  .title-header {
+    h1, h2 {
+      text-transform: uppercase;
+    }
   }
 </style>

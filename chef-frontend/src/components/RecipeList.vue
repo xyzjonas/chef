@@ -2,16 +2,13 @@
   <div>
 
     <!-- RECIPE COUNT -->
-    <div v-if="isInitState()">
-      <h1 class="title is-4 has-text-primary">{{ allRecipes.length }} Recipes</h1>
-    </div>
-    <div v-else>
+    <div>
       <h1 class="title is-4 has-text-primary">{{ recipes.length }} Recipes</h1>
     </div>
 
     <!-- TAGS -->
     <div class="tags mt-2">
-      <a v-for="(tag) in new Set(allRecipes.map(r => r.tags.map(t => t.name)).flat())" :key="'tag_key' + tag"
+      <a v-for="tag in tags" :key="'tag_key' + tag"
         v-on:click="toggleFilter(tag)"
         :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
         style="text-decoration:none;"
@@ -32,15 +29,8 @@
     </p>
 
     <!-- LIST -->
-    <div id="init-list" v-if="isInitState()" class="recipe-list">
-      <div v-for="(recipe) in allRecipes" :key="'recipe_key+' + recipe.id">
-        <RecipeListItem :recipe="recipe"/>
-      </div>
-    </div>
-    <div v-else class="recipe-list">
-      <div v-for="(recipe) in recipes" :key="'recipe_a_key+' + recipe.id">
-        <RecipeListItem :recipe="recipe"/>
-      </div>
+    <div class="recipe-list">
+      <RecipeListItem v-for="(recipe) in recipes" :key="'recipe_a_key+' + recipe.id" :recipe="recipe" />
     </div>
 
   </div>  
@@ -68,6 +58,10 @@ export default {
   },
 
   computed: {
+
+    tags() {
+      return new Set(this.allRecipes.map(r => r.tags.map(t => t.name)).flat())
+    },
 
     recipes() {
       this.recipesInitiated = true;
@@ -104,11 +98,6 @@ export default {
   },
 
   methods: {
-    
-    isInitState() {
-      // a bit hack-ish :(
-      return (this.recipes.length === 0) && !this.recipesInitiated;
-    },
 
     toggleFilter(filter) {
       // filter based on tags

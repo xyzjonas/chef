@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :ref="recipe.id">
     
     <router-link :to="{ name: 'recipe', params: {id: recipe.id}}">
       <article class="media box boxhov p-0">
@@ -16,7 +16,7 @@
         <div class="media-content p-3">
           <div class="content">
             <p class="title is-5">
-              {{ recipe.title.toUpperCase() }}
+              {{ recipe.title }}
               <br>
               <span 
                 v-if="recipe.subtitle"
@@ -92,5 +92,6 @@ export default {
   }
   .title {
     font-weight: 500;
+    text-transform: uppercase;
   }
 </style>
