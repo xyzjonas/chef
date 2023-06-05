@@ -2,12 +2,12 @@
   <div>
 
     <!-- RECIPE COUNT -->
-    <div>
-      <h1 class="title is-4 has-text-primary">{{ recipes.length }} Recipes</h1>
+    <div class="mb-2">
+      <h1 class="title is-4 has-text-primary">{{ recipes.length }} {{ title || 'Recipes' }}</h1>
     </div>
 
     <!-- TAGS -->
-    <div class="tags mt-2">
+    <div v-if="!hideFilters" class="tags">
       <a v-for="tag in tags" :key="'tag_key' + tag"
         v-on:click="toggleFilter(tag)"
         :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
@@ -16,7 +16,7 @@
     </div>
 
     <!-- search -->
-    <p class="control has-icons-left mb-4">
+    <p v-if="!hideSearch" class="control has-icons-left mb-4">
       <input 
         v-model="search"
         @input="refresh"
@@ -42,7 +42,7 @@ import RecipeListItem from "../components/RecipeListItem.vue";
 import Constants from "../components/Constants.vue";
 
 export default {
-  props: ["allRecipes"],
+  props: ["allRecipes", "title", "hideSearch", "hideFilters"],
 
   data() {
     return {
@@ -106,7 +106,6 @@ export default {
       } else {
         this.activeTags.push(filter);
       }
-      this.refresh();
     },
 
   },

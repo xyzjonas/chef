@@ -2,11 +2,14 @@
   <div>
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
-    <div v-else class="category-tiles">
-      <CategoryTile
-          v-for="category in categories" :category="category"
-          @clicked="$router.push({ name: 'category', params: { id: category.id } })"
-        />
+    <div v-else>
+      <RecipeList v-if="current_recipes.length > 0" :allRecipes="current_recipes" :hideSearch="true" :hideFilters="true" title="Planned"/>
+      <div class="category-tiles">
+        <CategoryTile
+            v-for="category in categories" :category="category"
+            @clicked="$router.push({ name: 'category', params: { id: category.id } })"
+          />
+      </div>
     </div>
     </transition>
 
@@ -18,9 +21,10 @@ import axios from "axios";
 import Constants from "../components/Constants.vue";
 import CategoryTile from "../components/CategoryTile.vue";
 import LoadingSection from "../components/LoadingSection.vue"
+import RecipeList from "../components/RecipeList.vue"
 
 export default {
-  components: { CategoryTile, LoadingSection },
+  components: { CategoryTile, LoadingSection, RecipeList },
 
   data() {
     return {
@@ -30,6 +34,8 @@ export default {
       categories: [],
       newCategory: false,
       loading: false,
+
+      current_recipes: []
     };
   },
 
@@ -57,9 +63,19 @@ export default {
         .catch((err) => this.error = err)
         .finally(() => (this.loading = false));
     },
+    getCurrent() {
+      this.loading = true;
+      const path = `${Constants.HOST_URL}/recipes/current`;
+      axios
+        .get(path)
+        .then(res => this.current_recipes = res.data)
+        .catch((err) => this.error = err)
+        .finally(() => (this.loading = false));
+    },
   },
   created() {
     this.getAllCategories();
+    this.getCurrent();
   }
 };
 </script>

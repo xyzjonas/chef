@@ -37,6 +37,9 @@
             <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
         </div>
 
+        <!-- CURR -->
+        <MakeCurrentButton :recipe="recipe" @plan="makeCurrent" @cancel="cancelCurrent" :loading="currentLoading"/>
+
         <!-- chevron -->
         <div ref="chevron" class="tabs is-right is-boxed">
           <ul>
@@ -95,7 +98,7 @@
         </transition>
 
         <!-- Steps -->
-        <h1 v-show="recipe" class="title is-5">Recipe</h1>
+        <h1 v-show="recipe" class="title is-5">Steps</h1>
         <!-- HTML body -->
         <div v-html="recipe.body" class="content section pt-1"/>
       </div>
@@ -143,11 +146,12 @@ import ImageUpload from "@/components/ImageUpload.vue";
 import LoadingSection from "@/components/LoadingSection.vue";
 import NotFound from "@/components/NotFound.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
+import MakeCurrentButton from "@/components/MakeCurrentButton.vue";
 
 
 
 export default {
-  components: { Counter, RecipeForm, ImageUpload, LoadingSection, NotFound, DeleteButton },
+  components: { Counter, RecipeForm, ImageUpload, LoadingSection, NotFound, DeleteButton, MakeCurrentButton },
 
   data() {
     return {
@@ -208,6 +212,28 @@ export default {
         .catch((err) => this.error = err)
         .finally(() => (this.loading = false));
     },
+
+    makeCurrent() {
+      this.currentLoading = true;
+      const path = `${Constants.HOST_URL}/recipes/current`;
+      const options = { headers: { 'Content-Type': 'application/json' } };
+      axios.post(path, { id: this.recipe.id }, options)
+        .then(() => this.recipe.current = true)
+        .catch((err) => this.error = err)
+        .finally(() => (this.currentLoading = false));
+    },
+
+    cancelCurrent() {
+      this.currentLoading = true;
+      const path = `${Constants.HOST_URL}/recipes/current/${this.recipe.id}`;
+      const options = { headers: { 'Content-Type': 'application/json' } };
+      axios.delete(path, options)
+        .then(() => this.recipe.current = false)
+        .catch((err) => this.error = err)
+        .finally(() => (this.currentLoading = false));
+    },
+
+    
 
   },
 

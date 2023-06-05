@@ -1,10 +1,15 @@
 import json
-from flask import jsonify, request, current_app
+import traceback
 
 from app import db
 from app.exceptions import InvalidUsage
 from app.main import bp
 from app.models import Recipe, Tag, Ingredient, IngredientItem, Unit, Category
+from flask import jsonify, request, current_app
+from werkzeug.exceptions import NotFound
+
+# Store the current recipe id in memory
+CURRENT_RECIPES_IDS = []
 
 
 def _assert_request_data(data: dict, required=None):
@@ -141,10 +146,52 @@ def delete_ingredient(ingredient_id):
     return f"{ingredient} deleted.", 200
 
 
+@bp.route('/recipes/current', methods=['GET'])
+def get_current_recipes():
+    global CURRENT_RECIPES_IDS
+    recipes = Recipe.query.filter(Recipe.id.in_(CURRENT_RECIPES_IDS))
+    return jsonify([recipe.dictionary for recipe in recipes]), 200
+
+
+@bp.route('/recipes/current', methods=['POST'])
+def add_current_recipe():
+    global CURRENT_RECIPES_IDS
+    data = request.json or request.form
+    try:
+        r_id = int(data['id'])
+        Recipe.query.filter_by(id=r_id).first_or_404()
+        CURRENT_RECIPES_IDS.append(r_id)
+        return f"Current recipe '{r_id}' set", 200
+    except NotFound:
+        raise
+    except Exception as e:
+        traceback.print_exception(e)
+        return f"Invalid input: {e}", 400
+
+
+@bp.route('/recipes/current/<int:recipe_id>', methods=['DELETE'])
+def remove_current_recipe(recipe_id):
+    global CURRENT_RECIPES_IDS
+    if not recipe_id:
+        return "'id' field missing.", 400
+    if recipe_id == "*":
+        CURRENT_RECIPES_IDS.clear()
+        return "Current recipes cleared.", 200
+    if recipe_id in CURRENT_RECIPES_IDS:
+        CURRENT_RECIPES_IDS.remove(recipe_id)
+        return f"Current recipe '{recipe_id}' removed."
+    return f"Nothing happened", 200
+
+
 @bp.route('/recipes/<int:recipe_id>', methods=['GET'])
 def get_recipe(recipe_id):
     recipe = Recipe.query.filter_by(id=recipe_id).first_or_404()
-    return jsonify(recipe.dictionary), 200
+    data = recipe.dictionary
+    if recipe.id in CURRENT_RECIPES_IDS:
+        data['current'] = True
+    else:
+        data['current'] = False
+    return jsonify(data), 200
 
 
 @bp.route('/recipes/<int:recipe_id>', methods=['DELETE'])
