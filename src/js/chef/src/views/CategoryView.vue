@@ -8,7 +8,7 @@
       :category="category"
       :editable="true"
       @categoryDeleted="$router.push({ name: 'home' })"
-      @categoryEdited="$emit('categoryEdited')"
+      @categoryEdited="edited"
     />
     </transition>
 
@@ -56,24 +56,36 @@ export default {
     };
   },
 
+  methods: {
+    edited() {
+      this.getCategory();
+      this.getRecipes();
+    },
+
+    getCategory() {
+      const category = `${Constants.HOST_URL}/categories/${this.$route.params.id}`;
+      this.loadingCategory = true;
+      axios
+        .get(category)
+        .then(res => (this.category = res.data))
+        .catch(() => (this.errorCategory = "Category NOT found"))
+        .finally(() => (this.loadingCategory = false));
+      },
+
+      getRecipes() {
+        const recipes = `${Constants.HOST_URL}/recipes?category=${this.$route.params.id}`;
+        this.loadingRecipes = true;
+        axios
+          .get(recipes)
+          .then(res => (this.recipes = res.data))
+          .catch(() => (this.errorRecipes = "Error occured while fetching recipes."))
+          .finally(() => (this.loadingRecipes = false));
+      }
+  },
+
   created() {
-    console.log('created')
-    const category = `${Constants.HOST_URL}/categories/${this.$route.params.id}`;
-    const recipes = `${Constants.HOST_URL}/recipes?category=${this.$route.params.id}`;
-
-    this.loadingCategory = true;
-    axios
-      .get(category)
-      .then(res => (this.category = res.data))
-      .catch(() => (this.errorCategory = "Category NOT found"))
-      .finally(() => (this.loadingCategory = false));
-
-    this.loadingRecipes = true;
-    axios
-      .get(recipes)
-      .then(res => (this.recipes = res.data))
-      .catch(() => (this.errorRecipes = "Error occured while fetching recipes."))
-      .finally(() => (this.loadingRecipes = false));
+    this.getCategory();
+    this.getRecipes();
   }
 };
 </script>

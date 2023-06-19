@@ -198,7 +198,7 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         ).first()
         if cat:
             result = [recipe for tag in cat.tags for recipe in tag.recipes]
-            return [Recipe(**r.get_dictionary) for r in result]
+            return [Recipe(**r.dictionary) for r in result]
         return []
 
     async def create(self, session: Session, data: CreateOrUpdateRecipe) -> Recipe:

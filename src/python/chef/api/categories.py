@@ -11,12 +11,12 @@ router = APIRouter()
 categories = CategoriesController()
 
 
-@router.get("/")
+@router.get("")
 async def get_categories() -> List[Category]:
     return await generic_get_all(categories)
 
 
-@router.post("/", status_code=201)
+@router.post("", status_code=201)
 async def create_category(create_data: CreateOrUpdateCategory) -> Category:
     return await generic_create(categories, create_data)
 

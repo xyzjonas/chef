@@ -91,10 +91,10 @@ export default {
 
   created() {
     if (this.category) {
-      this.url = `${Constants.HOST_URL}/categories/${this.category.id}/image`;
+      this.url = `${Constants.HOST_URL}/images/categories/${this.category.id}`;
     }
     if (this.recipe) {
-      this.url = `${Constants.HOST_URL}/recipes/${this.recipe.id}/image`;
+      this.url = `${Constants.HOST_URL}/images/recipes/${this.recipe.id}`;
     }
   }
 }

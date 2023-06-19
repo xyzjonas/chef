@@ -108,30 +108,41 @@ export default {
     },
 
     getRootData() {
-      var path = `${Constants.HOST_URL}/`;
-      axios.get(path)
+      axios.get(`${Constants.HOST_URL}/tags`)
         .then(res => {
           if (res.status !== "success") {
-            if (res.data) {
-              this.availableTags = res.data.tags;
-            }
+            this.availableTags = res.data;
           }
         })
         .catch((err) => this.error = err);
 
-      path = `${Constants.HOST_URL}/ingredients`;
-      axios.get(path)
+      axios.get(`${Constants.HOST_URL}/ingredients`)
         .then(res => {
           if (res.status !== "success") {
-            if (res.data) {
-              this.ingredients = res.data.map(i => i.name);
-            }
+            this.ingredients = res.data.map(i => i.name);
           }
         })
         .catch((err) => this.error = err);
     },
-
+    updateCategory(category_id) {
+      const path = `${Constants.HOST_URL}/categories/${category_id}`;
+      const options = {
+        headers: { 'Content-Type': 'application/json' },
+      };
+      axios
+        .put(path, this.category, options)
+        .then((res) => {
+          this.postSuccess = `${res.status} ${res.statusText}`;
+          this.$emit('categoryPosted', res.data);
+        })
+        .catch((err) => {
+          this.postError = err;
+        });
+    },
     postCategory() {
+      if (this.category.id) {
+        return this.updateCategory(this.category.id);
+      }
       const path = `${Constants.HOST_URL}/categories`;
       const options = {
         headers: { 'Content-Type': 'application/json' },
@@ -140,7 +151,7 @@ export default {
         .post(path, this.category, options)
         .then((res) => {
           this.postSuccess = `${res.status} ${res.statusText}`;
-          this.$emit('categoryPosted', res);
+          this.$emit('categoryPosted', res.data);
           // setTimeout(() => this.$emit('categoryPosted', res), 500)
         })
         .catch((err) => {

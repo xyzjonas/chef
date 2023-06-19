@@ -5,7 +5,7 @@
 
     <RecipeForm
       :recipe="recipe"
-      @recipePosted="$router.push({ name: 'recipes' })"
+      @recipePosted="routeToNewRecipe"
       @cancel="$router.push({ name: 'home' })"
     />
     
@@ -29,5 +29,10 @@ export default {
       },
     };
   },
+  methods: {
+    routeToNewRecipe(recipe) {
+      this.$router.push({ name: 'recipe', params: { id: recipe.id } })
+    }
+  }
 };
 </script>

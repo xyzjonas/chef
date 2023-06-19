@@ -6,7 +6,7 @@
       v-if="edit"
       class="p-3"
       :inputCategory="category"
-      @categoryPosted="edited()"
+      @categoryPosted="edited"
       @cancel="edit = !edit"
     />
     <a
@@ -29,6 +29,7 @@
             <ImageUpload
               :category=category :small="true"
               @uploadFailed="imageUploadFailed"
+              @uploadSuccess="edited"
             />
           </p>
           <div class="mx-0">
@@ -123,7 +124,6 @@ export default {
 
     getTileStyle() {
       return `background-image: url('${Constants.IMAGES_URL}/categories/${this.category.id}/landscape.jpeg');`
-      // return `background-image: url(' + ${Constants.IMAGES_URL}/categories/${this.category.id}/landscape.jpeg');`
     }
 
   },

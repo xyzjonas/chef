@@ -10,7 +10,7 @@ router = APIRouter()
 tags = TagController()
 
 
-@router.get("/")
+@router.get("")
 async def get_tags() -> List[Tag]:
     return await generic_get_all(tags)
 
@@ -20,7 +20,7 @@ async def get_tag(item_id: int) -> Tag:
     return await generic_get(tags, item_id)
 
 
-@router.post("/", status_code=201)
+@router.post("", status_code=201)
 async def create_tag(tag_data: UpdateTag) -> Tag:
     return await generic_create(tags, tag_data)
 

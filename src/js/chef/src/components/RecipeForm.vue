@@ -376,9 +376,6 @@ export default {
       }
 
       if (typeof prefill === "string") {
-        console.log(`prefill: ${prefill}`)
-        console.log(`name: ${name}`)
-        // this.addIngredientSmartField = this.addIngredientSmartField.replace(name, prefill);
         this.addIngredientSmartField = `${amount}${getOr(unit, "")} ${prefill} ${getOr(note, "")}`
         name = prefill;
       } else {
@@ -428,19 +425,35 @@ export default {
     },
 
     postRecipe() {
-      const path = `${Constants.HOST_URL}/recipes/new`;
-      const options = {
-        headers: { 'Content-Type': 'application/json' },
-      };
-      axios.post(path, this.recipe, options)
-        .then((res) => {
-          this.postSuccess = `${res.status} ${res.statusText}`;
-          this.$emit('recipePosted', res);
-          // this.$router.push(to-the-new-recipe);
-        })
-        .catch((err) => {
-          this.postError = err.response.data;
-        });
+      // hacky... but it works
+      if (this.recipe.id) {
+        const path = `${Constants.HOST_URL}/recipes/${this.recipe.id}`;
+        const options = {
+          headers: { 'Content-Type': 'application/json' },
+        };
+        axios.put(path, this.recipe, options)
+          .then((res) => {
+            this.postSuccess = `${res.status} ${res.statusText}`;
+            this.$emit('recipePosted', res.data);
+          })
+          .catch((err) => {
+            this.postError = err.response.data;
+          });
+
+        } else {
+          const path = `${Constants.HOST_URL}/recipes`;
+          const options = {
+            headers: { 'Content-Type': 'application/json' },
+          };
+          axios.post(path, this.recipe, options)
+            .then((res) => {
+              this.postSuccess = `${res.status} ${res.statusText}`;
+              this.$emit('recipePosted', res.data);
+            })
+            .catch((err) => {
+              this.postError = err.response.data;
+            });
+        }
     }
   },
   created() {

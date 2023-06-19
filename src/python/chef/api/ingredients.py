@@ -13,7 +13,7 @@ router = APIRouter()
 ingredients = IngredientsController()
 
 
-@router.get("/")
+@router.get("")
 async def get_ingredients() -> List[Ingredient]:
     return await generic_get_all(ingredients)
 
