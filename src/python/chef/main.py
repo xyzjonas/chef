@@ -19,7 +19,8 @@ def serve():
         logger.add(settings.log_file, level=settings.log_level)
 
     if settings.serve_frontend:
-        app.mount("/", StaticFiles(directory="static", html=True), name="static")
+        app.mount("/images", StaticFiles(directory=settings.images_folder))
+        app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True), name="static")
 
     options = "\n".join([f"{k.upper()}: '{v}'" for k, v in settings])
     logger.info(f"""
@@ -28,8 +29,8 @@ def serve():
 ██╔════╝██║  ██║██╔════╝██╔════╝
 ██║     ███████║█████╗  █████╗  
 ██║     ██╔══██║██╔══╝  ██╔══╝  
-╚██████╗██║  ██║███████╗██║     
-╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+║██████ ██║  ██║███████╗██║     
+╚═════════╝  ╚═╝╚══════╝╚═╝
 ...started with following settings:
 
 {options}

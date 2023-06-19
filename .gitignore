@@ -4,7 +4,8 @@
 
 *.pytest_cache
 
-#virtualenv
 *venv
 
 dist.tar
+
+static

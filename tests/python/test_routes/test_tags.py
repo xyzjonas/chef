@@ -1,6 +1,6 @@
 import pytest
 
-from chef.models import Ingredient
+from chef.models import Ingredient, Tag
 
 
 @pytest.mark.parametrize("size", [10])
@@ -23,6 +23,17 @@ def test_get_tag(db_session, http_client, tag, name):
     response = http_client.get(f"/api/tags/{tag.id}")
     assert response.status_code == 200
     assert response.json() == tag.dictionary
+
+
+def test_create_tag(db_session, http_client):
+    tag_name = "foobar"
+    response = http_client.post("/api/tags", json={"name": tag_name})
+    response.raise_for_status()
+    assert response.status_code == 201
+    tag = response.json()
+
+    t = db_session.query(Tag).filter_by(name=tag_name).first()
+    assert t.id == tag["id"]
 
 
 def test_delete_tag(db_session, http_client, tag):
