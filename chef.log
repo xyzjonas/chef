@@ -1,0 +1,971 @@
+2023-06-12 14:47:28.046 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:48:03.637 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:48:03.638 | INFO     | app.main:main:45 - serve_frontend=False database_uri='sqlite://chef.db' log_file='chef.log' log_level='DEBUG'
+2023-06-12 14:48:12.215 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:48:12.215 | INFO     | app.main:main:45 - {'serve_frontend': False, 'database_uri': 'sqlite://chef.db', 'log_file': 'chef.log', 'log_level': 'DEBUG'}
+2023-06-12 14:49:08.256 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:49:08.256 | INFO     | app.main:main:45 - started with following settings:
+2023-06-12 14:49:14.675 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:49:14.675 | INFO     | app.main:main:45 - started with following settings:
+2023-06-12 14:49:14.675 | INFO     | app.main:main:47 - serve_frontend: False
+2023-06-12 14:49:14.675 | INFO     | app.main:main:47 - database_uri: sqlite://chef.db
+2023-06-12 14:49:14.675 | INFO     | app.main:main:47 - log_file: chef.log
+2023-06-12 14:49:14.676 | INFO     | app.main:main:47 - log_level: DEBUG
+2023-06-12 14:51:07.459 | INFO     | app.main:main:36 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+    
+2023-06-12 14:51:07.459 | INFO     | app.main:main:46 - started with following settings:
+serve_frontend: False
+database_uri: sqlite://chef.db
+log_file: chef.log
+log_level: DEBUG
+2023-06-12 14:51:55.758 | INFO     | app.main:main:37 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+        
+        started with following settings:
+serve_frontend: False
+database_uri: sqlite://chef.db
+log_file: chef.log
+log_level: DEBUG
+    
+2023-06-12 14:52:13.514 | INFO     | app.main:main:37 - 
+
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ╚██████╗██║  ██║███████╗██║     
+        ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+        
+started with following settings:
+
+serve_frontend: False
+database_uri: sqlite://chef.db
+log_file: chef.log
+log_level: DEBUG
+    
+2023-06-12 14:53:04.681 | INFO     | app.main:main:37 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+        
+started with following settings:
+
+serve_frontend: False
+database_uri: sqlite://chef.db
+log_file: chef.log
+log_level: DEBUG
+    
+2023-06-12 14:53:14.038 | INFO     | app.main:main:37 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+serve_frontend: False
+database_uri: sqlite://chef.db
+log_file: chef.log
+log_level: DEBUG
+    
+2023-06-12 14:53:29.233 | INFO     | app.main:main:37 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: False
+DATABASE_URI: sqlite://chef.db
+LOG_FILE: chef.log
+LOG_LEVEL: DEBUG
+    
+2023-06-12 14:53:37.367 | INFO     | app.main:main:37 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite://chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 15:26:42.692 | INFO     | chef.main:serve:37 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:04:56.052 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:06:10.215 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:08:30.753 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:11:17.934 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:13:02.266 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:14:01.356 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7f47d30>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7f47cd0>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7eeb4f0>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7eebca0>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7eebbe0>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7eeba60>
+2023-06-12 20:14:01.367 | INFO     | chef.main:serve:58 - <chef.models.Recipe object at 0x7f12b7eeb640>
+2023-06-13 10:38:46.511 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 10:39:00.119 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 10:57:39.634 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 10:57:39.645 | INFO     | chef.controller:get_recipes:13 - [<chef.models.Recipe object at 0x7fcf61e3d2e0>, <chef.models.Recipe object at 0x7fcf61c975b0>, <chef.models.Recipe object at 0x7fcf61c6e3a0>, <chef.models.Recipe object at 0x7fcf61c6e4f0>, <chef.models.Recipe object at 0x7fcf61c6eb50>, <chef.models.Recipe object at 0x7fcf61c6e9a0>, <chef.models.Recipe object at 0x7fcf61c6e850>]
+2023-06-13 10:58:17.437 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 10:58:17.447 | WARNING  | chef.controller:get_recipes:13 - [<chef.models.Recipe object at 0x7f1f47fdae50>, <chef.models.Recipe object at 0x7f1f47fdae80>, <chef.models.Recipe object at 0x7f1f47e2e3a0>, <chef.models.Recipe object at 0x7f1f47e2e4f0>, <chef.models.Recipe object at 0x7f1f47e2eb50>, <chef.models.Recipe object at 0x7f1f47e2e9a0>, <chef.models.Recipe object at 0x7f1f47e2e850>]
+2023-06-13 11:36:49.871 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:36:49.881 | WARNING  | chef.controller:get_recipes:13 - <chef.models.Recipe object at 0x7f5fe42bd2e0>
+2023-06-13 11:36:57.221 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:37:09.540 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:37:19.165 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:37:19.176 | WARNING  | chef.controller:get_recipes:13 - {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f3d385e27c0>, 'title': 'foo bar', 'source': None, 'portions': 4, 'id': 1, 'source_name': None, 'subtitle': None, 'draft': False, 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [<chef.models.Tag object at 0x7f3d385a0280>, <chef.models.Tag object at 0x7f3d385a00d0>]}
+2023-06-13 11:37:31.714 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:37:31.726 | WARNING  | chef.controller:get_recipes:13 - {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7fe795460b80>, 'title': 'foo bar', 'source': None, 'portions': 4, 'id': 1, 'source_name': None, 'subtitle': None, 'draft': False, 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [<chef.models.Tag object at 0x7fe795420280>, <chef.models.Tag object at 0x7fe7954200d0>]}
+2023-06-13 11:38:19.006 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:38:19.018 | WARNING  | chef.controller:get_recipes:13 - {'_sa_instance_state': <sqlalchemy.orm.state.InstanceState object at 0x7f90590f4e80>, 'title': 'foo bar', 'source': None, 'portions': 4, 'id': 1, 'source_name': None, 'subtitle': None, 'draft': False, 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [<chef.models.Tag object at 0x7f90590e2280>, <chef.models.Tag object at 0x7f90590e20d0>]}
+2023-06-13 11:38:54.250 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:38:54.263 | WARNING  | chef.controller:get_recipes:13 - [<chef.models.IngredientItem object at 0x7fb10119f130>, <chef.models.IngredientItem object at 0x7fb10119f0d0>]
+2023-06-13 11:43:11.240 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:58:21.928 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:58:32.193 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:58:32.209 | WARNING  | chef.controller:get_recipes:13 - [{'id': 1.0, 'title': 'foo bar', 'ingredients': [{'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}, {'ingredient': {'id': 2.0, 'name': 'potatos', 'density': 1000.0}, 'amount': 500.0, 'unit': {'name': 'g'}}], 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [{'name': 'bar bar'}, {'name': '1d2ad21'}], 'portions': 4.0}, {'id': 2.0, 'title': 'qwdwaaw', 'subtitle': 'asdasdasd', 'tags': [{'name': 'bar bar'}], 'portions': 4.0}, {'id': 3.0, 'title': 'DsadsasdSA', 'tags': [{'name': 'bar bar'}], 'portions': 4.0}, {'id': 4.0, 'title': '1C121CSADSASDASD', 'tags': [{'name': 'bar bar'}], 'portions': 4.0}, {'id': 5.0, 'title': 'ACASCASC', 'tags': [{'name': 'bar bar'}], 'portions': 4.0}, {'id': 6.0, 'title': '2CASCASCA', 'tags': [{'name': 'bar bar'}], 'portions': 4.0}, {'id': 7.0, 'title': '   },    methods: {     getImageUrl() {       // todo: check if image exists, replace with unknown if yes       return `${Constants.IMAGES_URL}/${this.recipe.id}/small.jpeg`     },   },    mounted() {', 'portions': 4.0}]
+2023-06-13 11:58:45.155 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 11:58:45.172 | WARNING  | chef.controller:get_recipes:13 - {'id': 1.0, 'title': 'foo bar', 'ingredients': [{'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}, {'ingredient': {'id': 2.0, 'name': 'potatos', 'density': 1000.0}, 'amount': 500.0, 'unit': {'name': 'g'}}], 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [{'name': 'bar bar'}, {'name': '1d2ad21'}], 'portions': 4.0}
+2023-06-13 12:01:39.329 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:01:39.345 | WARNING  | chef.controller:get_recipes:13 - {'id': 1.0, 'title': 'foo bar', 'ingredients': [{'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}, {'ingredient': {'id': 2.0, 'name': 'potatos', 'density': 1000.0}, 'amount': 500.0, 'unit': {'name': 'g'}}], 'body': '<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>', 'tags': [{'name': 'bar bar'}, {'name': '1d2ad21'}], 'portions': 4.0}
+2023-06-13 12:04:41.593 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:04:52.472 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:04:52.489 | WARNING  | chef.controller:get_recipes:13 - [{'name': 'bar bar'}, {'name': '1d2ad21'}]
+2023-06-13 12:05:17.406 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:05:17.422 | WARNING  | chef.controller:get_recipes:13 - [{'name': 'bar bar'}, {'name': '1d2ad21'}]
+2023-06-13 12:06:00.731 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:06:26.101 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:06:26.117 | WARNING  | chef.controller:get_recipes:13 - id=1 name='bar bar'
+2023-06-13 12:07:28.131 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:07:28.148 | WARNING  | chef.controller:get_recipes:13 - id=1 name='bar bar'
+2023-06-13 12:07:59.591 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:07:59.607 | WARNING  | chef.controller:get_recipes:13 - id=1 name='bar bar'
+2023-06-13 12:08:10.590 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:08:10.607 | WARNING  | chef.controller:get_recipes:13 - id=1 name='bar bar'
+2023-06-13 12:08:50.572 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:09:19.667 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:09:37.700 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:09:51.743 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:09:51.759 | WARNING  | chef.controller:get_recipes:13 - {'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}
+2023-06-13 12:10:20.508 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:10:20.525 | WARNING  | chef.controller:get_recipes:13 - {'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}
+2023-06-13 12:10:48.908 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:10:48.923 | WARNING  | chef.controller:get_recipes:13 - {'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}
+2023-06-13 12:11:37.953 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:11:37.969 | WARNING  | chef.controller:get_recipes:13 - {'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'name': 'g'}}
+2023-06-13 12:11:50.055 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:11:50.073 | WARNING  | chef.controller:get_recipes:13 - {'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-13 12:12:30.846 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:12:30.864 | WARNING  | chef.controller:get_recipes:13 - {'id': 1.0, 'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-13 12:12:42.497 | INFO     | chef.main:serve:43 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:12:42.513 | WARNING  | chef.controller:get_recipes:13 - {'id': 1.0, 'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=1 title='foo bar' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[IngredientItem(id=1, ingredient=Ingredient(id=1, name='milk', approx_per_piece=1, energy=0.0, fats=0.0, carbs=0.0, proteins=0.0, fibres=0.0, salt=0.0, is_liquid=False, density=1000.0), amount=100.0, unit=Unit(id=1, name='g', grams=0), note=None, exclude=False), IngredientItem(id=2, ingredient=Ingredient(id=2, name='potatos', approx_per_piece=1, energy=0.0, fats=0.0, carbs=0.0, proteins=0.0, fibres=0.0, salt=0.0, is_liquid=False, density=1000.0), amount=500.0, unit=Unit(id=1, name='g', grams=0), note=None, exclude=False)] tags=[Tag(id=1, name='bar bar'), Tag(id=2, name='1d2ad21')] body='<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>'
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=2 title='qwdwaaw' subtitle='asdasdasd' source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=3 title='DsadsasdSA' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=4 title='1C121CSADSASDASD' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=5 title='ACASCASC' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=6 title='2CASCASCA' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:12:42.518 | INFO     | chef.main:serve:58 - id=7 title='   },    methods: {     getImageUrl() {       // todo: check if image exists, replace with unknown if yes       return `${Constants.IMAGES_URL}/${this.recipe.id}/small.jpeg`     },   },    mounted() {' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[] body=None
+2023-06-13 12:33:07.320 | INFO     | chef.main:serve:40 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-13 12:33:07.337 | WARNING  | chef.controller:get_recipes:13 - {'id': 1.0, 'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=1 title='foo bar' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[IngredientItem(id=1, ingredient=Ingredient(id=1, name='milk', approx_per_piece=1, energy=0.0, fats=0.0, carbs=0.0, proteins=0.0, fibres=0.0, salt=0.0, is_liquid=False, density=1000.0), amount=100.0, unit=Unit(id=1, name='g', grams=0), note=None, exclude=False), IngredientItem(id=2, ingredient=Ingredient(id=2, name='potatos', approx_per_piece=1, energy=0.0, fats=0.0, carbs=0.0, proteins=0.0, fibres=0.0, salt=0.0, is_liquid=False, density=1000.0), amount=500.0, unit=Unit(id=1, name='g', grams=0), note=None, exclude=False)] tags=[Tag(id=1, name='bar bar'), Tag(id=2, name='1d2ad21')] body='<p>Sit qui repudiandae vero at. Maxime ullam commodi expedita et. Voluptates aspernatur minima dolor odio. Et nihil necessitatibus quia officia aut non maiores esse.</p><p>Velit est ab sapiente perspiciatis. Tenetur perferendis consequatur ut et dolor. Rerum explicabo sint voluptatem officiis quis voluptatem. Veniam maiores et fugit reiciendis. Ut est amet enim. Accusantium praesentium quia sapiente minima corrupti.</p><p>Natus dolorem necessitatibus ipsum rerum. Qui velit aperiam ea excepturi eum laboriosam esse et. Quod non nostrum minus qui enim eveniet. Sed natus rerum ipsam est. Eaque illo aut in inventore dolor aut sapiente.</p><p>Sed repudiandae eligendi voluptatum saepe itaque nemo perferendis. Et adipisci corrupti illo soluta velit impedit est dignissimos. Voluptas dolore sint minus delectus quae sapiente eos dicta.</p><p>Aut in minima eos veniam mollitia. Qui eligendi doloribus rem est. Qui ducimus ut rerum molestiae vel perspiciatis. Hic eum eveniet mollitia perferendis et explicabo nam et. Saepe inventore mollitia cumque blanditiis aut quam blanditiis.</p><p>Laudantium asperiores eaque est et. Sapiente tempora soluta cupiditate facere. Vitae ab et non blanditiis. Voluptas error sunt dolorum quia in aut laboriosam sed.</p><p>Pariatur perferendis labore ut laborum est perferendis voluptas. Amet consequatur sed laudantium eaque doloremque eligendi. Perspiciatis et voluptatem eos accusamus. Reprehenderit labore voluptas molestiae inventore architecto enim ab quaerat. Voluptatem aliquam officia doloribus eos ipsam vel officia.</p><p>Ut dolor ratione autem quisquam possimus qui reprehenderit sint. Dolorum adipisci rerum eos. Sit minus pariatur eius rerum iste nisi et fugit. Sit excepturi voluptatum totam et esse beatae ut. Non molestias sed et eum.</p><p>Velit odit enim laboriosam ipsum quaerat aut amet facilis. Aliquam doloribus v</p>'
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=2 title='qwdwaaw' subtitle='asdasdasd' source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=3 title='DsadsasdSA' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=4 title='1C121CSADSASDASD' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=5 title='ACASCASC' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=6 title='2CASCASCA' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[Tag(id=1, name='bar bar')] body=None
+2023-06-13 12:33:07.342 | INFO     | chef.main:serve:55 - id=7 title='   },    methods: {     getImageUrl() {       // todo: check if image exists, replace with unknown if yes       return `${Constants.IMAGES_URL}/${this.recipe.id}/small.jpeg`     },   },    mounted() {' subtitle=None source_name=None source=None draft=False portions=4 ingredients=[] tags=[] body=None
+2023-06-13 12:40:59.999 | INFO     | chef.main:serve:46 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 07:52:36.964 | INFO     | chef.main:serve:22 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 07:52:41.571 | WARNING  | chef.controller:get_all:14 - {'id': 1.0, 'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-14 07:56:09.172 | INFO     | chef.main:serve:22 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 07:56:17.172 | INFO     | chef.main:serve:22 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 08:20:20.604 | WARNING  | chef.controller:get_all:14 - {'id': 1.0, 'ingredient': {'id': 1.0, 'name': 'milk', 'density': 1000.0}, 'amount': 100.0, 'unit': {'id': 1.0, 'name': 'g'}}
+2023-06-14 11:37:49.166 | INFO     | chef.main:serve:28 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 11:47:36.535 | INFO     | chef.main:serve:25 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 11:49:00.496 | INFO     | chef.main:serve:25 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-14 13:24:27.476 | INFO     | chef.main:serve:25 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
+2023-06-15 15:13:59.206 | INFO     | chef.main:serve:25 - 
+
+███████╗██╗  ██╗███████╗███████╗
+██╔════╝██║  ██║██╔════╝██╔════╝
+██║     ███████║█████╗  █████╗  
+██║     ██╔══██║██╔══╝  ██╔══╝  
+╚██████╗██║  ██║███████╗██║     
+╚═════╝╚═╝  ╚═╝╚══════╝╚═╝
+...started with following settings:
+
+SERVE_FRONTEND: 'False'
+DATABASE_URI: 'sqlite:///chef.db'
+LOG_FILE: 'chef.log'
+LOG_LEVEL: 'DEBUG'
+    
