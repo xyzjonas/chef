@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
 from chef.controllers import RecipesController
 from chef.schemas import Recipe, CreateOrUpdateRecipe
@@ -20,7 +20,6 @@ async def get_recipes(category: int = None) -> List[Recipe]:
     with Session(engine()) as session:
         if category:
             return await recipes.get_by_category(session, category)
-        h = await recipes.get_all(session)
         return await recipes.get_all(session)
 
 

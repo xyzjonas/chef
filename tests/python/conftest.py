@@ -1,17 +1,15 @@
 import os
 import random
+import string
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 
 from chef.main import app
-from chef.settings import settings
 from chef.models import Base, Tag, Ingredient, IngredientItem, Recipe, Category, Unit
-
-from fastapi.testclient import TestClient
-import string
-import random
+from chef.settings import settings
 
 
 @pytest.fixture(scope="session", autouse=True)

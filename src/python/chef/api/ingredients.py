@@ -1,13 +1,10 @@
 from typing import List
 
 from fastapi import APIRouter
-from sqlmodel import Session
 
 from chef.api.common import generic_get, generic_get_all, generic_delete, generic_update
 from chef.controllers import IngredientsController
-from chef.models import engine
 from chef.schemas import Ingredient, UpdateIngredient
-
 
 router = APIRouter()
 ingredients = IngredientsController()

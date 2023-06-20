@@ -1,11 +1,10 @@
 from contextlib import ContextDecorator
 from typing import Union
 
-from sqlalchemy import create_engine, Engine
-from sqlmodel import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from chef.settings import settings
-
 
 engine = create_engine(settings.database_uri, echo=True)
 
