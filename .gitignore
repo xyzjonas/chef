@@ -1,6 +1,7 @@
 *__pycache__
 .idea
 *.db
+*.log
 
 *.pytest_cache
 
