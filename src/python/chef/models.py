@@ -11,6 +11,10 @@ def engine() -> Engine:
     return create_engine(settings.database_uri, echo=settings.log_sql)
 
 
+def ensure_tables():
+    Base.metadata.create_all(engine())
+
+
 def _dictify(obj, depth=100):
     if obj is None:
         return None
@@ -85,64 +89,6 @@ category_tags = Table(
     Column("tag_id", Integer, ForeignKey("tag.id"), primary_key=True)
 )
 
-
-# def _dictify(obj, depth=100):
-#     if obj is None:
-#         return None
-#     if issubclass(obj.__class__, Base) and depth > 0:
-#         return obj.get_dictionary(depth=depth-1)
-#     if issubclass(obj.__class__, list):
-#         if depth > 1:
-#             return [_dictify(o, depth=depth - 1) for o in obj]
-#         else:
-#             return [str(o) for o in obj]
-#     try:
-#         return float(obj)
-#     except (TypeError, ValueError, SyntaxError):
-#         pass
-#     return str(obj)
-
-
-# class Base(db.Model):
-#     __abstract__ = True
-#     __items__ = ["id"]
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#
-#     def _get_attributes(self, exclude=None) -> dict:
-#         """Get 'public' attributes to be parsed into JSON response"""
-#         if not exclude:
-#             exclude = []
-#
-#         result = {}
-#         for attr in self.__items__:
-#             try:
-#                 if attr in exclude:
-#                     continue
-#                 result[attr] = self.__getattribute__(attr)
-#             except AttributeError:
-#                 continue
-#         return result
-#
-#     def get_dictionary(self, depth=99, exclude=None):
-#         """Serialize recursively according to the __items__ attribute."""
-#         return {
-#             k: _dictify(v, depth=depth) for k, v in self._get_attributes(exclude=exclude).items()
-#         }
-#
-#     @property
-#     def dictionary(self):
-#         """Serialize recursively according to the __items__ attribute."""
-#         return self.get_dictionary()
-#
-#     def _repr(self, **kwargs):
-#         """Create repr string."""
-#         kw = {f"{str(k)}={v}" for k, v in kwargs.items()}
-#         return f'<{self.__class__.__name__} ({", ".join(kw)})>'
-#
-#     def __repr__(self):
-#         """Default for all subclasses: everything 'public'."""
-#         return self._repr(**self.get_dictionary())
 
 class Unit(Base):
     __items__ = ["id", "name", "grams"]

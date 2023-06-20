@@ -31,6 +31,8 @@ def http_client() -> TestClient:
 @pytest.fixture(scope="function")
 def db(inmemory_engine):
     Base.metadata.create_all(inmemory_engine)
+    Base.metadata.create_all(inmemory_engine)
+    Base.metadata.create_all(inmemory_engine)
     yield
     Base.metadata.drop_all(inmemory_engine)
 

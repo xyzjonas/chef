@@ -1,4 +1,3 @@
-import os
 from typing import Union
 
 from pydantic import BaseSettings
@@ -14,6 +13,9 @@ class Settings(BaseSettings):
 
     upload_folder: str = "/tmp"  # temporary storage before processing
     images_folder: str = "/tmp/images"
+
+    uvicorn_host: str = "0.0.0.0"
+    uvicorn_port: int = 8000
 
 
 settings = Settings()

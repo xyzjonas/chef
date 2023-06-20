@@ -1,19 +1,16 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 
 from chef.api import api_router
+from chef.models import ensure_tables
 from chef.settings import settings
 
 
 app = FastAPI()
 app.include_router(api_router)
-
-# for router in chef.api.routers:
-#     app.include_router(router)
 
 
 app.add_middleware(
@@ -29,6 +26,8 @@ app.add_middleware(
 
 
 def serve():
+    ensure_tables()
+
     if settings.log_file:
         logger.add(settings.log_file, level=settings.log_level)
 
@@ -50,7 +49,7 @@ def serve():
 {options}
     """)
 
-    uvicorn.run(app)
+    uvicorn.run(app, host=settings.uvicorn_host, port=settings.uvicorn_port)
 
 
 if __name__ == '__main__':
