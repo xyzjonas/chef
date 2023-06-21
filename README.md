@@ -3,11 +3,11 @@
 A simple, customizable recipe management app.
 
 <picture>
- <img alt="screenshot1" src="https://github.com/jonasbrauer/chef/assets/10963153/98b9ca93-1fe0-44c5-afff-403423f5be09" height=360>
+ <img alt="screenshot1" src="https://github.com/jonasbrauer/chef/assets/10963153/7caf01e0-c1f6-487b-9b09-2483cf938161" height=360>
 </picture>
 
 <picture>
- <img alt="screenshot2" src="https://github.com/jonasbrauer/chef/assets/10963153/17ee4e24-62be-4b3d-89ed-ed1644c3df2c" height=360>
+ <img alt="screenshot2" src="https://github.com/jonasbrauer/chef/assets/10963153/067c5953-79cf-4be5-a2ca-89a293d3db90" height=360>
 </picture>
 
 <picture>
@@ -15,7 +15,7 @@ A simple, customizable recipe management app.
 </picture>
 
 <picture>
- <img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/fe1cf765-6475-47bc-b69c-06b21eb08d2a" height=360>
+ <img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/002aad12-4e6c-4815-8793-e6125405d940" height=360>
 </picture>
 
 ## Installation
