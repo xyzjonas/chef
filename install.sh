@@ -7,7 +7,7 @@ virtualenv="$HOME/.virtualenvs/chef-$(date -I)"
 mkdir -p "$virtualenv" && pushd "$virtualenv"
 python -m venv .
 source ./bin/activate
-pip install /home/jonasbrauer/Projects/chef/dist/chef-0.1.0-py3-none-any.whl
+pip install -U chef-recipes
 
 cmd="$(which chef)"
 echo
