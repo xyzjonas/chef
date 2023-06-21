@@ -53,8 +53,14 @@ def serve():
         logger.add(settings.log_file, level=settings.log_level)
 
     if settings.serve_frontend:
+        if not settings.serve_frontend_path or not os.path.isdir(settings.serve_frontend_path):
+            logger.error(
+                f"Frontend files '{settings.serve_frontend_path}' not found, "
+                f"frontend can't be served."
+            )
+            return
         app.mount("/images", StaticFiles(directory=settings.images_folder))
-        app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True), name="static")
+        app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True))
 
     uvicorn.run(app, host=settings.uvicorn_host, port=settings.uvicorn_port)
 

@@ -9,6 +9,9 @@ packages = [
     { include = "chef", from = "src/python" }
 ]
 
+include = ["src/js/chef/dist/*", "src/js/chef/dist/assets/*"]
+
+
 [tool.poetry.scripts]
 chef = "chef.main:serve"
 
