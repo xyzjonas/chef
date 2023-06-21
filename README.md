@@ -18,18 +18,18 @@ A simple, customizable recipe management app.
 ## Installation
 
 ```shell
-$ curl https://raw.githubusercontent.com/jonasbrauer/chef/master/install.sh | bash
+curl https://raw.githubusercontent.com/jonasbrauer/chef/master/install.sh | bash
 ```
 
 or install the package yourself
 
 ```shell
-$ pip install chef-recipes
+pip install chef-recipes
 ```
 
 ...or run with docker:
 
 ```shell
-$ docker build . -t chef
-$ docker run -p 8000:8000 -v ~/.chef:/chef/data chef
+docker build . -t chef
+docker run -p 8000:8000 -v ~/.chef:/chef/data chef
 ```
