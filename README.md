@@ -1,22 +1,31 @@
 # 👨‍🍳 Chef
 
 A simple, customizable recipe management app.
+<details>
 
-<picture>
- <img alt="screenshot1" src="https://github.com/jonasbrauer/chef/assets/10963153/7caf01e0-c1f6-487b-9b09-2483cf938161" height=360>
-</picture>
+<summary>Screenshots</summary>
 
-<picture>
- <img alt="screenshot2" src="https://github.com/jonasbrauer/chef/assets/10963153/067c5953-79cf-4be5-a2ca-89a293d3db90" height=360>
-</picture>
+ <picture>
+  <img alt="screenshot1" src="https://github.com/jonasbrauer/chef/assets/10963153/7caf01e0-c1f6-487b-9b09-2483cf938161" height=360>
+ </picture>
+ 
+ <picture>
+  <img alt="screenshot2" src="https://github.com/jonasbrauer/chef/assets/10963153/067c5953-79cf-4be5-a2ca-89a293d3db90" height=360>
+ </picture>
+ 
+ <picture>
+  <img alt="screenshot3" src="https://github.com/jonasbrauer/chef/assets/10963153/2c6aea89-2220-40ed-a1d1-4b13c558314a" height=360>
+ </picture>
+ 
+ <picture>
+  <img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/002aad12-4e6c-4815-8793-e6125405d940" height=360>
+ </picture>
 
-<picture>
- <img alt="screenshot3" src="https://github.com/jonasbrauer/chef/assets/10963153/2c6aea89-2220-40ed-a1d1-4b13c558314a" height=360>
-</picture>
+ <picture>
+  <img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/3d237a3f-a3c8-4bd9-afad-43ac4ef57811" height=360>
+ </picture>
 
-<picture>
- <img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/002aad12-4e6c-4815-8793-e6125405d940" height=360>
-</picture>
+</details>
 
 ## Installation
 
