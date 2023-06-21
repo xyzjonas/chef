@@ -1,3 +1,5 @@
+import os.path
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,7 +8,7 @@ from starlette.staticfiles import StaticFiles
 
 from chef.api import api_router
 from chef.models import ensure_tables
-from chef.settings import settings
+from chef.settings import settings, HOME_DIR
 
 
 app = FastAPI()
@@ -26,6 +28,25 @@ app.add_middleware(
 
 
 def serve():
+    options = "\n".join([f"{k.upper()}: '{v}'" for k, v in settings])
+    logger.info(f"""
+
+    ███████╗██╗  ██╗███████╗███████╗
+    ██╔════╝██║  ██║██╔════╝██╔════╝
+    ██║     ███████║█████╗  █████╗  
+    ██║     ██╔══██║██╔══╝  ██╔══╝  
+    ║██████ ██║  ██║███████╗██║     
+    ╚═════════╝  ╚═╝╚══════╝╚═╝
+
+    ...starting with following settings:
+
+{options}
+""")
+
+    if not os.path.isdir(settings.images_folder):
+        logger.info(f"Creating images folder: {settings.images_folder}")
+        os.makedirs(settings.images_folder, exist_ok=True)
+
     ensure_tables()
 
     if settings.log_file:
@@ -34,20 +55,6 @@ def serve():
     if settings.serve_frontend:
         app.mount("/images", StaticFiles(directory=settings.images_folder))
         app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True), name="static")
-
-    options = "\n".join([f"{k.upper()}: '{v}'" for k, v in settings])
-    logger.info(f"""
-
-███████╗██╗  ██╗███████╗███████╗
-██╔════╝██║  ██║██╔════╝██╔════╝
-██║     ███████║█████╗  █████╗  
-██║     ██╔══██║██╔══╝  ██╔══╝  
-║██████ ██║  ██║███████╗██║     
-╚═════════╝  ╚═╝╚══════╝╚═╝
-...started with following settings:
-
-{options}
-    """)
 
     uvicorn.run(app, host=settings.uvicorn_host, port=settings.uvicorn_port)
 

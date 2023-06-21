@@ -1,5 +1,5 @@
 import typing
-from typing import List, Generic, TypeVar, Union
+from typing import List, Generic, TypeVar, Union, Type
 
 from fastapi import HTTPException
 from pydantic import BaseModel
@@ -10,6 +10,7 @@ from chef.models import Category as CategoryDb
 from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe, \
     IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
 
+
 C = TypeVar('C', bound=BaseModel)
 R = TypeVar('R', bound=BaseModel)
 U = TypeVar('U', bound=BaseModel)
@@ -18,19 +19,23 @@ U = TypeVar('U', bound=BaseModel)
 class Controller(Generic[C, R, U]):
 
     @property
-    def create_schema(self) -> C:
+    def create_schema(self) -> Type[C]:
         return typing.get_args(self.__orig_bases__[0])[0]
 
     @property
-    def read_schema(self) -> R:
+    def read_schema(self) -> Type[R]:
         return typing.get_args(self.__orig_bases__[0])[1]
 
     @property
-    def update_schema(self) -> U:
+    def update_schema(self) -> Type[U]:
         return typing.get_args(self.__orig_bases__[0])[2]
 
+    async def _fill_model(self,  session: Session, model, data: Union[C, U]):
+        """Override for more complex models."""
+        for attr, value in data.dict(exclude_none=True).items():
+            setattr(model, attr, value)
+
     async def get_all(self, session: Session) -> List[R]:
-        x = session.query(self.read_schema.Meta.orm_model).all()
         return [
             self.read_schema(**item.dictionary)
             for item in session.scalars(select(self.read_schema.Meta.orm_model)).all()
@@ -55,19 +60,17 @@ class Controller(Generic[C, R, U]):
 
     async def create(self, session: Session, data: C) -> R:
         new_model = self.read_schema.Meta.orm_model()
-        for attr, value in data.dict(exclude_none=True).items():
-            setattr(new_model, attr, value)
+        await self._fill_model(session, new_model, data)
         session.add(new_model)
         session.commit()
         return await self.get_single(session, item_id=new_model.id)
 
-    async def update_or_create(self, session: Session, data: Union[U, C]) -> R:
+    async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         if getattr(data, "id", None):
             item = session.get(self.read_schema.Meta.orm_model, data.id)
         else:
             item = self.read_schema.Meta.orm_model()
-        for attr in data.dict(exclude={"id": True}):
-            setattr(item, attr, getattr(data, attr))
+        await self._fill_model(session, item, data)
         session.add(item)
         session.commit()
         return self.read_schema(**session.get(self.read_schema.Meta.orm_model, item.id).dictionary)
@@ -78,8 +81,7 @@ class Controller(Generic[C, R, U]):
             raise HTTPException(
                 status_code=404, detail=f"{self.read_schema.__class__} id={data.id} not found"
             )
-        for attr, value in data.dict(exclude_none=True).items():
-            setattr(item, attr, value)
+        await self._fill_model(session, item, data)
         session.add(item)
         session.commit()
         return await self.get_single(session, item.id)
@@ -108,7 +110,7 @@ class IngredientsController(Controller[UpdateIngredient, Ingredient, UpdateIngre
 
 class CategoriesController(Controller[CreateOrUpdateCategory, Category, CreateOrUpdateCategory]):
 
-    def _fill_model(self,  session: Session, model: CategoryDb, data: CreateOrUpdateCategory):
+    async def _fill_model(self,  session: Session, model: CategoryDb, data: CreateOrUpdateCategory):
         tags = []
         for tag in data.tags:
             item = session.get(Tag.Meta.orm_model, tag.id)
@@ -120,32 +122,18 @@ class CategoriesController(Controller[CreateOrUpdateCategory, Category, CreateOr
         for attr, value in data.dict(exclude_none=True, exclude={"tags": True}).items():
             setattr(model, attr, value)
         model.tags = tags
-        return model
-
-    async def update(self, session: Session, item_id: int, data: CreateOrUpdateCategory) -> R:
-        item = session.get(self.read_schema.Meta.orm_model, item_id)
-        if not item:
-            raise HTTPException(
-                status_code=404, detail=f"{self.read_schema.__class__} id={item_id} not found"
-            )
-        session.add(self._fill_model(session, item, data))
-        session.commit()
-        return await self.get_single(session, item_id)
-
-    async def create(self, session: Session, data: CreateOrUpdateCategory) -> Category:
-        item = CategoryDb()
-        session.add(self._fill_model(session, item, data))
-        session.commit()
-        return await self.get_single(session, item.id)
 
 
 class UnitsController(Controller[Unit, Unit, Unit]):
 
-    async def update_or_create(self, session: Session, data: Union[U, C]) -> R:
+    async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         if getattr(data, "id", None):
             item = session.get(self.read_schema.Meta.orm_model, data.id)
         else:
-            same_name = session.query(self.read_schema.Meta.orm_model).filter_by(name=data.name).first()
+            same_name = session \
+                .query(self.read_schema.Meta.orm_model) \
+                .filter_by(name=data.name) \
+                .first()
             if same_name:
                 item = same_name
             else:
@@ -166,6 +154,7 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
 
     @staticmethod
     async def _get_ingredients_and_tags(session: Session, data: CreateOrUpdateRecipe):
+        """Load (or create and load) entire models and for specified ingredients and tags."""
         updated_ingredients = []
         ingredients_controller = IngredientsController()
         units_controller = UnitsController()
@@ -173,9 +162,9 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
             updated_item = IngredientItem.Meta.orm_model(
                 **ingredient_item.dict(exclude={'ingredient': True, 'unit': True})
             )
-            u = await units_controller.update_or_create(session, ingredient_item.unit)
+            u = await units_controller.create_or_update(session, ingredient_item.unit)
             updated_item.unit_id = u.id
-            i = await ingredients_controller.update_or_create(session, ingredient_item.ingredient)
+            i = await ingredients_controller.create_or_update(session, ingredient_item.ingredient)
             updated_item.ingredient_id = i.id
             updated_ingredients.append(updated_item)
 
@@ -189,8 +178,20 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
                 )
         return updated_ingredients, updated_tags
 
-    @staticmethod
-    async def get_by_category(session: Session, category_id: int = None) -> List[Recipe]:
+    async def _fill_model(self, session: Session, model, data: Union[C, U]):
+        if not model:
+            raise HTTPException(
+                status_code=404, detail=f"{self.read_schema.__class__} id={data.id} not found"
+            )
+        for attr, value in data.dict(
+                exclude_none=True, exclude={"tags": True, "ingredients": True}
+        ).items():
+            setattr(model, attr, value)
+        updated_ingredients, updated_tags = await self._get_ingredients_and_tags(session, data)
+        model.ingredients = updated_ingredients
+        model.tags = updated_tags
+
+    async def get_by_category(self, session: Session, category_id: int = None) -> List[Recipe]:
         cat = session.scalars(
             select(Category.Meta.orm_model)
             .filter_by(id=category_id)
@@ -198,42 +199,8 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         ).first()
         if cat:
             result = [recipe for tag in cat.tags for recipe in tag.recipes]
-            return [Recipe(**r.dictionary) for r in result]
+            return [self.read_schema(**r.dictionary) for r in result]
         return []
 
-    async def create(self, session: Session, data: CreateOrUpdateRecipe) -> Recipe:
-        new_model = self.read_schema.Meta.orm_model(
-            **data.dict(exclude={"ingredients": True, "tags": True})
-        )
-
-        updated_ingredients, updated_tags = await self._get_ingredients_and_tags(session, data)
-
-        new_model.ingredients = updated_ingredients
-        new_model.tags = updated_tags
-        session.add(new_model)
-        session.commit()
-        return await self.get_single(session, item_id=new_model.id)
-
-    async def update(self, session: Session, item_id: int, data: CreateOrUpdateRecipe) -> Recipe:
-        item = session.get(self.read_schema.Meta.orm_model, item_id)
-        if not item:
-            raise HTTPException(
-                status_code=404, detail=f"{self.read_schema.__class__} id={data.id} not found"
-            )
-        for attr, value in data.dict(
-                exclude_none=True, exclude={"tags": True, "ingredients": True}
-        ).items():
-            setattr(item, attr, value)
-
-        ingredients, tags = await self._get_ingredients_and_tags(session, data)
-        item.tags = tags
-        item.ingredients = ingredients
-        session.add(item)
-        session.commit()
-        return await self.get_single(session, item_id)
-
-    async def update_or_create(self, session: Session, data: Union[U, C]) -> R:
+    async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         raise ValueError("Not allowed on this controller!")
-
-
-

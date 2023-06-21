@@ -44,7 +44,9 @@ class Handler:
         for name, size in self._sizes():
             tmp_img = image.copy()
             tmp_img.thumbnail(size, Image.LANCZOS)
-            tmp_img.save(os.path.join(target_dir, f"{name}.jpeg"))
+            path = os.path.join(target_dir, f"{name}.jpeg")
+            logger.info(f"Saving image to '{path}'")
+            tmp_img.save(path)
 
 
 class CategoryHandler(Handler):

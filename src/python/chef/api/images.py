@@ -1,15 +1,14 @@
 import os
-
-from fastapi import APIRouter, HTTPException
-from fastapi import FastAPI, File, UploadFile
 from datetime import datetime
 
+from fastapi import APIRouter, HTTPException
+from fastapi import UploadFile
 from loguru import logger
 
 from chef.api.common import generic_get
+from chef.controllers import RecipesController, CategoriesController
 from chef.images import Handler, CategoryHandler
 from chef.settings import settings
-from chef.controllers import RecipesController, CategoriesController
 
 recipes = RecipesController()
 categories = CategoriesController()
@@ -32,12 +31,7 @@ def _create_tmp_dir():
 @router.post('/recipes/{recipe_id}')
 async def post_recipe_image(recipe_id: int, image: UploadFile):
     await generic_get(recipes, recipe_id)
-    logger.debug(f"uploading recipe (id={recipe_id}) image: {image.filename}, {image.size}")
-
-    upload_path = settings.upload_folder
-    if not os.path.isdir(upload_path):
-        logger.warning(f"Server misconfiguration, invalid images path: {upload_path}")
-        raise HTTPException(status_code=500, detail="Server misconfiguration, invalid images path.")
+    logger.debug(f"uploading recipe (id={recipe_id}) image: {image.filename}, {image.size}b")
 
     handler = Handler(image.file, recipe_id)
     handler.create_images_set()
@@ -49,15 +43,7 @@ async def post_recipe_image(recipe_id: int, image: UploadFile):
 async def post_category_image(category_id, image: UploadFile):
     await generic_get(categories, category_id)
 
-    # upload_path = current_app.config["UPLOAD_FOLDER"]
-    # if not os.path.isdir(upload_path):
-    #     raise InvalidUsage("Server misconfiguration, invalid images path.", status_code=500)
-
-    # dit_path = _create_tmp_dir()
-    # image_path = os.path.join(dit_path, image.filename)
-    # image.save(image_path)
-    logger.debug(f"uploading category (id={category_id}) image: {image.filename}, {image.size}")
-
+    logger.debug(f"uploading category (id={category_id}) image: {image.filename}, {image.size}b")
     handler = CategoryHandler(image.file, category_id)
     try:
         handler.create_images_set()
