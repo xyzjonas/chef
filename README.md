@@ -18,7 +18,7 @@ A simple, customizable recipe management app.
 ## Installation
 
 ```shell
-curl https://raw.githubusercontent.com/jonasbrauer/chef/master/install.sh | bash
+curl https://raw.githubusercontent.com/xyzjonas/chef/master/install.sh | bash
 ```
 
 or install the package yourself
