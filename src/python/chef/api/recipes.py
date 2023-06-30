@@ -1,11 +1,12 @@
+import asyncio
 from typing import List
 
 from fastapi import APIRouter
 from sqlalchemy.orm import Session
 
 from chef.controllers import RecipesController
-from chef.schemas import Recipe, CreateOrUpdateRecipe
 from chef.models import engine
+from chef.schemas import Recipe, CreateOrUpdateRecipe
 
 router = APIRouter()
 recipes = RecipesController()
@@ -16,8 +17,10 @@ CURRENT_RECIPES_IDS = []
 
 
 @router.get("")
-async def get_recipes(category: int = None) -> List[Recipe]:
+async def get_recipes(category: int = None, favorite: bool = False) -> List[Recipe]:
     with Session(engine()) as session:
+        if favorite:
+            return await recipes.get_all_and_filter(session, favorite=favorite)
         if category:
             return await recipes.get_by_category(session, category)
         return await recipes.get_all(session)
@@ -43,5 +46,6 @@ async def create_recipe(create_data: CreateOrUpdateRecipe) -> Recipe:
 
 @router.put('/{item_id}')
 async def update_recipe(item_id: int, update_data: CreateOrUpdateRecipe) -> Recipe:
+    await asyncio.sleep(1)
     with Session(engine()) as session:
         return await recipes.update(session, item_id, update_data)

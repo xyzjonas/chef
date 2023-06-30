@@ -1,27 +1,41 @@
-<template lang="">
-    <div class="mt-5">
-        <div v-if="recipe.current" class="field is-grouped">
-            <button class="button is-small mr-1 is-success is-rounded">
-                <i class="fa-solid fa-check"></i>
-                <span class="ml-2">planned</span>
-            </button>
-            <button
-                class="button is-small is-rounded is-danger is-outlined"
-                @click="$emit('cancel')"
-            >
-                <i class="fa-solid fa-ban"></i>
-            </button>
-        </div>
-        <button v-else class="button is-small is-rounded" @click="$emit('plan')">
-            <i class="fa-regular fa-calendar"></i>
-            <span class="ml-2">plan</span>
-        </button>
-       
-    </div>
+<template>
+    <span :class="`star ${loading ? 'loading': ''}`" @click="$emit('favorite')">
+        <span v-if="recipe.favorite">
+            <i class="fa-solid fa-star"></i>
+        </span>
+        <span v-else>
+            <i class="fa-regular fa-star"></i>
+        </span>
+    </span>
 </template>
 <script setup>
 defineProps(['recipe', 'loading'])
 </script>
-<style lang="">
-    
+<style lang="scss" scoped>
+@keyframes loading {
+    from {
+        transform: rotate(-15deg)
+    }
+    to {
+        transform: rotate(15deg)
+    }
+}
+.star {
+    font-size: x-large;
+    color: goldenrod;
+
+    &:hover {
+        color: gold;
+        cursor: pointer;
+    }
+
+    &.loading {
+        animation-name: loading;
+        animation-duration: 0.2s;
+        animation-direction: alternate-reverse;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+}
 </style>

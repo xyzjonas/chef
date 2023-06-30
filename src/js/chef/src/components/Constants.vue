@@ -1,7 +1,7 @@
 <script>
 
 export default {
-  HOST_URL: '/api',
+  HOST_URL: 'http://localhost:8000/api',
   IMAGES_URL: '/images',
 
   methods: {
