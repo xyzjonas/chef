@@ -1,10 +1,12 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlmodel import Session
 
 from chef.models import Recipe, Category, Tag
 
-OLD_URI = "sqlite:///chef.db"
-NEW_URI = "postgresql://postgres:f7AaZqV7Qbo4maCz@db.jsprrnmlxkwlzaywpudu.supabase.co:5432/postgres"
+OLD_URI = os.getenv('OLD_URI')
+NEW_URI = os.getenv('NEW_URI')
 
 
 def main():
