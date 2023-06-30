@@ -11,11 +11,7 @@ RUN pip install poetry
 RUN poetry build
 
 
-FROM python:3.11.1-slim-buster
-
-RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+FROM python:3.11.1-alpine
 
 WORKDIR app
 
