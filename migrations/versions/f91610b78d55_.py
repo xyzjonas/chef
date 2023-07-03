@@ -1,4 +1,4 @@
-"""empty message
+"""Add fibres/proteins.
 
 Revision ID: f91610b78d55
 Revises: 3251a114750c

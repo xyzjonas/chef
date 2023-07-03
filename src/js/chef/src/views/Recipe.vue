@@ -34,11 +34,10 @@
 
         <!-- tags -->
         <div class="tags mt-5">
-            <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
+          <!-- CURR -->
+          <MakeCurrentButton :recipe="recipe" :loading="favoriteLoading" @favorite="makeFavorite" @cancel="cancelCurrent" class="mr-2"/>
+          <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
         </div>
-
-        <!-- CURR -->
-        <MakeCurrentButton :recipe="recipe" @plan="makeCurrent" @cancel="cancelCurrent" :loading="currentLoading"/>
 
         <!-- chevron -->
         <div ref="chevron" class="tabs is-right is-boxed">
@@ -164,6 +163,8 @@ export default {
       missingImage: false,
 
       ingredientsCollapsed: false,
+
+      favoriteLoading: false,
     }
   },
 
@@ -193,47 +194,38 @@ export default {
 
     deleteRecipe() {
       const path = `${Constants.HOST_URL}/recipes/${this.$route.params.id}`;
-      console.info(`Deleting: ${path}`);
       axios.delete(path)
-        .then(() => {
-          this.$router.push('/recipes');
-        })
+        .then(() => this.$router.push('/recipes'))
+        .catch(err => console.error(err))
     },
 
     fetchRecipe() {
       this.loading = true;
       const path = `${Constants.HOST_URL}/recipes/${this.$route.params.id}`;
-      console.info(`Getting: ${path}`);
       axios.get(path)
         .then(res => {
           this.recipe = res.data;
           this.portions = this.recipe.portions;
         })
-        .catch((err) => this.error = err)
+        .catch((err) => {
+          this.error = err;
+          console.error(err)
+        })
         .finally(() => (this.loading = false));
     },
 
-    makeCurrent() {
-      this.currentLoading = true;
-      const path = `${Constants.HOST_URL}/recipes/current`;
+    makeFavorite() {
+      this.favoriteLoading = true;
+      const path = `${Constants.HOST_URL}/recipes/${this.recipe.id}`;
       const options = { headers: { 'Content-Type': 'application/json' } };
-      axios.post(path, { id: this.recipe.id }, options)
-        .then(() => this.recipe.current = true)
-        .catch((err) => this.error = err)
-        .finally(() => (this.currentLoading = false));
-    },
+      const data = {...this.recipe};
+      data.favorite = !data.favorite;
 
-    cancelCurrent() {
-      this.currentLoading = true;
-      const path = `${Constants.HOST_URL}/recipes/current/${this.recipe.id}`;
-      const options = { headers: { 'Content-Type': 'application/json' } };
-      axios.delete(path, options)
-        .then(() => this.recipe.current = false)
+      axios.put(path, data, options)
+        .then((res) => this.recipe = res.data)
         .catch((err) => this.error = err)
-        .finally(() => (this.currentLoading = false));
-    },
-
-    
+        .finally(() => (this.favoriteLoading = false));
+    },    
 
   },
 
@@ -255,5 +247,9 @@ export default {
     h1, h2 {
       text-transform: uppercase;
     }
+  }
+  .tag {
+    margin-bottom: 0%;
+    padding-top: 1px;
   }
 </style>

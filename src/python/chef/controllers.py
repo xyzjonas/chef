@@ -202,5 +202,12 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
             return [self.read_schema(**r.dictionary) for r in result]
         return []
 
+    async def get_all_and_filter(self, session: Session, **filters: typing.Any) -> List[Recipe]:
+        recipes = session.scalars(
+            select(self.read_schema.Meta.orm_model)
+            .filter_by(**filters)
+        ).all()
+        return [self.read_schema(**r.dictionary) for r in recipes]
+
     async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         raise ValueError("Not allowed on this controller!")

@@ -401,15 +401,9 @@ export default {
     },
 
     getRootData() {
-      var path = `${Constants.HOST_URL}/`;
+      var path = `${Constants.HOST_URL}/tags`;
       axios.get(path)
-        .then(res => {
-          if (res.status !== "success") {
-            if (res.data) {
-              this.availableTags = res.data.tags;
-            }
-          }
-        })
+        .then(res => this.availableTags = res.data)
         .catch((err) => this.error = err);
 
       path = `${Constants.HOST_URL}/ingredients`;

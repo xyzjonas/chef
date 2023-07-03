@@ -94,7 +94,6 @@ export default {
   methods: {
     fetchIngredient() {
       const path = `${Constants.HOST_URL}/ingredients/${this.$route.params.id}`;
-      console.info(`Getting: ${path}`);
       axios
         .get(path)
         .then(res => {
@@ -112,18 +111,21 @@ export default {
             }
           }
         })
-        .catch(err => (this.error = err));
+        .catch(err => {
+          this.error = err;
+          console.error(err)
+        });
     },
 
     deleteIngredient() {
       const path = `${Constants.HOST_URL}/ingredients/${this.ingredient.id}`;
-      console.info(`Deleting: ${path}`);
       axios.delete(path)
         .then(() => {
           this.$emit("ingredientDeleted");
         })
         .catch(err => {
           this.error = `${err.response.data}.`;
+          console.error(err);
         })
     }
 

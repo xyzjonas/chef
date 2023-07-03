@@ -12,6 +12,7 @@ def test_dictionary(db_session, recipe, ingredient, ingredient_item):
         "subtitle": "recipe_01",
         "body": "asd",
         "portions": 20,
+        "favorite": True,
         "source": "http://source.com",
         "source_name": "source",
         "ingredients": [ii],
@@ -25,6 +26,7 @@ def test_dictionary(db_session, recipe, ingredient, ingredient_item):
         subtitle=test_items["subtitle"],
         body=test_items["body"],
         source=test_items["source"],
+        favorite=test_items["favorite"],
         source_name=test_items["source_name"],
         portions=test_items["portions"],
         ingredients=test_items["ingredients"],
@@ -42,6 +44,7 @@ def test_dictionary(db_session, recipe, ingredient, ingredient_item):
     assert recipe.dictionary["source"] == test_items["source"]
     assert recipe.dictionary["source_name"] == test_items["source_name"]
     assert recipe.dictionary["portions"] == test_items["portions"]
+    assert recipe.dictionary["favorite"] == test_items["favorite"]
 
     assert len(recipe.dictionary["ingredients"]) == len(recipe.ingredients) == 1
     assert recipe.dictionary["ingredients"][0] == ii.dictionary

@@ -3,7 +3,7 @@
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
     <div v-else>
-      <RecipeList v-if="current_recipes.length > 0" class="mb-4 mt-5" :allRecipes="current_recipes" :hideSearch="true" :hideFilters="true" title="Planned"/>
+      <RecipeList v-if="favorites.length > 0" class="mb-4 mt-5" :allRecipes="favorites" :hideSearch="true" :hideFilters="true" title="favorite recipes"/>
       <div class="category-tiles">
         <CategoryTile
             v-for="category in categories" :category="category"
@@ -35,7 +35,7 @@ export default {
       newCategory: false,
       loading: false,
 
-      current_recipes: []
+      favorites: []
     };
   },
 
@@ -63,19 +63,19 @@ export default {
         .catch((err) => this.error = err)
         .finally(() => (this.loading = false));
     },
-    getCurrent() {
+    getFavoriteRecipes() {
       this.loading = true;
-      const path = `${Constants.HOST_URL}/recipes/current`;
+      const path = `${Constants.HOST_URL}/recipes?favorite=true`;
       axios
         .get(path)
-        .then(res => this.current_recipes = res.data)
+        .then(res => this.favorites = res.data)
         .catch((err) => this.error = err)
         .finally(() => (this.loading = false));
     },
   },
   created() {
     this.getAllCategories();
-    this.getCurrent();
+    this.getFavoriteRecipes();
   }
 };
 </script>

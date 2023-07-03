@@ -98,7 +98,6 @@ export default {
   methods: {
 
     toggleTag(tag) {
-      console.log(this.category.tags)
       const tagNames = this.category.tags.map(t => t.name)
       if (!tagNames.includes(tag.name)) {
         this.category.tags.push(tag);

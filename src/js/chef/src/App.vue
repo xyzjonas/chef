@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-
+    
     <Navbar class="mb-2" />
 
-    <div class="container pb-4">
+    <div class="container pb-4 px-1">
       <transition mode="out-in">
         <keep-alive>
           <router-view/>

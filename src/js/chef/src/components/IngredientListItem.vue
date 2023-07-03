@@ -90,7 +90,6 @@ export default {
 
     deleteIngredient() {
       const path = `${Constants.HOST_URL}/ingredients/${this.ingredient.id}`;
-      console.info(`Deleting: ${path}`);
       axios.delete(path)
         .then(() => {
           this.$emit("ingredientDeleted");

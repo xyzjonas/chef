@@ -53,8 +53,6 @@ const router = createRouter({
     },
   ],
   scrollBehavior (to, from, savedPosition) {
-    console.info(`saved: ${savedPosition}`)
-    console.info(savedPosition)
     if (savedPosition) {
       return savedPosition
     } else {

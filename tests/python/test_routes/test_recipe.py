@@ -17,7 +17,8 @@ R1 = {
     "source": "source",
     "source_name": "source_name",
     "body": "body",
-    "draft": True
+    "draft": True,
+    "favorite": True,
 }
 
 R2 = {
@@ -35,14 +36,18 @@ R2 = {
     "source": "source",
     "source_name": "http://source/path#fragment?query=True",
     "body": "body",
-    "draft": False
+    "draft": False,
+    "favorite": False,
 }
 
 
 def _assert_recipe_matches(session: Session, recipe: dict):
     actual_recipe = session.query(Recipe).filter_by(title=recipe["title"]).first()
     assert actual_recipe
-    for attr in ("title", "subtitle", "source", "source_name", "body", "portions", "draft"):
+    for attr in (
+            "title", "subtitle", "source",
+            "source_name", "body", "portions", "draft", "favorite"
+    ):
         assert getattr(actual_recipe, attr) == recipe[attr]
 
     actual_ingredient_items = getattr(actual_recipe, "ingredients", [])

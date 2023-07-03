@@ -167,14 +167,25 @@ class Category(Base):
 
 class Recipe(Base):
     __tablename__ = "recipe"
-    __items__ = ["id", "title", "subtitle", "ingredients", "body",
-                 "source", "source_name", "tags", "portions"]
+    __items__ = [
+        "id",
+        "title",
+        "subtitle",
+        "ingredients",
+        "favorite",
+        "body",
+        "source",
+        "source_name",
+        "tags",
+        "portions"
+    ]
 
     title = Column(String(80), nullable=False)
     subtitle = Column(String(50), nullable=True)
     source_name = Column(String(100), nullable=True)
     source = Column(String(100), nullable=True)
     draft = Column(Boolean(), default=False)
+    favorite = Column(Boolean(), default=False)
     portions = Column(Integer, default=4)
     ingredients: Mapped[List[IngredientItem]] = relationship(
         secondary=ingredients,

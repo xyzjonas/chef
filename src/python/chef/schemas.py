@@ -120,6 +120,7 @@ class BaseRecipe(BaseModel):
     source_name: Union[str, None] = None
     source: Union[str, None] = None
     draft: bool = False
+    favorite: bool = False
     portions: int = 4
     ingredients: List[IngredientItem] = Field(default_factory=list)
     tags: List[Tag] = []
