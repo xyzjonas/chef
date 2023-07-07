@@ -14,15 +14,17 @@ defineProps(['recipe', 'loading'])
 <style lang="scss" scoped>
 @keyframes loading {
     from {
-        transform: rotate(-15deg)
+        transform: rotate(-100deg)
     }
     to {
-        transform: rotate(15deg)
+        transform: rotate(100deg)
     }
 }
 .star {
     font-size: x-large;
     color: goldenrod;
+    transform: rotate(0deg);
+    transition: all 1s;
 
     &:hover {
         color: gold;
@@ -31,7 +33,7 @@ defineProps(['recipe', 'loading'])
 
     &.loading {
         animation-name: loading;
-        animation-duration: 0.2s;
+        animation-duration: 0.3s;
         animation-direction: alternate-reverse;
         animation-timing-function: ease-in-out;
         animation-iteration-count: infinite;

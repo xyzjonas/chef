@@ -46,6 +46,5 @@ async def create_recipe(create_data: CreateOrUpdateRecipe) -> Recipe:
 
 @router.put('/{item_id}')
 async def update_recipe(item_id: int, update_data: CreateOrUpdateRecipe) -> Recipe:
-    await asyncio.sleep(1)
     with Session(engine()) as session:
         return await recipes.update(session, item_id, update_data)
