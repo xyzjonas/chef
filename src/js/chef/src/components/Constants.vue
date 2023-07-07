@@ -1,8 +1,9 @@
 <script>
 
+
 export default {
-  HOST_URL: '/api',
-  IMAGES_URL: '/images',
+  HOST_URL: import.meta.env.VITE_API_URL,
+  IMAGES_URL: import.meta.env.VITE_IMAGES_URL,
 
   methods: {
     replaceUnicode(str) {
