@@ -21,9 +21,7 @@
           <i class="fas fa-check"></i>
         </span>
       </div>
-      <p v-if="!recipe.title" class="help is-danger">
-        Title is required
-      </p>
+      <p v-if="!recipe.title" class="help is-danger">Title is required</p>
     </div>
 
     <!-- sub-title -->
@@ -84,81 +82,28 @@
        <div class="field">
          <div class="control">
            <div class="tags">
-              <span
-                v-for="(i, index) in recipe.ingredients" :key="i+index"
-                class="tag"
-              >
-              <p>{{ i.amount }}<strong>{{ i.unit.name }}</strong> {{ i.ingredient.name }}
-              <span v-if="i.note">({{ i.note }})</span>
-              </p>
-              <button v-on:click="removeIngredient(i)" class="delete is-small"></button>
+              <span v-for="(i, index) in recipe.ingredients" class="tag">
+                <p>{{ i.amount }}<strong>{{ i.unit.name }}</strong> {{ i.ingredient.name }}
+                  <span v-if="i.note">({{ i.note }})</span>
+                </p>
+                <button v-on:click="removeIngredient(i)" class="delete is-small"></button>
             </span>
            </div>
          </div>
         </div>
+    </div>
 
-      <!-- smart field -->
-      <div class="field has-addons my-0">
-        <div
-          :class="{
-            dropdown: true,
-            'is-active': smartFieldAutocomplete.length > 0,
-            control: true,
-            'is-expanded': true,
-            'is-right': true,
-            'has-icons-left': true
-          }"
-        >
-          <input
-            :class="{
-              'is-danger': smartFieldError,
-              'is-success': parsedSmartField && !smartFieldNewIngredient,
-              'is-info': smartFieldNewIngredient
-            }"
-            v-model="addIngredientSmartField"
-            @input="parseSmartField"
-            @keyup="ingredientEnterPressed"
-            class="input"
-            type="text"
-            placeholder="100g <ingredient>"
-          />
-          <span class="icon is-small is-left">
-            <i class="fas fa-drumstick-bite"></i>
-          </span>
-          <div class="dropdown-menu fullwidth" id="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a v-for="(item, index) in smartFieldAutocomplete" :key="index"
-              v-on:click="autocomplete(item)"
-              class="dropdown-item">
-                {{ item }}
-              </a>
-            </div>
-          </div>
-        </div>
-      
-        <p class="control">
-          <button :class="{
-            'button':true,
-            'is-success':!smartFieldError,
-            'is-danger':smartFieldError,
-            'is-outlined':true
-            }"
-            :disabled=smartFieldError||!addIngredientSmartField
-            v-on:click="confirmIngredient"
-          >
-            <span class="icon is-small">
-              <i class="fas fa-plus"></i>
-            </span>
-          </button>
-        </p>
-      </div>
-      <!-- smart field hint -->
-      <p v-if="smartFieldError" class="help is-danger">
-        {{ smartFieldError }}
-      </p>
-      <p v-if="smartFieldNewIngredient" class="help is-info">
-        New ingredient will be added <strong>{{ smartFieldNewIngredient }}</strong>
-      </p>
+    <div class="ingredient-items">
+      <IngredientInput
+        v-for="(i, index) in recipe.ingredients"
+        :key="i.id"
+        :initialData="i"
+        @update:ingredient="ing => recipe.ingredients[index] = ing"
+        @delete="removeIngredient(i)"
+        @up="up(index)"
+        @down="down(index)"
+      />
+      <button class="button mt-3" @click="recipe.ingredients.push(blankIngredient)">+</button>
     </div>
 
     <!-- portions -->
@@ -185,7 +130,7 @@
       </article>
       <div class="control">
         <div>
-          <a v-for="(tag, index) in availableTags" :key="tag + index"
+          <a v-for="(tag, index) in availableTags" :key="`${tag},${index}`"
             v-on:click="toggleTag(tag)"
           >
             <span
@@ -220,8 +165,13 @@
 
     <div class="my-1">
       <button
-        v-on:click="postRecipe"
-        class="button is-fullwidth is-success"
+        @click="postRecipe"
+        :class="{
+          'button': true,
+          'is-fullwidth': true,
+          'is-success': true,
+          'is-loading': recipeStore.loading
+        }"
         :disabled="!recipe.title"
       >Save</button>
     </div>
@@ -239,226 +189,119 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "@/components/Constants.vue";
+<script setup lang="ts">
 import TextEditor from "@/components/TextEditor.vue";
 import Counter from "@/components/Counter.vue";
+import IngredientInput from "@/components/IngredientInput.vue";
+import type { Recipe, IngredientItem, Tag, CreateRecipe } from "@/types";
+import { computed, ref } from "vue";
+import { useRecipeStore } from "@/stores/recipe";
+import { useTagStore } from "@/stores/tags";
+import { deepCopy } from "@/utils";
 
-const getOr = (val, def) => {
-  if(val) {
-    return val;
+
+const recipeStore = useRecipeStore();
+const tagStore = useTagStore();
+const availableTags = tagStore.all;
+
+
+const props = defineProps<{
+  data: Recipe | CreateRecipe
+}>()
+const recipe = ref<Recipe>(deepCopy(props.data));
+
+const counter = ref<number>(4);
+const createTagField = ref<string>();
+
+const postSuccess = ref();
+const postError = ref();
+
+const formIsValid = computed(() => {
+  // todo
+})
+
+
+const updateCounter = (val: number) => {
+  counter.value = val
+  recipe.value.portions = val
+}
+
+const updateText = (value: string) => {
+  recipe.value.body = value;
+}
+
+const blankIngredient: IngredientItem = {
+  amount: 0,
+  unit: { name: "g" },
+  ingredient: { name: "" },
+  note: "",
+}
+const removeIngredient = (ingredient: IngredientItem) => {
+  recipe.value.ingredients = recipe.value.ingredients.filter(i => {
+    return !(
+      i.ingredient.name === ingredient.ingredient.name
+      && i.amount === ingredient.amount
+      && i.unit.name === ingredient.unit.name
+      && i.note === ingredient.note
+    );
+  });
+}
+
+const up = (index: number) => {
+  if (index === 0) {
+    return
+  }
+  const item = recipe.value.ingredients[index];
+  recipe.value.ingredients[index] = recipe.value.ingredients[index - 1];
+  recipe.value.ingredients[index - 1] = item;
+}
+
+const down = (index: number) => {
+  if (index === recipe.value.ingredients.length - 1) {
+    return
+  }
+  const item = recipe.value.ingredients[index];
+  recipe.value.ingredients[index] = recipe.value.ingredients[index + 1];
+  recipe.value.ingredients[index + 1] = item;
+}
+
+const toggleTag = (tag: Tag) => {
+  var tagNames = recipe.value.tags.map(t => t.name)
+  if (!tagNames.includes(tag.name)) {
+    recipe.value.tags.push(tag);
   } else {
-    return def;
+    recipe.value.tags = recipe.value.tags.filter(t => t.name != tag.name)
   }
 }
 
-export default {
-  props: ["recipe"],
+const createTag = () => {
+  if (createTagField.value) {
+    var tag = { name: createTagField.value };
+    availableTags.push(tag);
+    createTagField.value = undefined;
+    recipe.value.tags.push(tag);
+  }
+}
 
-  components: {
-    TextEditor,
-    Counter,
-  },
-  data() {
-    return {
-      addIngredientSmartField: null,
-      smartFieldError: null,
-      smartFieldAutocomplete: [],
-      smartFieldNewIngredient: null,
-      parsedSmartField: null,
-      addIngredientNoteField: null,
+const emit = defineEmits(['posted', 'created']);
+const postRecipe = () => {
+  if (recipe.value.id) {
+    console.debug('Updating existing recipe.')
+    recipeStore.update(recipe.value).then(r => emit('posted', r));
+  } else {
+    console.debug('Creating new recipe.')
+    recipeStore.create(recipe.value).then(r => emit('posted', r));
+  }
+}
 
-      counter: 4,
-      availableTags: [],
-      createTagField: null,
-
-      postSuccess: null,
-      postError: null,
-
-      ingredients: ["rice", "chicken", "penne"],
-    };
-  },
-  methods: {
-    updateCounter(val) {
-      this.counter = val // why is this needed?
-      this.recipe.portions = val
-    },
-
-    updateText(value) {
-      // this.text = value;  // why is this needed?
-      this.recipe.body = value;
-    },
-
-    autocomplete(value) {
-      this.parseSmartField(value);
-    },
-
-    ingredientEnterPressed(event) {
-      if (event.keyCode === 13) {
-          this.confirmIngredient();
-      } 
-    },
-    
-    confirmIngredient() {
-      this.recipe.ingredients.push(this.parsedSmartField);
-      this.addIngredientSmartField = "";
-      this.resetSmartField();
-    },
-
-    removeIngredient(ingredient) {
-      this.recipe.ingredients = this.recipe.ingredients.filter(i => {
-        return !(
-          i.ingredient.name === ingredient.ingredient.name
-          && i.amount === ingredient.amount
-          && i.note === ingredient.note
-        );
-      });
-    },
-
-    resetSmartField() {
-      this.smartFieldError = null;
-      this.parsedSmartField = null;
-      this.smartFieldAutocomplete = [];
-      this.smartFieldNewIngredient = null;
-      this.addIngredientNoteField = null;
-    },
-
-    toggleTag(tag) {
-      var tagNames = this.recipe.tags.map(t => t.name)
-      if (!tagNames.includes(tag.name)) {
-        this.recipe.tags.push(tag);
-      } else {
-        this.recipe.tags = this.recipe.tags.filter(t => t.name != tag.name)
-      }
-    },
-
-    createTag() {
-      if (this.createTagField) {
-        var tag = { name: this.createTagField }
-        this.availableTags.push(tag);
-        this.createTagField = null;
-        this.recipe.tags.push(tag)
-      }
-    },
-
-    filterAutocomplete(text) {
-      var re = new RegExp(
-        Constants.methods.replaceUnicode(text.toLowerCase()));
-
-      return this.ingredients.filter(i => {
-        var match = re.exec(
-          Constants.methods.replaceUnicode(i.toLowerCase()))
-        if (match) {
-          return true;
-        }
-        return false;
-      })
-    },
-
-    parseSmartField(prefill) {
-      this.resetSmartField();
-
-      // group 1 = amount, 2 = unit, 3 = name, 4 = note
-      var re = /([\d.]+)([^\s\\/><)(}{]+)? +([^\\/><)(}{0-9]*) *(\([^\\/><)(}{]+\))?$/
-
-      var match = re.exec(this.addIngredientSmartField);
-      if (!match) {
-        this.smartFieldError = "Expected format: <amount><unit> <item> (<note>)";
-        return;
-      }
-      var amount = parseFloat(match[1]);
-      var name = match[3].trim();
-      var note = match[4];
-      var unit = match[2];
-      if (isNaN(amount)) {
-        this.smartFieldError = `First item '${match[1]}' must be a number.`
-      }
-
-      if (typeof prefill === "string") {
-        this.addIngredientSmartField = `${amount}${getOr(unit, "")} ${prefill} ${getOr(note, "")}`
-        name = prefill;
-      } else {
-        this.smartFieldAutocomplete = this.filterAutocomplete(name);
-      }
-
-      if (note) {
-        note = note.replace("(", "").replace(")", "");
-      }
-
-      if (!this.ingredients.includes(name)) {
-        this.smartFieldNewIngredient = name;
-      }
-
-      this.parsedSmartField = {
-        amount: amount,
-        unit: {
-          name: unit,
-        },
-        ingredient: {name: name},
-        note: note,
-      };
-    },
-
-    getRootData() {
-      var path = `${Constants.HOST_URL}/tags`;
-      axios.get(path)
-        .then(res => this.availableTags = res.data)
-        .catch((err) => this.error = err);
-
-      path = `${Constants.HOST_URL}/ingredients`;
-      axios.get(path)
-        .then(res => {
-          if (res.status !== "success") {
-            if (res.data) {
-              this.ingredients = res.data.map(i => i.name);
-            }
-          }
-        })
-        .catch((err) => this.error = err);
-    },
-
-    postRecipe() {
-      // hacky... but it works
-      if (this.recipe.id) {
-        const path = `${Constants.HOST_URL}/recipes/${this.recipe.id}`;
-        const options = {
-          headers: { 'Content-Type': 'application/json' },
-        };
-        axios.put(path, this.recipe, options)
-          .then((res) => {
-            this.postSuccess = `${res.status} ${res.statusText}`;
-            this.$emit('recipePosted', res.data);
-          })
-          .catch((err) => {
-            this.postError = err.response.data;
-          });
-
-        } else {
-          const path = `${Constants.HOST_URL}/recipes`;
-          const options = {
-            headers: { 'Content-Type': 'application/json' },
-          };
-          axios.post(path, this.recipe, options)
-            .then((res) => {
-              this.postSuccess = `${res.status} ${res.statusText}`;
-              this.$emit('recipePosted', res.data);
-            })
-            .catch((err) => {
-              this.postError = err.response.data;
-            });
-        }
-    }
-  },
-  created() {
-    this.getRootData();
-    this.counter = this.recipe.portions;
-  },
-
-};
 </script>
 
 <style>
+  .ingredient-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
   .fullwidth {
     width: 100%;
   }

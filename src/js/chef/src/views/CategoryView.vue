@@ -1,93 +1,44 @@
 <template>
   <div>
-
     <transition name="loading" mode="out-in">
-    <LoadingSection v-if="loadingCategory" :loading="loadingCategory"/>
+    <LoadingSection v-if="categories.loading" :loading="categories.loading"/>
     <CategoryTile
       v-else
-      :category="category"
+      :category="categories.current"
       :editable="true"
       @categoryDeleted="$router.push({ name: 'home' })"
-      @categoryEdited="edited"
+      @categoryEdited="$router.push(route.fullPath)"
     />
     </transition>
 
-    <div v-if="errorCategory">
-      <article class="message is-danger my-5">
-      <div class="message-body">{{ errorCategory }}</div>
-      </article>
-    </div>
-
-    <div v-else>
     <transition name="loading" mode="out-in">
-    <LoadingSection v-if="loadingRecipes" :loading="loadingRecipes"/>
-    <div v-else-if="errorRecipes">
-      <article class="message is-danger my-5">
-      <div class="message-body">{{ errorRecipes }}</div>
-      </article>
-    </div>
+    <LoadingSection v-if="recipes.loading" :loading="recipes.loading"/>
     <div v-else class="px-2 pt-3 recipe-list">
-      <RecipeList :allRecipes="recipes" />
+      <RecipeList :allRecipes="categories.recipes" />
     </div>
     </transition>
-    </div>
 
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import RecipeList from "@/components/RecipeList.vue";
-import CategoryTile from "../components/CategoryTile.vue";
-import axios from "axios";
-import Constants from "../components/Constants.vue";
-import LoadingSection from "../components/LoadingSection.vue"
+import CategoryTile from "@/components/CategoryTile.vue";
+import LoadingSection from "@/components/LoadingSection.vue"
+import { useCategoryStore } from "@/stores/categories";
+import { useRecipeStore } from "@/stores/recipe";
+import { useRoute } from "vue-router";
 
-export default {
-  components: { CategoryTile, RecipeList, LoadingSection},
 
-  data() {
-    return {
-      category: null,
-      recipes: [],
-      errorCategory: null,
-      loadingCategory: false,
-      errorRecipes: null,
-      loadingRecipes: false
-    };
-  },
+const categories = useCategoryStore();
+const recipes = useRecipeStore();
 
-  methods: {
-    edited() {
-      this.getCategory();
-      this.getRecipes();
-    },
-
-    getCategory() {
-      const category = `${Constants.HOST_URL}/categories/${this.$route.params.id}`;
-      this.loadingCategory = true;
-      axios
-        .get(category)
-        .then(res => (this.category = res.data))
-        .catch(() => (this.errorCategory = "Category NOT found"))
-        .finally(() => (this.loadingCategory = false));
-      },
-
-      getRecipes() {
-        const recipes = `${Constants.HOST_URL}/recipes?category=${this.$route.params.id}`;
-        this.loadingRecipes = true;
-        axios
-          .get(recipes)
-          .then(res => (this.recipes = res.data))
-          .catch(() => (this.errorRecipes = "Error occured while fetching recipes."))
-          .finally(() => (this.loadingRecipes = false));
-      }
-  },
-
-  created() {
-    this.getCategory();
-    this.getRecipes();
-  }
-};
+const route = useRoute();
+const categoryId = parseInt(route.params.id);
+categories.currentId = categoryId;
+if (!categories.all.find(cat => cat.id === categoryId)) {
+  categories.fetchSingle(categoryId);
+}
 </script>
 
 <style lang="scss" scoped>

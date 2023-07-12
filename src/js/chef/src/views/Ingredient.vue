@@ -70,71 +70,33 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "@/components/Constants.vue";
+<script setup lang="ts">
 import IngredientForm from "@/components/IngredientForm.vue";
 import NotFound from "@/components/NotFound.vue";
+import { useIngredientStore } from "@/stores/ingredient";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
 
-export default {
-  components: {
-    IngredientForm,
-    NotFound
-  },
+const ingredientId = parseInt(useRoute().params.id);
 
-  data() {
-    return {
-      ingredient: null,
-      error: null,
-      edit: false,
-      attributes: {},
-    };
-  },
+const ingredients = useIngredientStore();
 
-  methods: {
-    fetchIngredient() {
-      const path = `${Constants.HOST_URL}/ingredients/${this.$route.params.id}`;
-      axios
-        .get(path)
-        .then(res => {
-          if (res.status !== "success") {
-            if (res.data) {
-              this.ingredient = res.data;
-              this.attributes = {
-                energy: `${this.ingredient.energy} kcal`,
-                carbs: `${this.ingredient.carbs} g`,
-                fats: `${this.ingredient.fats} g`,
-                proteins: `${this.ingredient.proteins} g`,
-                fibres: `${this.ingredient.fibres} g`,
-                salt: `${this.ingredient.salt} g`,
-              }
-            }
-          }
-        })
-        .catch(err => {
-          this.error = err;
-          console.error(err)
-        });
-    },
+if (!ingredients.all.find(ing => ing.id === ingredientId)) {
+  ingredients.fetchSingle(ingredientId);
+}
 
-    deleteIngredient() {
-      const path = `${Constants.HOST_URL}/ingredients/${this.ingredient.id}`;
-      axios.delete(path)
-        .then(() => {
-          this.$emit("ingredientDeleted");
-        })
-        .catch(err => {
-          this.error = `${err.response.data}.`;
-          console.error(err);
-        })
-    }
+const ingredient = computed(() => {
+  return ingredients.all.find(r => r.id === ingredientId);
+});
 
-  },
 
-  created() {
-    this.fetchIngredient();
-  }
-};
+const edit = ref(false);
+const attributes = ref({})
+
+const emit = defineEmits(["ingredientDeleted"])
+const deleteIngredient = () => {
+  ingredients.deleteById(ingredientId).then(() => emit("ingredientDeleted"));
+}
 </script>
 
 <style></style>

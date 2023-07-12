@@ -13,13 +13,13 @@
       v-else
       v-on:click="clicked"
       class="tile box is-child image-background clickable"
-      :style="getTileStyle()"
+      :style="backgroundStyle"
     >
       <!-- title -->
       <p class="title tile-title">{{ category.name }}</p>
 
       <!-- TAGS -->
-      <div class="tags my-0">
+      <div class="tags mb-3">
         <span class="mytag" v-for="(tag, index) in category.tags" :key="'category-tag-' + index">{{tag.name}}</span>
       </div>
       <!-- buttons -->
@@ -27,7 +27,8 @@
         <div v-if="editable" class="level-item level-right">
           <p class="control mr-1">
             <ImageUpload
-              :category=category :small="true"
+              :category=category
+              :small="true"
               @uploadFailed="imageUploadFailed"
               @uploadSuccess="edited"
             />
@@ -38,8 +39,14 @@
             </button>
           </div>
 
-          <DeleteButton @delete="deleteCategory" :small="true" :rounded="true"/>
-          
+          <DeleteButton
+            @delete="deleteCategory"
+            v-model="youSure"
+            :small="true"
+            :rounded="true"
+            class="ml-1 del-btn"
+            :loading="categories.loading"
+          />          
         </div>
       </div>
       <span v-if="uploadError" class="help is-danger">
@@ -56,79 +63,61 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "@/components/Constants.vue";
+<script setup lang="ts">
 import CategoryForm from "@/components/CategoryForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
+import { useCategoryStore } from "@/stores/categories";
+import { computed, ref } from "vue";
+import { IMAGES_URL } from "@/constants";
+import type { Category } from "@/types";
+import { useRouter } from "vue-router";
 
-export default {  
+const categories = useCategoryStore();
 
-  data() {
-    return {
-      edit: false,
-      youSure: false,
-      uploadError: null,
-    };
-  },
-
-  props: ["category", "editable"],
-
-  components: { CategoryForm, ImageUpload, DeleteButton },
-
-  methods: {
-
-    imageUploadFailed(err) {
-      this.uploadError = err;
-    },
-
-    clicked() {
-      if (!this.editable) {
-        this.$emit("clicked", this.category);
-      }
-    },
-
-    edited() {
-      this.edit = false;
-      this.$emit("categoryEdited");
-    },
-
-    deleteCategory() {
-      const path = `${Constants.HOST_URL}/categories/${this.category.id}`;
-      axios
-        .delete(path)
-        .then((res) => {
-          this.$emit('categoryDeleted', res);
-        })
-        .catch((err) => {
-          this.postError = err;
-        });
-    },
+const youSure = ref(false);
 
 
-    getRandomColor() {
-      // storing all letter and digit combinations
-      // for html color code
-      var letters = "012345html6789ABCDEF";
-    
-      // html color code starts with #
-      var color = '#';
-    
-      // generating 6 times as HTML color code consist
-      // of 6 letter or digits
-      for (var i = 0; i < 6; i++)
-        color += letters[(Math.floor(Math.random() * 16))];
-      return color;
-    },
+const props = defineProps<{
+  category: Category,
+  editable: boolean,
+}>();
+const emit = defineEmits(["categoryEdited", "categoryDeleted", "clicked"])
 
-    getTileStyle() {
-      return `background-image: url('${Constants.IMAGES_URL}/categories/${this.category.id}/landscape.jpeg');`
-    }
 
-  },
+const uploadError = ref(null);
+const imageUploadFailed = (err) => {
+  uploadError.value = err;
+}
 
-};
+const edit = ref(false);
+const clicked = () => {
+  if (!props.editable) {
+    emit("clicked", props.category);
+  }
+}
+
+// Use random query param to force reload on change.
+const backgroundStyle = computed(() => {
+  return `background-image: url('${IMAGES_URL}/categories/${props.category.id}/landscape.jpeg?rand=${categories.imageCache[props.category.id]}');`  
+})
+  
+
+const router = useRouter();
+const edited = () => {
+  edit.value = false;
+  categories.imageCache[props.category.id] = Math.random();
+  emit("categoryEdited");
+}
+
+const deleteCategory = () => {
+  categories
+    .deleteById(props.category.id)
+    .then((res) => {
+      emit('categoryDeleted', res);
+      router.push({name: "home"})
+    })
+}
 </script>
 
 <style lang="scss" scoped>

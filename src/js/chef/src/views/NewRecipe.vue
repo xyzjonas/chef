@@ -4,35 +4,28 @@
   <h2 class="subtitle is-5">a new recipe</h2>
 
     <RecipeForm
-      :recipe="recipe"
-      @recipePosted="routeToNewRecipe"
+      :data="blankRecipe"
+      @posted="routeToNewRecipe"
       @cancel="$router.push({ name: 'home' })"
     />
     
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import RecipeForm from "@/components/RecipeForm.vue";
+import type { CreateRecipe, Recipe } from "@/types";
+import { useRouter } from "vue-router";
 
-export default {
-  components: {
-    RecipeForm,
-  },
-  data() {
-    return {
-      recipe: {
-        portions: 4,
-        ingredients: [],
-        tags: [],
-        body: ""
-      },
-    };
-  },
-  methods: {
-    routeToNewRecipe(recipe) {
-      this.$router.push({ name: 'recipe', params: { id: recipe.id } })
-    }
-  }
-};
+const blankRecipe: CreateRecipe = {
+  title: "",
+  portions: 4,
+  ingredients: [],
+  tags: [],
+  body: "",
+}
+const router = useRouter();
+const routeToNewRecipe = (recipe: Recipe) => {
+  router.push({ name: 'recipe', params: { id: recipe.id } })
+}
 </script>

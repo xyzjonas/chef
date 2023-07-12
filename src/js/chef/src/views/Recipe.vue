@@ -1,6 +1,6 @@
 <template>
   <div class="mx-3 mb-3">
-    <div ref="look-here"></div>
+    <div ref="lookHere"></div>
     <transition name="loading" mode="out-in">
     <div ref="recipeTitle" v-if="recipe">
       <div v-if="!editMode">
@@ -10,7 +10,7 @@
             <p class="image" style="width: 256px; height: 256px">
               <img
                 ref="r-img"
-                :src="url"
+                :src="image_url"
                 @error="missingImage = true"
                 alt="recipe image"
                 class="is-rounded p-2">
@@ -18,6 +18,7 @@
           </div>
           <div class="level-item">
             <div class="has-text-centered-mobile title-header">
+              <h1 v-if="recipe" class="title is-4">#{{ recipe.id }}</h1>
               <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
               <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
 
@@ -35,7 +36,7 @@
         <!-- tags -->
         <div class="tags mt-5">
           <!-- CURR -->
-          <MakeCurrentButton :recipe="recipe" :loading="favoriteLoading" @favorite="makeFavorite" @cancel="cancelCurrent" class="mr-2"/>
+          <ButtonFavorite :favorite="recipe.favorite" :loading="recipes.loading" @favorite="makeFavorite" class="mr-2"/>
           <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
         </div>
 
@@ -65,7 +66,7 @@
 
           <div v-if="recipe && recipe.ingredients" class="px-5">
             <div
-              v-for="(ingredient, index) in recipe.ingredients" :key="ingredient + index + 'recipe-detail'"
+              v-for="(ingredient, index) in recipe.ingredients" :key="ingredient.ingredient.name + index + 'recipe-detail'"
               class="level is-mobile">
               <div class="level-left">
                 <div class="level-item">
@@ -88,7 +89,7 @@
 
           <!-- portion counter  -->
           <div class="my-5">
-            <Counter :initialValue="recipe.portions" @counterUpdate="updatePortions"></Counter>
+            <Counter v-model="portions"></Counter>
             <label class="label">Enough for {{ Math.round((portions/recipe.portions)*10)/10 }} batch(es).</label>
           </div>
 
@@ -96,147 +97,103 @@
         </div>
         </transition>
 
-        <!-- Steps -->
-        <h1 v-show="recipe" class="title is-5">Steps</h1>
         <!-- HTML body -->
         <div v-html="recipe.body" class="content section pt-1"/>
       </div>
 
       <!-- buttons -->
-      <div v-if="!editMode" class="my-5">     
-        <div class="field is-grouped">
-          <p class="control mx-1">
-            <DeleteButton @delete="deleteRecipe" />
-          </p>
-          <p class="control mx-1">
-            <ImageUpload :recipe=recipe @uploadSuccess="$router.go($router.currentRoute)" />
-          </p>
-          <p class="control mx-1 is-expanded">
-            <button v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
-              <i class="fas fa-pen"></i>
-              <span class="ml-2">Edit</span>
-            </button>
-          </p>
-        </div>
+      <div v-if="!editMode" class="my-5 row">
+        <DeleteButton @delete="deleteRecipe" v-model="deletePrompt" :loading="recipes.loading"/>
+        <ImageUpload
+          v-show="!deletePrompt"
+          :recipe=recipe
+          @uploadSuccess="$router.go($router.currentRoute)"
+        />
+        <button v-show="!deletePrompt" v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
+          <i class="fas fa-pen"></i>
+          <span class="ml-2">Edit</span>
+        </button>
       </div>
 
       <div v-if="editMode">
         <RecipeForm
-          :recipe="recipe"
-          @recipePosted="updateRecipe"
+          :data="recipe"
+          @posted="updateRecipe"
           @cancel="editMode=false"
         />
       </div>
     </div>
     <!-- no recipe -->
-    <LoadingSection v-else-if="loading" class="p-5" :loading="loading"/>
+    <LoadingSection v-else-if="recipes.loading" class="p-5" :loading="recipes.loading"/>
     <NotFound v-else message="Recipe not found" />
     </transition>
 
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "@/components/Constants.vue";
+<script setup lang="ts">
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
 import LoadingSection from "@/components/LoadingSection.vue";
 import NotFound from "@/components/NotFound.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
-import MakeCurrentButton from "@/components/MakeCurrentButton.vue";
+import ButtonFavorite from "@/components/ButtonFavorite.vue";
+
+import { useRecipeStore } from "@/stores/recipe";
+import { useRoute, useRouter } from "vue-router";
+import { computed, ref, toRefs } from "vue";
+import { IMAGES_URL } from "@/constants";
+
+const router = useRouter();
+const route = useRoute();
+const recipeId = parseInt(route.params.id);
+
+const recipes = useRecipeStore();
+const { all } = toRefs(recipes)
+
+if (!all.value.find(r => r.id === recipeId)) {
+  recipes.fetchSingle(recipeId);
+}
+
+const recipe = computed(() => {
+  return all.value.find(r => r.id === recipeId);
+});
+const portions = ref<number>(recipe.value?.portions ?? 4);
 
 
-
-export default {
-  components: { Counter, RecipeForm, ImageUpload, LoadingSection, NotFound, DeleteButton, MakeCurrentButton },
-
-  data() {
-    return {
-      recipe: null,
-      error: null,
-      portions: 4,
-      editMode: false,
-      deletePrompt: false,
-      loading: false,
-      missingImage: false,
-
-      ingredientsCollapsed: false,
-
-      favoriteLoading: false,
-    }
-  },
-
-  computed: {
-
-    url() {
-      return `${Constants.IMAGES_URL}/${this.recipe.id}/medium.jpeg`;
-    }
-
-  },
-
-  methods: {
-    updatePortions(val) {
-      this.portions = val;
-    },
-
-    updateRecipe() {
-      this.editMode = !this.editMode
-      this.$refs["look-here"].scrollIntoView();
-      this.fetchRecipe();
-    },
-
-    youSurePrompt() {
-      this.deletePrompt=!this.deletePrompt;
-      this.$refs['yousure'].scrollIntoView()
-    },
-
-    deleteRecipe() {
-      const path = `${Constants.HOST_URL}/recipes/${this.$route.params.id}`;
-      axios.delete(path)
-        .then(() => this.$router.push('/recipes'))
-        .catch(err => console.error(err))
-    },
-
-    fetchRecipe() {
-      this.loading = true;
-      const path = `${Constants.HOST_URL}/recipes/${this.$route.params.id}`;
-      axios.get(path)
-        .then(res => {
-          this.recipe = res.data;
-          this.portions = this.recipe.portions;
-        })
-        .catch((err) => {
-          this.error = err;
-          console.error(err)
-        })
-        .finally(() => (this.loading = false));
-    },
-
-    makeFavorite() {
-      this.favoriteLoading = true;
-      const path = `${Constants.HOST_URL}/recipes/${this.recipe.id}`;
-      const options = { headers: { 'Content-Type': 'application/json' } };
-      const data = {...this.recipe};
-      data.favorite = !data.favorite;
-
-      axios.put(path, data, options)
-        .then((res) => this.recipe = res.data)
-        .catch((err) => this.error = err)
-        .finally(() => (this.favoriteLoading = false));
-    },    
-
-  },
-
-  created() {
-    this.fetchRecipe();
-  },
-
+const editMode = ref(false);
+const lookHere = ref(null)
+const updateRecipe = () => {
+  editMode.value = !editMode.value;
 };
+
+
+const deletePrompt = ref(false);
+const deleteRecipe = async () => {
+  recipes.deleteById(recipeId).then(() => router.push('/recipes'));
+}
+
+const makeFavorite = async () => {
+  const data = {...recipe.value}
+  data.favorite = !data.favorite;
+  recipes.update(data);
+}
+
+const ingredientsCollapsed = ref<boolean>(false);
+
+const missingImage = ref<boolean>(false);
+
+const image_url = `${IMAGES_URL}/${recipeId}/medium.jpeg`;
+
 </script>
 
 <style lang="scss" scoped>
+  .row {
+    display: flex;
+    gap: 3px;
+  }
+
   .animate-icon {
     transition: 0.15s;
   }

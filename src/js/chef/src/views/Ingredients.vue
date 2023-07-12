@@ -1,13 +1,12 @@
 <template>
   <div>
     <!-- title -->
-    <h1 class="title is-4">{{ ingredients.length }} Ingredients</h1>
+    <h1 class="title is-4 mt-5">{{ ingredients.length }} Ingredients</h1>
 
     <!-- search -->
     <p class="control has-icons-left">
       <input 
         v-model="search"
-        @input="refresh"
         class="input is-rounded"
         type="text"
         placeholder="search">
@@ -18,72 +17,36 @@
 
     <div class="section px-3 pt-4">
       <IngredientListItem
-        v-for="(ingredient, index) in ingredients" :key="ingredient + index + 'list'"
+        v-for="(ingredient, index) in ingredients" :key="`${ingredient},${index},list`"
         :ingredient="ingredient"
-        @ingredientDeleted="reload();refresh();"
       />
     </div>
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "../components/Constants.vue";
-import IngredientListItem from "../components/IngredientListItem.vue";
+<script setup lang="ts">
+import IngredientListItem from "@/components/IngredientListItem.vue";
+import { useIngredientStore } from "@/stores/ingredient";
+import { computed, ref } from "vue";
+import { replaceUnicode } from "@/utils";
 
-export default {
-  data() {
-    return {
-      allIngredients: [],
-      ingredients: [],
-      error: null,
-      search: null,
-    };
-  },
+const ingredientsStore = useIngredientStore();
 
-  components: {
-    IngredientListItem
-  },
+const search = ref<string>();
 
-  methods: {
-
-    refresh() {
-      this.ingredients = this.allIngredients;
-      // search & regex
-      if (!this.search || this.search === ""){
-        return;
-      }
-      var re = new RegExp(
-        Constants.methods.replaceUnicode(this.search.toLowerCase()));
-      this.ingredients = this.allIngredients.filter(i => {
-        var match = re.exec(Constants.methods.replaceUnicode(i.name.toLowerCase()))
-        if (match) {
-          return true;
-        }
-        return false;
-      })
-      
-    },
-
-    reload() {
-      const path = `${Constants.HOST_URL}/ingredients`;
-      axios.get(path)
-        .then(res => {
-          if (res.status !== "success") {
-            if (res.data) {
-              this.ingredients = res.data;
-              this.allIngredients = res.data;
-            }
-          }
-        })
-        .catch((err) => this.error = err);
-    }
-  },
-
-  created() {
-    this.reload();
+const ingredients = computed(() => {
+  if (!search.value || search.value === ""){
+    return ingredientsStore.all;
   }
-}
+  const re = new RegExp(replaceUnicode(search.value.toLowerCase()));
+  return ingredientsStore.all.filter(ing => {
+    const match = re.exec(replaceUnicode(ing.name.toLowerCase()))
+    if (match) {
+      return true;
+    }
+    return false;
+  })
+})
 </script>
 
 <style>

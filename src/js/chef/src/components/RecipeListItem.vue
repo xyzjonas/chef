@@ -6,7 +6,7 @@
         <figure class="media-left m-0">
           <p class="image is-96x96" style="display: flex;">
             <img
-              ref="r-img"
+              ref="recipeImage"
               :src="getImageUrl()"
               alt="recipe image"
               class="is-rounded p-2"
@@ -38,39 +38,34 @@
   </div>
 </template>
 
-<script>
-import Constants from '@/components/Constants.vue';
-// import axios from 'axios';
+<script setup lang="ts">
+import type { Recipe } from '@/types';
+import { onMounted, ref } from 'vue';
+import { IMAGES_URL } from '@/constants';
 
-export default {
-  props: ["recipe"],
+const props = defineProps<{ recipe: Recipe }>();
 
-  data() {
-    return {
-      imageFailedToLoad: false,
-    }
-  },
-
-  methods: {
-    getImageUrl() {
-      // todo: check if image exists, replace with unknown if yes
-      return `${Constants.IMAGES_URL}/${this.recipe.id}/small.jpeg`
-    },
-  },
-
-  mounted() {
-
-    // Failsafe for images
-    this.$refs["r-img"].onerror = el => {
-      if (this.imageFailedToLoad) {
-        el.target.src = "";
-        return;
-      }
-      this.imageFailedToLoad = true;
-      el.target.src = `${Constants.IMAGES_URL}/not-found.png`;
-    }
-  }
+const imageFailedToLoad = ref(false);
+    
+const getImageUrl = (): string => {
+  // todo: check if image exists, replace with unknown if yes
+  return `${IMAGES_URL}/${props.recipe.id}/small.jpeg`
 };
+
+const recipeImage = ref<HTMLInputElement | null>(null);
+onMounted(() => {
+    // Failsafe for images
+    if (recipeImage.value) {
+      recipeImage.value.onerror = el => {
+        if (imageFailedToLoad.value) {
+          el.target.src = "";
+          return;
+        }
+        imageFailedToLoad.value = true;
+        el.target.src = `${IMAGES_URL}/not-found.png`;
+      }
+    }
+})
 </script>
 
 <style lang="scss" scoped>

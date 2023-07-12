@@ -1,9 +1,9 @@
 <template>
-  <div class="ml-1">
-    <transition name="slide-up" mode="out-in">
+  <div style="flex-grow: 2;">
+
     <button 
-      v-if="!youSure"
-      @click="youSure=!youSure"
+      v-if="!modelValue"
+      @click="$emit('update:modelValue', !modelValue)"
       :class="{
         button: true,
         'is-danger': true,
@@ -13,54 +13,49 @@
       }">
       <i class="fas fa-trash"></i>
     </button>
-    <div v-else>
-      <div class="field has-addons">
-        <p class="control">
-          <button
-            @click="$emit('delete')"
-            :class="{
-              button: true,
-              'is-danger': true,
-              'is-small': small,
-              'is-rounded': rounded,
-              'clickable-link': true
-            }">
-            <span class="icon is-small">
-              <i class="fas fa-trash"></i>
-            </span>
-          </button>
-        </p>
-        <p class="control">
-          <button
-            @click="youSure=!youSure"
-            :class="{
-              button: true,
-              'is-small': small,
-              'is-rounded': rounded,
-              'clickable-link': true
-            }">
-            <span class="icon is-small">
-              <i class="fas fa-times"></i>
-            </span>
-          </button>
-        </p>
-      </div>
+    <div v-else style="display: flex;">
+      <button
+        @click="$emit('update:modelValue', !modelValue)"
+        :class="{
+          button: true,
+          'is-small': small,
+          'is-rounded': rounded,
+          'is-fullwidth': true,
+          'clickable-link': true
+        }">
+        <span class="icon is-small">
+          <i class="fas fa-times"></i>
+        </span>
+      </button>
+      <button
+        @click="$emit('delete')"
+        :class="{
+          button: true,
+          'is-danger': true,
+          'is-small': small,
+          'is-rounded': rounded,
+          'is-fullwidth': true,
+          'clickable-link': true,
+          'is-loading': loading,
+          'ml-1': true,
+        }">
+        <span class="icon is-small">
+          <i class="fas fa-trash"></i>
+        </span>
+      </button>
     </div>
-    </transition>
+
   </div>
 </template>
 
-<script>
-export default {
-
-  props: ['small', 'rounded'],
-
-  data() {
-    return {
-      youSure: false
-    };
-  },
-}
+<script setup lang="ts">
+const props = defineProps<{
+  small: boolean,
+  rounded: boolean,
+  loading: boolean,
+  modelValue: boolean
+}>()
+defineEmits(["update:modelValue"])
 </script>
 
 <style>

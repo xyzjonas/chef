@@ -22,6 +22,9 @@
             <router-link :to="{ name: 'newcategory'}" class="button is-primary mx-0 pl-0">
               <strong>Add Category</strong>
             </router-link>
+            <router-link :to="{ name: 'Ingredients'}" class="button is-primary mx-0 pl-0">
+              <strong>Ingredients</strong>
+            </router-link>
             <router-link :to="{ name: 'new'}" class="button is-light">
               <span class="icon is-small">
                 <i class="fas fa-plus"></i>

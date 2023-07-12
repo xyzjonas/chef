@@ -12,11 +12,11 @@
     <div class="level-right">
       
       <!-- delete button -->
-      <div v-if="!error" class="level-item">
+      <div class="level-item">
         <button v-on:click="deleteIngredient()" class="button has-icons is-danger">
           <span class="icon">
             <i class="fas fa-trash"/>
-          </span>
+        </span>
         </button>
       </div>      
       <!-- edit button -->
@@ -46,9 +46,9 @@
   </nav>
 
   <!-- error message -->
-  <div v-if="error" class="level-item">
+  <!-- <div v-if="error" class="level-item">
     <p class="help is-danger">{{ error }}</p>
-  </div>
+  </div> -->
 
   <div v-if="edit">
     <hr>
@@ -61,44 +61,24 @@
 </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "../components/Constants.vue";
+<script setup lang="ts">
 import IngredientForm from "@/components/IngredientForm.vue";
+import { useIngredientStore } from "@/stores/ingredient";
+import { ref } from "vue";
 
-export default {
-  components: {
-    IngredientForm,
-  },
+const ingredients = useIngredientStore();
 
-  props: [
-    "ingredient"
-  ],
+const props = defineProps(["ingredient"]);
+const edit = ref(false);
+    
+const posted = () => {
+  // ingredient = ing;
+  edit.value = false;
+}
 
-  data() {
-    return {
-      error: null,
-      edit: false,
-    };
-  },
-
-  methods: {
-    posted(ing) {
-      this.ingredient = ing;
-      this.edit = false;
-    },
-
-    deleteIngredient() {
-      const path = `${Constants.HOST_URL}/ingredients/${this.ingredient.id}`;
-      axios.delete(path)
-        .then(() => {
-          this.$emit("ingredientDeleted");
-        })
-        .catch(err => {
-          this.error = `${err.response.data}.`;
-        })
-    }
-  },
+const emit = defineEmits(["ingredientDeleted"]);
+const deleteIngredient = () => {
+  ingredients.deleteById(props.ingredient.id).then(() => emit("ingredientDeleted"));
 }
 </script>
 

@@ -15,14 +15,29 @@
 
 </template>
 
-<script>
+<script setup lang="ts">
 import Navbar from '@/components/Navbar.vue';
+import { useRecipeStore } from './stores/recipe';
+import { useIngredientStore } from './stores/ingredient';
+import { useTagStore } from './stores/tags';
+import { useUnitsStore } from './stores/units';
+import { useCategoryStore } from './stores/categories';
 
-export default {
-  components: {
-    Navbar
-  },
-};
+const recipes = useRecipeStore();
+recipes.fetch();
+
+const categories = useCategoryStore();
+categories.fetch();
+
+const ingredients = useIngredientStore();
+ingredients.fetch();
+
+const tags = useTagStore();
+tags.fetch();
+
+const units = useUnitsStore();
+units.fetch();
+
 </script>
 
 <style>

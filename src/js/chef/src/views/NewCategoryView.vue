@@ -9,10 +9,6 @@
 </div>
 </template>
 
-<script>
-import CategoryForm from "../components/CategoryForm.vue";
-
-export default {
-  components: { CategoryForm },
-}
+<script setup lang="ts">
+import CategoryForm from "@/components/CategoryForm.vue";
 </script>

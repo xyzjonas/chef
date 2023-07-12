@@ -7,5 +7,11 @@
     {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "lib": [
+      "es2021"
+    ]
+  },
+  "types": ["@types/node", "@nuxt/types", "mande/nuxt"]
 }

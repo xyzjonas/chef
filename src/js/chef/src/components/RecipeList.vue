@@ -8,8 +8,8 @@
 
     <!-- TAGS -->
     <div v-if="!hideFilters" class="tags">
-      <a v-for="tag in tags" :key="'tag_key' + tag"
-        v-on:click="toggleFilter(tag)"
+      <a v-for="tag in tagNames" :key="'tag_key' + tag"
+        @click="toggleFilter(tag)"
         :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
         style="text-decoration:none;"
       >{{ tag }}</a>
@@ -19,7 +19,6 @@
     <p v-if="!hideSearch" class="control has-icons-left mb-4">
       <input 
         v-model="search"
-        @input="refresh"
         class="input is-rounded"
         type="text"
         placeholder="search">
@@ -36,81 +35,67 @@
   </div>  
 </template>
 
-<script>
-// import axios from "axios";
-import RecipeListItem from "../components/RecipeListItem.vue";
-import Constants from "../components/Constants.vue";
+<script setup lang="ts">
+import RecipeListItem from "@/components/RecipeListItem.vue";
+import type { Recipe } from "@/types";
+import { replaceUnicode } from "@/utils";
+import { computed, ref } from "vue";
 
-export default {
-  props: ["allRecipes", "title", "hideSearch", "hideFilters"],
+const props = defineProps<{
+  allRecipes: Recipe[],
+  title: string,
+  hideSearch: boolean,
+  hideFilters: boolean
+}>()
 
-  data() {
-    return {
-      activeTags: [],
-      search: null,
+const activeTags = ref<string[]>([])
+const search = ref<string>()
+const recipesInitiated = ref(false)
 
-      recipesInitiated: false,
-    };
-  },
 
-  components: {
-    RecipeListItem,
-  },
+const tagNames = computed<string[]>(() => {
+   return [...new Set(props.allRecipes.map(recipe => recipe.tags.map(tag => tag.name)).flat())]
+})
 
-  computed: {
+const recipes = computed<Recipe[]>(() => {
+  recipesInitiated.value = true;
 
-    tags() {
-      return new Set(this.allRecipes.map(r => r.tags.map(t => t.name)).flat())
-    },
-
-    recipes() {
-      this.recipesInitiated = true;
-
-      const recipes = this.allRecipes.filter(r => {
-        var recipeTags = r.tags.map(t => t.name);
-        if (!recipeTags) return true; // if a recipe has no tags, always show
-        for (let i = 0; i < this.activeTags.length; i++) {
-            const tag = this.activeTags[i];
-            if (!recipeTags.includes(tag)) {
-              return false;
-            }
-          }
-          return true;
-      }).sort((a, b) => {
-        if (a.title > b.title) {
-          return 1
-        } else {
-          return -1
+  const recipes = props.allRecipes.filter(r => {
+    var recipeTags = r.tags.map(t => t.name);
+    if (!recipeTags) return true; // if a recipe has no tags, always show
+    for (let i = 0; i < activeTags.value.length; i++) {
+        const tag = activeTags.value[i];
+        if (!recipeTags.includes(tag)) {
+          return false;
         }
-      });
-      // 2) Search (regex)
-      if (!this.search || this.search === "") return recipes;
-      var re = new RegExp(Constants.methods.replaceUnicode(this.search.toLowerCase()));
-      return recipes.filter(r => {
-        var match = re.exec(
-          Constants.methods.replaceUnicode(r.title.toLowerCase()))
-        if (match) {
-          return true;
-        }
-        return false;
-      })
-    }
-  },
-
-  methods: {
-
-    toggleFilter(filter) {
-      // filter based on tags
-      if (this.activeTags.includes(filter)) {
-        this.activeTags = this.activeTags.filter(t => t != filter);
-      } else {
-        this.activeTags.push(filter);
       }
-    },
+      return true;
+  }).sort((a, b) => {
+    if (a.title > b.title) {
+      return 1
+    } else {
+      return -1
+    }
+  });
+  // 2) Search (regex)
+  if (!search.value || search.value === "") return recipes;
+  var re = new RegExp(replaceUnicode(search.value.toLowerCase()));
+  return recipes.filter(r => {
+    if (re.exec(replaceUnicode(r.title.toLowerCase()))) {
+      return true;
+    }
+    return false;
+  })
+})
 
-  },
-
-};
+const toggleFilter = (tagName: string) => {
+  // filter based on tags
+  if (activeTags.value.indexOf(tagName) !== -1) {
+    activeTags.value = activeTags.value.filter(t => t != tagName);
+  } else {
+    activeTags.value.push(tagName);
+  }
+}
 </script>
 <style scoped lang="scss">
 .recipe-list {

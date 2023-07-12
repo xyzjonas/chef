@@ -27,7 +27,7 @@ def test_get_tag(db_session, http_client, tag, name):
 
 def test_create_tag(db_session, http_client):
     tag_name = "foobar"
-    response = http_client.post("/api/tags", json={"name": tag_name})
+    response = http_client.post("/api/tags", json={"name": tag_name, 'foo': 'br'})
     response.raise_for_status()
     assert response.status_code == 201
     tag = response.json()

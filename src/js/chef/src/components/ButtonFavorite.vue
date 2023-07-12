@@ -1,6 +1,6 @@
 <template>
     <span :class="`star ${loading ? 'loading': ''}`" @click="$emit('favorite')">
-        <span v-if="recipe.favorite">
+        <span v-if="favorite">
             <i class="fa-solid fa-star"></i>
         </span>
         <span v-else>
@@ -8,23 +8,35 @@
         </span>
     </span>
 </template>
-<script setup>
-defineProps(['recipe', 'loading'])
+
+<script setup lang="ts">
+const props = defineProps<{
+    favorite: boolean,
+    loading: boolean,
+}>()
 </script>
+
 <style lang="scss" scoped>
 @keyframes loading {
-    from {
-        transform: rotate(-100deg)
+    0% {
+        transform: rotate(0deg)
     }
-    to {
-        transform: rotate(100deg)
+    10% {
+        transform: rotate(8deg)
+    }
+    30% {
+        transform: rotate(-8deg)
+    }
+    40% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(0deg)
     }
 }
 .star {
     font-size: x-large;
     color: goldenrod;
-    transform: rotate(0deg);
-    transition: all 1s;
 
     &:hover {
         color: gold;
@@ -33,7 +45,7 @@ defineProps(['recipe', 'loading'])
 
     &.loading {
         animation-name: loading;
-        animation-duration: 0.3s;
+        animation-duration: 0.25s;
         animation-direction: alternate-reverse;
         animation-timing-function: ease-in-out;
         animation-iteration-count: infinite;

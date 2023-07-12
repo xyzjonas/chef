@@ -195,53 +195,27 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "../components/Constants.vue";
+<script setup lang="ts">
+import { useIngredientStore } from '@/stores/ingredient';
+import type { Ingredient } from '@/types';
+import { deepCopy } from '@/utils';
+import { ref } from 'vue';
 
-export default {
-  props: [ "ingredientProp" ],  // for editing
+const ingredients = useIngredientStore();
 
-  data() {
-    return {
-      postError: null,
-      ingredient: {},
-    };
-  },
+const props = defineProps<{
+  ingredientProp: Ingredient | undefined;
+}>();
 
-  methods: {
-
-    cancel() {
-      this.$emit("cancel");
-    },
-
-    save() {
-      this.post();
-    },
-
-    post() {
-      const path = `${Constants.HOST_URL}/ingredients/${this.ingredient.id}`;
-      const options = {
-        headers: { 'Content-Type': 'application/json' },
-      };
-      axios
-        .post(path, this.ingredient, options)
-        .then((res) => {
-          this.postSuccess = `${res.status} ${res.statusText}`;
-          this.$emit("posted", this.ingredient);
-        })
-        .catch((err) => {
-          this.postError = err.response.data;
-        });
-    }
-
-  },
-
-  mounted() {
-    if (this.ingredientProp) {
-      this.ingredient = {...this.ingredientProp};  // leave the original intact
-    }
-  }
+const ingredient = ref();
+if (props.ingredientProp) {
+  ingredient.value = deepCopy(props.ingredientProp);
+}
+    
+const emit = defineEmits(["cancel", "posted"]);
+const cancel = () => emit("cancel");
+const save = () => {
+  ingredients.update(ingredient.value).then(() => emit("posted", ingredient));
 }
 </script>
 

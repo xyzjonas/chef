@@ -3,10 +3,17 @@
     <transition name="loading" mode="out-in">
     <LoadingSection v-if="loading" :loading="loading" />
     <div v-else>
-      <RecipeList v-if="favorites.length > 0" class="mb-4 mt-5" :allRecipes="favorites" :hideSearch="true" :hideFilters="true" title="favorite recipes"/>
+      <RecipeList
+        class="mb-4 mt-5"
+        v-if="recipes.favorites.length > 0"
+        :allRecipes="recipes.favorites"
+        :hideSearch="true"
+        :hideFilters="true"
+        :hideTitle="true"
+      />
       <div class="category-tiles">
         <CategoryTile
-            v-for="category in categories" :category="category"
+            v-for="category in categories.all" :category="category"
             @clicked="$router.push({ name: 'category', params: { id: category.id } })"
           />
       </div>
@@ -16,68 +23,20 @@
   </div>
 </template>
 
-<script>
-import axios from "axios";
-import Constants from "../components/Constants.vue";
-import CategoryTile from "../components/CategoryTile.vue";
-import LoadingSection from "../components/LoadingSection.vue"
-import RecipeList from "../components/RecipeList.vue"
+<script setup lang="ts">
+import CategoryTile from "@/components/CategoryTile.vue";
+import LoadingSection from "@/components/LoadingSection.vue"
+import RecipeList from "@/components/RecipeList.vue"
+import { useCategoryStore } from "@/stores/categories";
+import { useRecipeStore } from "@/stores/recipe";
+import { computed } from "vue";
 
-export default {
-  components: { CategoryTile, LoadingSection, RecipeList },
 
-  data() {
-    return {
-      error: null,
-
-      columns: 3,
-      categories: [],
-      newCategory: false,
-      loading: false,
-
-      favorites: []
-    };
-  },
-
-  methods: {
-    getAllCategories() {
-      this.loading = true;
-      const path = `${Constants.HOST_URL}/categories`;
-      axios
-        .get(path)
-        .then(res => {
-          if (res.status !== "success") {
-            if (res.data) {
-              this.categories = res.data;
-
-              // select category if url query
-              if (this.$route.query.category) {
-                this.selectCategoryByName(this.$route.query.category)
-              }
-
-            } else {
-              this.error = "No categories received.";
-            }
-          }
-        })
-        .catch((err) => this.error = err)
-        .finally(() => (this.loading = false));
-    },
-    getFavoriteRecipes() {
-      this.loading = true;
-      const path = `${Constants.HOST_URL}/recipes?favorite=true`;
-      axios
-        .get(path)
-        .then(res => this.favorites = res.data)
-        .catch((err) => this.error = err)
-        .finally(() => (this.loading = false));
-    },
-  },
-  created() {
-    this.getAllCategories();
-    this.getFavoriteRecipes();
-  }
-};
+const categories = useCategoryStore();
+const recipes = useRecipeStore();
+const loading = computed(() => {
+  return categories.loading || recipes.loading
+});
 </script>
 
 <style lang="scss" scoped>
