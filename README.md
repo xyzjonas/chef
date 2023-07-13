@@ -42,7 +42,9 @@ docker run -p 8000:8000 -v ~/.chef:/chef/data chef
 
 
 ...or run on GCP using `scotch3840/misc:chef-gcp` image (PostgreSQL):
+> ! second generation execution environment required.
 - `BUCKET`: name of your GCP/CloudStorage bucket.
 - `MNT_DIR`: target where the bucket will be mounted.
 - `IMAGES_FOLDER`: where the app will be looking for and storing uploaded images, has to be somewhere inside your bucket.
 - `DATABASE_URI`: specify your posgres or possibly put an sqlite file in the bucket as well.
+
