@@ -1,4 +1,4 @@
-import './assets/mystyles.css'
+// import './assets/mystyles.css'
 import './assets/fontawesome/css/all.css'
 
 import { createApp } from 'vue'

@@ -2,17 +2,19 @@
   <div>
 
     <!-- RECIPE COUNT -->
-    <div class="mb-2">
-      <h1 class="title is-4 has-text-primary">{{ recipes.length }} {{ title || 'Recipes' }}</h1>
+    <div>
+      <h1 id="r-count">{{ recipes.length }} {{ title || 'Recipes' }}</h1>
     </div>
 
     <!-- TAGS -->
     <div v-if="!hideFilters" class="tags">
-      <a v-for="tag in tagNames" :key="'tag_key' + tag"
+      <pin
+        v-for="tag in tagNames"
+        :text="tag"
+        :active="activeTags.includes(tag)"
+        clickable
         @click="toggleFilter(tag)"
-        :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
-        style="text-decoration:none;"
-      >{{ tag }}</a>
+      />
     </div>
 
     <!-- search -->
@@ -37,15 +39,16 @@
 
 <script setup lang="ts">
 import RecipeListItem from "@/components/RecipeListItem.vue";
+import Pin from "@/components/ui/Pin.vue";
 import type { Recipe } from "@/types";
 import { replaceUnicode } from "@/utils";
 import { computed, ref } from "vue";
 
 const props = defineProps<{
   allRecipes: Recipe[],
-  title: string,
-  hideSearch: boolean,
-  hideFilters: boolean
+  title: string | undefined,
+  hideSearch: boolean | undefined,
+  hideFilters: boolean | undefined,
 }>()
 
 const activeTags = ref<string[]>([])
@@ -99,8 +102,27 @@ const toggleFilter = (tagName: string) => {
 </script>
 <style scoped lang="scss">
 .recipe-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 0.3em;
+  grid-template-columns: 1fr 1fr;
+
+  @media (min-width: 768px){
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (min-width: 992px){
+  	grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  gap: .3rem;
+  flex-wrap: wrap;
+}
+
+#r-count {
+  font-weight: 100;
 }
 </style>

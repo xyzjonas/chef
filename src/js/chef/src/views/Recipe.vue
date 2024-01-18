@@ -1,7 +1,6 @@
 <template>
   <div class="mx-3 mb-3">
     <div ref="lookHere"></div>
-    <transition name="loading" mode="out-in">
     <div ref="recipeTitle" v-if="recipe">
       <div v-if="!editMode">
         <div class="level">
@@ -123,10 +122,7 @@
         />
       </div>
     </div>
-    <!-- no recipe -->
-    <LoadingSection v-else-if="recipes.loading" class="p-5" :loading="recipes.loading"/>
     <NotFound v-else message="Recipe not found" />
-    </transition>
 
   </div>
 </template>
@@ -135,7 +131,7 @@
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
-import LoadingSection from "@/components/LoadingSection.vue";
+// import LoadingSection from "@/components/LoadingSection.vue";
 import NotFound from "@/components/NotFound.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
 import ButtonFavorite from "@/components/ButtonFavorite.vue";
@@ -153,7 +149,7 @@ const recipes = useRecipeStore();
 const { all } = toRefs(recipes)
 
 if (!all.value.find(r => r.id === recipeId)) {
-  recipes.fetchSingle(recipeId);
+  await recipes.fetchSingle(recipeId);
 }
 
 const recipe = computed(() => {

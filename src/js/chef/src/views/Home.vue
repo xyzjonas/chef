@@ -1,9 +1,6 @@
 <template>
   <div>
-    <transition name="loading" mode="out-in">
-    <LoadingSection v-if="loading" :loading="loading" />
-    <div v-else>
-      <RecipeList
+      <recipe-list
         class="mb-4 mt-5"
         v-if="recipes.favorites.length > 0"
         :allRecipes="recipes.favorites"
@@ -12,20 +9,17 @@
         :hideTitle="true"
       />
       <div class="category-tiles">
-        <CategoryTile
+        <category-tile
             v-for="category in categories.all" :category="category"
             @clicked="$router.push({ name: 'category', params: { id: category.id } })"
           />
       </div>
-    </div>
-    </transition>
 
   </div>
 </template>
 
 <script setup lang="ts">
 import CategoryTile from "@/components/CategoryTile.vue";
-import LoadingSection from "@/components/LoadingSection.vue"
 import RecipeList from "@/components/RecipeList.vue"
 import { useCategoryStore } from "@/stores/categories";
 import { useRecipeStore } from "@/stores/recipe";

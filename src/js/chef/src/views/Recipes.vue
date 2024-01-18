@@ -1,18 +1,30 @@
 <template>
-  <div class="recipes px-3">
-    <transition name="loading" mode="out-in">
-    <LoadingSection v-if="recipes.loading" :loading="recipes.loading" />
-    <RecipeList v-else :allRecipes="recipes.recipes"/>
-    </transition>
-  </div>  
+  <div>
+    <Transition name="loading" mode="out-in">
+      <Suspense>
+        
+        <template #default>
+          <recipe-list :allRecipes="recipes"/>
+        </template>
+
+        <template #fallback>
+          <loading-section :loading="true" />
+        </template>
+      </Suspense>
+    </Transition>
+  </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import RecipeList from "@/components/RecipeList.vue";
 import LoadingSection from "@/components/LoadingSection.vue"
 
 
 import { useRecipeStore } from "@/stores/recipe";
+import { storeToRefs } from "pinia";
 
-const recipes = useRecipeStore();
+const store = useRecipeStore();
+await store.fetch(false);
+
+const { recipes } = storeToRefs(store)
 </script>

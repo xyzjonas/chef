@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { computed, ref } from 'vue';
 
@@ -26,7 +26,11 @@ export const useRecipeStore = defineStore('recipe', () => {
   const all = computed(() => recipes);
   const favorites = computed(() => recipes.value.filter(rec => rec.favorite));
 
-  async function fetch() {
+  async function fetch(force: boolean = true) {
+    if (recipes.value.length > 0 && !force) {
+      return
+    }
+
     loading.value = true
     const result = await recipesApi.get<Recipe[]>()
     recipes.value = result.sort((a: Recipe, b: Recipe) => a.title > b.title ? 1 : -1);
@@ -35,10 +39,15 @@ export const useRecipeStore = defineStore('recipe', () => {
   
   async function fetchSingle(recipeId: number): Promise<Recipe> {
     loading.value = true
-    const recipe = await recipesApi.get<Recipe>(recipeId);
-    recipes.value.map(r => r.id === recipe.id ? recipe : r);
-    loading.value = false;
-    return recipe;
+    try {
+      const recipe = await recipesApi.get<Recipe>(recipeId);
+      recipes.value.map(r => r.id === recipe.id ? recipe : r);
+      loading.value = false;
+      return recipe;
+    } catch(err) {
+      loading.value = false;
+      console.error(err)
+    }
   }
 
   async function create(recipeData: CreateRecipe): Promise<Recipe> {
