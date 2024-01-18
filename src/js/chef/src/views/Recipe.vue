@@ -143,7 +143,7 @@ import { IMAGES_URL } from "@/constants";
 
 const router = useRouter();
 const route = useRoute();
-const recipeId = parseInt(route.params.id);
+const recipeId = parseInt(route.params.id as string);
 
 const recipes = useRecipeStore();
 const { all } = toRefs(recipes)

@@ -5,19 +5,19 @@
 
       <main class="container">
         <RouterView v-slot="{ Component }">
-          
           <template v-if="Component">
 
-          <Transition mode="out-in">
-            <KeepAlive>
-              <Suspense>
-                <component :is="Component"></component>
-                <template #fallback>
-                  LOADING...
-                </template>
-              </Suspense>
-            </KeepAlive>
-          </Transition>
+            <Transition mode="out-in">
+              <KeepAlive :exclude="['Recipe', 'CategoryView']">
+                <Suspense>
+                  <component :is="Component"></component>
+                  <template #fallback>
+                    LOADING...
+                  </template>
+                </Suspense>
+              </KeepAlive>
+            </Transition>
+
           </template>
         </RouterView>
       </main>
