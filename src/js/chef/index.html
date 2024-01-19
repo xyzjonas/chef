@@ -36,6 +36,16 @@ body {
   
   color: var(--text);
   font-family: 'Roboto', sans-serif;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
 }
 
 .container {
