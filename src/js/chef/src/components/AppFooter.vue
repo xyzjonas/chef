@@ -19,9 +19,7 @@
         </a>
     </footer>
 </template>
-<script lang="ts" setup>
-import UiButton from '@/components/ui/UiButton.vue';
-</script>
+
 <style lang="css" scoped>
 footer {
     display: flex;

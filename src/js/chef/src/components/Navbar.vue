@@ -5,16 +5,16 @@
           <img src="../assets/favicon.png" alt="Logo">
           <span class="ml-2">CHEF</span>
         </router-link>
-
-        <router-link :to="{ name: 'recipes'}" class="button is-primary mx-0">
-          <ui-button type="link" text="recipes" icon="fas fa-list"></ui-button>
-        </router-link>
-
-        <router-link :to="{ name: 'home'}" class="button is-primary mx-0">
+     
+        <router-link :to="{ name: 'categories'}" class="margin-left">
           <ui-button type="link" text="categories" icon="fas fa-folder"></ui-button>
         </router-link>
 
-        <router-link :to="{ name: 'new'}" id="new-recipe">
+        <router-link :to="{ name: 'recipes'}">
+          <ui-button type="link" text="recipes" icon="fas fa-list"></ui-button>
+        </router-link>
+
+        <router-link :to="{ name: 'new'}" >
           <ui-button type="link" text="recipe" icon="fas fa-plus"></ui-button>
         </router-link>
       </div>
@@ -28,6 +28,7 @@ import UiButton from "@/components/ui/UiButton.vue"
 <style lang="css" scoped>
 nav {
   background-color: var(--primary);
+  margin-bottom: .3rem;
 }
 
 #logo {
@@ -36,8 +37,8 @@ nav {
   align-items: center;
   color: var(--text-inv);
   font-weight: 100;
-  font-size: x-large;
-  margin-right: 2rem;
+  font-size: xx-large;
+  /* margin-right: rem; */
 }
 
 .container {
@@ -69,7 +70,7 @@ a {
   text-decoration: none;
 }
 
-#new-recipe {
+.margin-left {
   margin-left: auto;
   text-decoration: none;
 }

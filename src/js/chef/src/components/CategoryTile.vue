@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- EDIT -->
+    
     <transition name="slide" mode="out-in">
     <CategoryForm
       v-if="edit"
@@ -9,18 +10,21 @@
       @categoryPosted="edited"
       @cancel="edit = !edit"
     />
-    <a
+    <div
       v-else
       v-on:click="clicked"
-      class="tile box is-child image-background clickable"
-      :style="backgroundStyle"
+      class="card"
     >
       <!-- title -->
-      <p class="title tile-title">{{ category.name }}</p>
+      <h1>{{ category.name }}</h1>
 
       <!-- TAGS -->
-      <div class="tags mb-3">
-        <span class="mytag" v-for="(tag, index) in category.tags" :key="'category-tag-' + index">{{tag.name}}</span>
+      <div class="tags">
+        <pin
+          v-for="(tag, index) in category.tags"
+          :text="tag.name"
+          active
+        />
       </div>
       <!-- buttons -->
       <div class="level is-mobile mb-2">
@@ -57,7 +61,7 @@
         You absolutely sure you want to delete this category?
         <a v-on:click="deleteCategory">Yep, let's do this!</a>
       </span>
-    </a>
+    </div>
     </transition>
     
   </div>
@@ -67,6 +71,7 @@
 import CategoryForm from "@/components/CategoryForm.vue";
 import ImageUpload from "@/components/ImageUpload.vue";
 import DeleteButton from "@/components/DeleteButton.vue";
+import Pin from "./ui/Pin.vue";
 import { useCategoryStore } from "@/stores/categories";
 import { computed, ref } from "vue";
 import { IMAGES_URL } from "@/constants";
@@ -80,7 +85,7 @@ const youSure = ref(false);
 
 const props = defineProps<{
   category: Category,
-  editable: boolean,
+  editable?: boolean,
 }>();
 const emit = defineEmits(["categoryEdited", "categoryDeleted", "clicked"])
 
@@ -99,7 +104,7 @@ const clicked = () => {
 
 // Use random query param to force reload on change.
 const backgroundStyle = computed(() => {
-  return `background-image: url('${IMAGES_URL}/categories/${props.category.id}/landscape.jpeg?rand=${categories.imageCache[props.category.id]}');`  
+  return `url('${IMAGES_URL}/categories/${props.category.id}/landscape.jpeg')`  
 })
   
 
@@ -138,13 +143,51 @@ const deleteCategory = () => {
     top: 0;
     bottom: 0;
   }
-  .image-background {
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    border: 1px solid #888888;
-    border-radius: 0.3em;
+  .card {
+    display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  height: 10rem;
+  position: relative;
+
+  background-color: #ffebe8;
+
+  background-image: v-bind("backgroundStyle");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  cursor: pointer;
+
+  transition: filter 0.2s ease-in-out;
+
+
+  &:hover {
+    filter: contrast(1.2);
   }
+  }
+
+  h1,
+h2 {
+  margin: 0;
+  color: var(--text-inv);
+  text-shadow: 1px 1px 1px var(--text), 1px 1px 5px var(--text);
+}
+
+h2 {
+  font-size: medium;
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+
+  margin-top: auto;
+} 
   .tile-title {
     padding: 3px 10px;
     // background-color: #FFFFFFBB;

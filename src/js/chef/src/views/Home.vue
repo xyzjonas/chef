@@ -28,9 +28,9 @@ import { computed } from "vue";
 
 const categories = useCategoryStore();
 const recipes = useRecipeStore();
-const loading = computed(() => {
-  return categories.loading || recipes.loading
-});
+
+await recipes.fetch(false)
+
 </script>
 
 <style lang="scss" scoped>
