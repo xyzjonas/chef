@@ -2,7 +2,7 @@
   <div class="wrapper">
 
     <!-- RECIPE COUNT -->
-    <div>
+    <div v-if="allRecipes.length > 0">
       <h1 id="r-count">{{ displayedRecipes.length }} {{ title || 'Recipes' }}</h1>
     </div>
 
@@ -18,13 +18,16 @@
     </div>
 
     <!-- SEARCH -->
-    <ui-input v-model="search" :icon="Search" size="large" style="margin-block: .8rem;"/>
+    <ui-input v-if="allRecipes.length > 0" v-model="search" :icon="Search" size="large" style="margin-block: .8rem;"/>
 
     <!-- LIST -->
-    <div class="recipe-list">
+    <div class="recipe-list" v-if="allRecipes.length > 0">
       <div v-for="(recipe) in displayedRecipes" :key="'recipe_a_key+' + recipe.id" :recipe="recipe">
         <component :is="RecipeListItem" :recipe="recipe" />
       </div>
+    </div>
+    <div v-else class="empty-box">
+      <empty-box  link-text="add new recipe" route-name="new" />
     </div>
 
   </div>  
@@ -32,6 +35,7 @@
 
 <script setup lang="ts">
 import RecipeListItem from "@/components/RecipeListItem.vue";
+import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Search from "@/components/icons/Search.vue"
 import UiInput from "./ui/UiInput.vue";
 import Pin from "@/components/ui/Pin.vue";
@@ -127,5 +131,9 @@ const toggleFilter = (tagName: string) => {
   font-weight: 100;
   margin-top: 0;
   margin-bottom: 1rem;
+}
+
+.empty-box {
+  height: 65dvh;;
 }
 </style>

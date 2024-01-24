@@ -30,6 +30,10 @@ const props = defineProps<{
     }
 }
 
+span {
+    height: 1rem;
+}
+
 .secondary {
     background-color: var(--bg-200);
     border: 1px solid var(--secondary);
@@ -58,9 +62,9 @@ const props = defineProps<{
 
 button {
     display: flex;
-    flex-direction: row;
-    /* align-content: center; */
-    /* justify-content: center; */
+    align-items: center;
+    justify-content: center;
+
     gap: .3rem;
     border: none;
     cursor: pointer;

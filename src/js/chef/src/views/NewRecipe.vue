@@ -2,12 +2,11 @@
   <div>
     <h1>Add a new recipe</h1>
 
-      <RecipeForm
-        :data="blankRecipe"
-        @posted="routeToNewRecipe"
-        @cancel="$router.push({ name: 'home' })"
-      />
-    
+    <RecipeForm
+      :data="blankRecipe"
+      @posted="routeToNewRecipe"
+      @cancel="$router.push({ name: 'home' })"
+    />
   </div>
 </template>
 
@@ -22,11 +21,11 @@ const blankRecipe: CreateRecipe = {
   ingredients: [],
   tags: [],
   body: "",
-}
+};
 const router = useRouter();
 const routeToNewRecipe = (recipe: Recipe) => {
-  router.push({ name: 'recipe', params: { id: recipe.id } })
-}
+  router.push({ name: "recipe", params: { id: recipe.id } });
+};
 </script>
 <style lang="css" scoped>
 h1 {

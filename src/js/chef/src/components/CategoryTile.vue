@@ -152,7 +152,7 @@ const unsubscribe = responseBus.on(onDeleteConfirmListener);
   gap: 0.5rem;
   padding: 1rem;
   border-radius: 0.3rem;
-  height: 10rem;
+  min-height: 18dvh;
   position: relative;
 
   background-color: #ffebe8;

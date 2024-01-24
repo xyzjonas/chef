@@ -1,23 +1,25 @@
 <template>
-    <span id="wrapper" :data-focus="focused" >
+    <label :for="randomId" id="wrapper" :data-focus="focused" >
         <component :is="icon" :width="styleSize" id="icon"/>
         <span>
             <input 
                 ref="inputField"
-                id="inputField"
+                :id="randomId"
                 type="text"
                 v-model="model"
                 :disabled="disabled"
                 :class="clazz"
             />
-            <label v-if="label" for="inputField" :data-minimize="minimizeLabel">{{ label }}</label>
+            <label id="actualLabel" :for="randomId" v-if="label" :data-minimize="minimizeLabel">{{ label }}</label>
         </span>
-    </span>
+    </label>
 </template>
 
 <script lang="ts" setup>
 import { computed, type Component, ref } from 'vue';
 import { useFocus } from '@vueuse/core'
+
+const randomId = (Math.random() + 1).toString(36).substring(7);
 
 type Size = "small" | "normal" | "large"
 const sizes: { [key: string]: string } = {
@@ -29,7 +31,8 @@ const sizes: { [key: string]: string } = {
 const inputField = ref(null);
 const { focused } = useFocus(inputField);
 
-const minimizeLabel = computed(() => !!model.value || focused.value)
+const modelNotEmpty = computed(() => model.value !== '' && model.value !== undefined && model.value !== null)
+const minimizeLabel = computed(() => modelNotEmpty.value || focused.value)
 
 const model = defineModel()
 const props = defineProps<{
@@ -56,7 +59,7 @@ const textAlign = computed(() => props.centered ? 'center' : '')
     --size: v-bind("styleSize");
     --iconSize: calc(var(--size));
     --fontSize: calc(var(--size) - (var(--size) * 0.2));
-    --padding-y: calc(var(--size) / 2);
+    --padding-y: calc(var(--size) / 1.8);
     --padding-x: calc(var(--size) / 3);
 
     display: flex;
@@ -72,9 +75,12 @@ const textAlign = computed(() => props.centered ? 'center' : '')
 
     padding-inline: var(--padding-x);
     padding-bottom: var(--padding-y);
-    padding-top: calc(var(--padding-y) * 1.5);
+    padding-top: calc(var(--padding-y));
 
     transition: background-color .2s ease-in-out;
+
+    cursor: text;
+    overflow-x: auto;
 }
 
 #wrapper[data-focus="true"] {
@@ -98,19 +104,21 @@ span {
     flex: 2;
 }
 
-label {
+#actualLabel {
     position: absolute;
     left: 0;
     top: 0;
     font-size: var(--fontSize);
-    transition: 0.2s ease-in-out;
+    transition: 0.1s ease-in-out;
     color: #888;
+
+    cursor: text;
 }
 
-label[data-minimize=true] {
-    font-size: calc(var(--padding-y) * 0.9);
+#actualLabel[data-minimize=true] {
+    font-size: calc(var(--padding-y) * 1.3);
     top: calc(-1.2 * var(--padding-y));
-    color: var(--text);
+    /* color: var(--bg-300); */
 }
 
 /* span {

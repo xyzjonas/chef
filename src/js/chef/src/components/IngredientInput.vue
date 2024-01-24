@@ -8,7 +8,7 @@
 
     <ui-input class="unit" v-model="selectedUnitName" label="unit" size="small" />
 
-    <ui-input v-model="selectedIngredientName" label="ingredient" size="small" />
+    <ui-input class="ingredient" v-model="selectedIngredientName" label="ingredient" size="small" />
 
     <ui-input v-model="ingredientItem.note" label="note" size="small" />
 
@@ -90,10 +90,14 @@ select {
 }
 
 .amount {
-    flex: .5;
+    flex-basis: 4rem;
 }
 
 .unit {
-    flex: .2
+    flex-basis: 2rem;
+}
+
+.ingredient {
+    flex-grow: 2;
 }
 </style>

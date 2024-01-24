@@ -7,7 +7,7 @@
       @categoryEdited="$router.push(route.fullPath)"
     />
 
-    <RecipeList :allRecipes="categories.recipes" class="list" />
+    <RecipeList :allRecipes="categories.recipes" />
   </div>
 </template>
 
@@ -27,9 +27,3 @@ if (!categories.all.find(cat => cat.id === categoryId)) {
   await categories.fetchSingle(categoryId);
 }
 </script>
-
-<style lang="scss" scoped>
-.list {
-  margin-top: 1rem;
-}
-</style>
