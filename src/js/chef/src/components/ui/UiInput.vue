@@ -1,12 +1,23 @@
 <template>
-    <span>
+    <span id="wrapper" :data-focus="focused" >
         <component :is="icon" :width="styleSize" id="icon"/>
-        <input type="text" v-model="model" :class="clazz" />
+        <span>
+            <input 
+                ref="inputField"
+                id="inputField"
+                type="text"
+                v-model="model"
+                :disabled="disabled"
+                :class="clazz"
+            />
+            <label v-if="label" for="inputField" :data-minimize="minimizeLabel">{{ label }}</label>
+        </span>
     </span>
 </template>
 
 <script lang="ts" setup>
-import { computed, type Component } from 'vue';
+import { computed, type Component, ref } from 'vue';
+import { useFocus } from '@vueuse/core'
 
 type Size = "small" | "normal" | "large"
 const sizes: { [key: string]: string } = {
@@ -15,11 +26,18 @@ const sizes: { [key: string]: string } = {
     large: '2rem',
 }
 
+const inputField = ref(null);
+const { focused } = useFocus(inputField);
+
+const minimizeLabel = computed(() => !!model.value || focused.value)
 
 const model = defineModel()
 const props = defineProps<{
     icon?: Component
     size?: Size
+    label?: string
+    disabled?: boolean
+    centered?: boolean
 }>()
 
 const clazz = computed(() => {
@@ -27,16 +45,79 @@ const clazz = computed(() => {
 })
 
 const styleSize = computed(() => sizes[props.size ?? 'normal'])
-const styleAdditionalLeftPadding = computed(() => props.icon ? 'var(--size)' : '0')
+const textAlign = computed(() => props.centered ? 'center' : '')
+// const styleAdditionalLeftPadding = computed(() => props.icon ? 'var(--size)' : '0')
 </script>
 
 <style lang="css" scoped>
 
 
+#wrapper {
+    --size: v-bind("styleSize");
+    --iconSize: calc(var(--size));
+    --fontSize: calc(var(--size) - (var(--size) * 0.2));
+    --padding-y: calc(var(--size) / 2);
+    --padding-x: calc(var(--size) / 3);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .3rem;
+
+    background-color: var(--bg-200);
+    border-radius: 3px;
+    /* border-bottom: 1px solid var(--border); */
+    /* border-top-left-radius: 2px; */
+    /* border-top-right-radius: 2px; */
+
+    padding-inline: var(--padding-x);
+    padding-bottom: var(--padding-y);
+    padding-top: calc(var(--padding-y) * 1.5);
+
+    transition: background-color .2s ease-in-out;
+}
+
+#wrapper[data-focus="true"] {
+    background-color: var(--bg-300);
+}
+
+input,
+input:focus {
+    color: var(--text);
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 100%;
+    padding: 0;
+    font-size: var(--fontSize);
+    text-align: v-bind("textAlign");
+}
+
 span {
+    position: relative;
+    flex: 2;
+}
+
+label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: var(--fontSize);
+    transition: 0.2s ease-in-out;
+    color: #888;
+}
+
+label[data-minimize=true] {
+    font-size: calc(var(--padding-y) * 0.9);
+    top: calc(-1.2 * var(--padding-y));
+    color: var(--text);
+}
+
+/* span {
     position: relative;
     --size: v-bind("styleSize");
     --iconSize: calc(var(--size));
+    --fontSize: calc(var(--size) - (var(--size) * 0.2));
 
     & > #icon {
         position: absolute;
@@ -45,11 +126,15 @@ span {
         left: .5rem;
         top: calc(var(--size) / 3);
     }
-}
+    & > label {
+        position: absolute;
+        bottom: calc(0px + var(--fontSize) / 4);
+        font-size: var(--fontSize);
+        left: 0;
+    }
+} */
 
-
-
-input {
+/* input {
     -moz-box-sizing: border-box; 
     -webkit-box-sizing: border-box; 
      box-sizing: border-box; 
@@ -60,16 +145,25 @@ input {
     background-color: transparent;
     padding: calc(var(--size) / 3) calc(var(--size) / 3);
     padding-left: calc(var(--size) / 3 + v-bind("styleAdditionalLeftPadding") + 5px);
-    font-size: calc(var(--size) - (var(--size) * 0.2));
+    font-size: var(--fontSize);
     color: var(--text);
 
-    background-color: #eeeeee;
+    background-color: #eeeeee80;
     border: none;
     border-bottom: 1px solid var(--border);
-}
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 
-input:focus {
+    transition: background-color 0.3s ease-in-out;
+} */
+
+/* input:focus {
     border-bottom: 1px solid #333333;;
-}
+    background-color: #eeeeee;
+
+    & + label {
+        color: red;
+    }
+} */
 
 </style>

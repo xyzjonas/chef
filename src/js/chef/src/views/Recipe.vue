@@ -130,10 +130,9 @@
 <script setup lang="ts">
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
-import ImageUpload from "@/components/ImageUpload.vue";
-// import LoadingSection from "@/components/LoadingSection.vue";
+import ImageUpload from "@/components/ui/ImageUpload.vue";
 import NotFound from "@/components/NotFound.vue";
-import DeleteButton from "@/components/DeleteButton.vue";
+import DeleteButton from "@/components/ui/DeleteButton.vue";
 import ButtonFavorite from "@/components/ButtonFavorite.vue";
 
 import { useRecipeStore } from "@/stores/recipe";

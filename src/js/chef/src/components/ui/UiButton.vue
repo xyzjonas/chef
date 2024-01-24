@@ -1,19 +1,51 @@
 <template>
-    <button :class="type">
-        <span class="icon is-small">
+    <button :class="type ?? 'primary'" :disabled="disabled" >
+        <span class="icon" v-if="icon">
             <i :class="icon"></i>
         </span>
-        {{ text }}
+        {{ text ?? ""}}
+        <slot />
     </button>
 </template>
 <script lang="ts" setup>
 const props = defineProps<{
-    type: "primary" | "link"
-    icon: string,
-    text: string,
+    type?: "primary" | "secondary" | "link"
+    icon?: string,
+    disabled?: boolean,
+    text?: string,
 }>()
 </script>
 <style lang="css" scoped>
+
+.primary {
+    color: var(--text-inv);
+    background-color: var(--primary);
+
+    & > .icon {
+        color: var(--text-inv);
+    }
+
+    &:hover {
+        background-color: var(--primary-transparent);
+    }
+}
+
+.secondary {
+    background-color: var(--bg-200);
+    border: 1px solid var(--secondary);
+
+    & > .icon {
+        color: var(--text);
+    }
+
+    &:hover {
+        background-color: var(--secondary);
+    }
+}
+
+.icon {
+    font-size: medium;
+}
 
 .link {
     background-color: transparent;
@@ -21,20 +53,28 @@ const props = defineProps<{
 }
 
 .link:hover {
-    background-color: rgb(from var(--primary) r g b / 0.8);
-    background-color: oklch(from var(--primary) calc(l + 8) c h);
+    background-color: #ffffff33;
 }
 
 button {
     display: flex;
     flex-direction: row;
-    align-content: center;
+    /* align-content: center; */
+    /* justify-content: center; */
     gap: .3rem;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: .2rem;
 
+    min-width: 1.8rem;
+
     transition: 0.2s ease-in-out;
+    user-select: none;
+}
+
+button:disabled {
+    pointer-events: none;
+    filter: opacity(.5);
 }
 </style>

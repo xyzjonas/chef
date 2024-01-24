@@ -1,8 +1,10 @@
 <template>
-  <div v-if="recipe">
+  <form v-if="recipe">
+    <ui-input v-model="recipe.title" label="title" size="small" />
+    <p v-if="!recipe.title" class="help is-danger">Title is required</p>
 
     <!-- title -->
-    <div class="field">
+    <!-- <div class="field">
       <div class="control has-icons-left has-icons-right">
         <input
           v-model="recipe.title"
@@ -22,62 +24,26 @@
         </span>
       </div>
       <p v-if="!recipe.title" class="help is-danger">Title is required</p>
-    </div>
+    </div> -->
 
     <!-- sub-title -->
-    <div class="field">
-      <div class="control has-icons-left has-icons-right">
-        <input
-          v-model="recipe.subtitle"
-          class="input"
-          type="text"
-          placeholder="Subtitle"
-        />
-        <span class="icon is-small is-left">
-          <i class="fas fa-font"></i>
-        </span>
-      </div>
-    </div>
+    <ui-input v-model="recipe.subtitle" label="subtitle" size="small" />
 
     <!-- source (url) -->
-    <div class="field">
-      <div class="control has-icons-left has-icons-right">
-        <input
-          v-model="recipe.source"
-          class="input"
-          type="text"
-          placeholder="Source link"
-        />
-        <span class="icon is-small is-left">
-          <i class="fas fa-link"></i>
-        </span>
-      </div>
-    </div>
+    <ui-input v-model="recipe.source" label="source link" size="small" />
 
     <!-- source (name) -->
-    <div v-if="recipe.source" class="field">
-      <div class="control has-icons-left has-icons-right">
-        <input
-          v-model="recipe.source_name"
-          class="input"
-          type="text"
-          placeholder="Source name"
-        />
-        <span class="icon is-small is-left">
-          <i class="fas fa-link"></i>
-        </span>
-      </div>
-    </div>
+    <ui-input v-model="recipe.source_name" label="source name" size="small" />
 
     <!-- idea only -->
-    <label class="checkbox my-2">
+    <!-- <label class="checkbox my-2">
       <input type="checkbox" v-model="recipe.draft" />
       Recipe idea
       <i class="far fa-lightbulb"></i>
-    </label>
+    </label> -->
 
     <!-- ingredients -->
-    <div v-if="!recipe.draft">
+    <!-- <div v-if="!recipe.draft">
       <label class="label">Ingredients</label>
        <div class="field">
          <div class="control">
@@ -91,36 +57,37 @@
            </div>
          </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="ingredient-items">
       <IngredientInput
         v-for="(i, index) in recipe.ingredients"
         :key="i.id"
         :initialData="i"
-        @update:ingredient="ing => recipe.ingredients[index] = ing"
+        @update:ingredient="(ing) => (recipe.ingredients[index] = ing)"
         @delete="removeIngredient(i)"
         @up="up(index)"
         @down="down(index)"
       />
-      <button class="button mt-3" @click="recipe.ingredients.push(blankIngredient)">+</button>
+      <button
+        class="button mt-3"
+        @click="recipe.ingredients.push(blankIngredient)"
+      >
+        +
+      </button>
     </div>
 
     <!-- portions -->
     <!-- PORTIONS COUNTER -->
-    <div class="mt-4">
-      <Counter :initialValue="recipe.portions" @counterUpdate="updateCounter"/>
-    </div>
-    <label class="label has-text-centered">(1 batch)</label>
+    <Counter v-model="recipe.portions" @counterUpdate="updateCounter" />
 
-    <hr>
+    <hr />
 
     <div v-if="!recipe.draft" class="field my-2">
       <div class="control">
         <TextEditor @editorUpdate="updateText" :text="recipe.body"></TextEditor>
       </div>
     </div>
-
 
     <!-- tags -->
     <div class="field">
@@ -130,15 +97,19 @@
       </article>
       <div class="control">
         <div>
-          <a v-for="(tag, index) in availableTags" :key="`${tag},${index}`"
+          <a
+            v-for="(tag, index) in availableTags"
+            :key="`${tag},${index}`"
             v-on:click="toggleTag(tag)"
           >
             <span
               :class="{
                 tag: true,
-                'is-dark': recipe.tags && recipe.tags.map(t => t.name).includes(tag.name),
+                'is-dark':
+                  recipe.tags &&
+                  recipe.tags.map((t) => t.name).includes(tag.name),
                 'is-rounded': true,
-                'mr-1': true
+                'mr-1': true,
               }"
             >
               {{ tag.name }}
@@ -152,11 +123,16 @@
         <div class="control is-expanded">
           <input
             v-model="createTagField"
-            class="input is-small is-rounded" type="text" placeholder="new tag"
-          >
+            class="input is-small is-rounded"
+            type="text"
+            placeholder="new tag"
+          />
         </div>
-        <div class="control ">
-          <button v-on:click="createTag" class="button is-success is-small is-rounded">
+        <div class="control">
+          <button
+            v-on:click="createTag"
+            class="button is-success is-small is-rounded"
+          >
             <i class="fas fa-plus"></i>
           </button>
         </div>
@@ -167,16 +143,20 @@
       <button
         @click="postRecipe"
         :class="{
-          'button': true,
+          button: true,
           'is-fullwidth': true,
           'is-success': true,
-          'is-loading': recipeStore.loading
+          'is-loading': recipeStore.loading,
         }"
         :disabled="!recipe.title"
-      >Save</button>
+      >
+        Save
+      </button>
     </div>
     <div class="my-1">
-      <button @click="$emit('cancel')" class="button is-fullwidth">Cancel</button>
+      <button @click="$emit('cancel')" class="button is-fullwidth">
+        Cancel
+      </button>
     </div>
 
     <!-- msg -->
@@ -186,29 +166,32 @@
     <article v-if="postError" class="message is-danger">
       <div class="message-body">{{ postError }}</div>
     </article>
-  </div>
+  </form>
 </template>
 
 <script setup lang="ts">
 import TextEditor from "@/components/TextEditor.vue";
 import Counter from "@/components/Counter.vue";
 import IngredientInput from "@/components/IngredientInput.vue";
+import UiButton from "@/components/ui/UiButton.vue";
+import UiInput from "@/components/ui/UiInput.vue";
 import type { Recipe, IngredientItem, Tag, CreateRecipe } from "@/types";
 import { computed, ref } from "vue";
 import { useRecipeStore } from "@/stores/recipe";
 import { useTagStore } from "@/stores/tags";
 import { deepCopy } from "@/utils";
 
-
 const recipeStore = useRecipeStore();
 const tagStore = useTagStore();
 const availableTags = tagStore.all;
 
-
 const props = defineProps<{
-  data: Recipe | CreateRecipe
-}>()
+  data: Recipe | CreateRecipe;
+}>();
 const recipe = ref<Recipe>(deepCopy(props.data));
+if (!recipe.value.portions) {
+  recipe.value.portions = 4;
+}
 
 const counter = ref<number>(4);
 const createTagField = ref<string>();
@@ -218,61 +201,60 @@ const postError = ref();
 
 const formIsValid = computed(() => {
   // todo
-})
-
+});
 
 const updateCounter = (val: number) => {
-  counter.value = val
-  recipe.value.portions = val
-}
+  counter.value = val;
+  recipe.value.portions = val;
+};
 
 const updateText = (value: string) => {
   recipe.value.body = value;
-}
+};
 
 const blankIngredient: IngredientItem = {
   amount: 0,
   unit: { name: "g" },
   ingredient: { name: "" },
   note: "",
-}
+};
 const removeIngredient = (ingredient: IngredientItem) => {
-  recipe.value.ingredients = recipe.value.ingredients.filter(i => {
+  recipe.value.ingredients = recipe.value.ingredients.filter((i) => {
     return !(
-      i.ingredient.name === ingredient.ingredient.name
-      && i.amount === ingredient.amount
-      && i.unit.name === ingredient.unit.name
-      && i.note === ingredient.note
+      i.ingredient.name === ingredient.ingredient.name &&
+      i.amount === ingredient.amount &&
+      i.unit.name === ingredient.unit.name &&
+      i.note === ingredient.note
     );
   });
-}
+};
 
 const up = (index: number) => {
   if (index === 0) {
-    return
+    return;
   }
   const item = recipe.value.ingredients[index];
   recipe.value.ingredients[index] = recipe.value.ingredients[index - 1];
   recipe.value.ingredients[index - 1] = item;
-}
+};
 
 const down = (index: number) => {
   if (index === recipe.value.ingredients.length - 1) {
-    return
+    return;
   }
   const item = recipe.value.ingredients[index];
   recipe.value.ingredients[index] = recipe.value.ingredients[index + 1];
   recipe.value.ingredients[index + 1] = item;
-}
+};
 
 const toggleTag = (tag: Tag) => {
-  var tagNames = recipe.value.tags.map(t => t.name)
+  var tagNames = recipe.value.tags.map((t) => t.name);
   if (!tagNames.includes(tag.name)) {
     recipe.value.tags.push(tag);
   } else {
-    recipe.value.tags = recipe.value.tags.filter(t => t.name != tag.name)
+    recipe.value.tags = recipe.value.tags.filter((t) => t.name != tag.name);
   }
-}
+};
 
 const createTag = () => {
   if (createTagField.value) {
@@ -281,28 +263,32 @@ const createTag = () => {
     createTagField.value = undefined;
     recipe.value.tags.push(tag);
   }
-}
+};
 
-const emit = defineEmits(['posted', 'created']);
+const emit = defineEmits(["posted", "created"]);
 const postRecipe = () => {
   if (recipe.value.id) {
-    console.debug('Updating existing recipe.')
-    recipeStore.update(recipe.value).then(r => emit('posted', r));
+    console.debug("Updating existing recipe.");
+    recipeStore.update(recipe.value).then((r) => emit("posted", r));
   } else {
-    console.debug('Creating new recipe.')
-    recipeStore.create(recipe.value).then(r => emit('posted', r));
+    console.debug("Creating new recipe.");
+    recipeStore.create(recipe.value).then((r) => emit("posted", r));
   }
-}
-
+};
 </script>
 
 <style>
-  .ingredient-items {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .fullwidth {
-    width: 100%;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.ingredient-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fullwidth {
+  width: 100%;
+}
 </style>

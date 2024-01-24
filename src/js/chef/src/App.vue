@@ -8,7 +8,7 @@
           <template v-if="Component">
 
             <Transition mode="out-in">
-              <KeepAlive :exclude="['Recipe', 'CategoryView']">
+              <KeepAlive :exclude="['Recipe', 'CategoryView', 'CategoryTile']">
                 <Suspense>
                   <component :is="Component"></component>
                   <template #fallback>
@@ -24,6 +24,8 @@
 
       <app-footer />
 
+      <Notificaton />
+
     </div>
 
 </template>
@@ -31,6 +33,7 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue';
 import AppFooter from '@/components/AppFooter.vue';
+import Notificaton from './components/ui/Notificaton.vue';
 import { useRecipeStore } from './stores/recipe';
 import { useIngredientStore } from './stores/ingredient';
 import { useTagStore } from './stores/tags';
@@ -63,7 +66,7 @@ units.fetch();
 }
 
 main {
-  padding-bottom: 3rem;
+  padding-bottom: .5rem;
 }
 
 footer {

@@ -41,9 +41,9 @@ import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
   allRecipes: Recipe[],
-  title: string | undefined,
-  hideSearch: boolean | undefined,
-  hideFilters: boolean | undefined,
+  title?: string,
+  hideSearch?: boolean,
+  hideFilters?: boolean,
 }>()
 
 const activeTags = ref<string[]>([])

@@ -92,8 +92,9 @@ export const useCategoryStore = defineStore('category', () => {
             all.value = all.value.filter(cat => cat.id !== categoryId);
         } catch(err) {
             console.error(err);
+        } finally {
+            loading.value = false;
         }
-        loading.value = false;
     }
 
 

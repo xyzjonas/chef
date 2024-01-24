@@ -1,60 +1,36 @@
 <template>
-  <div>
+  <div class="level">
     <!-- success -->
-    <div v-if="success">
-      <button :class="{
-          button: true, 'is-success': true, 'is-small': small, 'is-rounded': small
-        }"
-        disabled
-      >
-        <i class="fas fa-upload"></i>
-      </button>
-    </div>
-    <div v-else-if="error">
-      <button
-        @click="file = undefined; error = undefined"
-        :class="{
-          button: true,
-          'is-danger': true,
-          'is-small': small,
-          'is-rounded': small
-        }"
-      >
-        <i class="fa-solid fa-ban"></i>
-      </button>
-    </div>
+    <ui-button v-if="success" disabled icon="fas fa-upload" />
+    <ui-button v-else-if="error" :text="error" disabled />
     <div v-else>
       <!-- upload -->
-      <button v-if="file" v-on:click="upload"
-        :class="{
-          button: true,
-          'is-success': true,
-          'is-small': small,
-          'is-rounded': small,
-          'is-loading': loading,
-        }"
-      >
-        <i class="fas fa-upload"></i>
-      </button>
+      <ui-button v-if="file" @click="upload" icon="fas fa-upload" />
 
       <!-- choose file -->
-      <button v-else
-        :class="{
-          button: true, file: true, 'is-info': true, 'is-rounded': small, 'is-small': small
-        }"
-      >
-        <span><i class="fas fa-upload"></i></span>
-        <input @change="handleFile" id="file" class="file-input" type="file" name="resume">
-      </button>
+      
+      <ui-button v-else icon="fas fa-file" type="secondary">
+        <label for="file">Choose a file</label>
+      </ui-button>
+      <input @change="handleFile" id="file" class="file-input" type="file" name="resume" >
     </div>
+    <ui-button v-if="file" @click="file = undefined; error = undefined" icon="fa-solid fa-ban" />
 
   </div>
 </template>
 
 <script setup lang="ts">
+import UiButton from './UiButton.vue';
 import { API_URL } from '@/constants';
 import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+import type { Notification } from '@/types';
+
+import { useEventBus } from '@vueuse/core';
+
+const bus = useEventBus<Notification>("notifications")
+
+// const send = useNotifications();
 
 const props = defineProps(["recipe", "category", "small"]);
 const file = ref();
@@ -64,7 +40,7 @@ const loading = ref();
 
 
 const route = useRoute();
-const itemId = parseInt(route.params.id);
+const itemId = parseInt(route.params.id as string);
 const getURL = () => {
   if (props.category) {
     return `${API_URL}/images/categories/${itemId}`;
@@ -82,8 +58,11 @@ const handleFile = (event: Event) => {
     if (file.value.name.endsWith('.jpg') || file.value.name.endsWith('.jpeg')) {
       error.value = undefined;
     } else {
-      error.value = "Wrong extension, only JPEG images are supported."
-      console.error(error.value);
+      file.value = undefined;
+      bus.emit({
+        level: 'ERROR',
+        message: "Wrong extension, only JPEG images are supported!"
+      })
     }
   }
 }
@@ -113,6 +92,9 @@ const upload = () => {
 }
 </script>
 
-<style>
+<style lang="css" scoped>
+#file {
+  display: none;
+}
 
 </style>
