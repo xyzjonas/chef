@@ -7,7 +7,7 @@
     <!-- tags -->
     <div class="tags">
       <pin
-        v-for="(tag, index) in tags.all"
+        v-for="tag in tags.all"
         :key="tag.id"
         :text="tag.name"
         clickable
@@ -63,28 +63,14 @@ const toggleTag = (beingToggled: Tag) => {
 }
 
 const emit = defineEmits(['categoryPosted', 'cancel']);
-// const updateCategory = (category_id: number) => {
-//   const path = `${Constants.HOST_URL}/categories/${category_id}`;
-//   const options = {
-//     headers: { 'Content-Type': 'application/json' },
-//   };
-//   axios
-//     .put(path, this.category, options)
-//     .then((res) => {
-//       this.postSuccess = `${res.status} ${res.statusText}`;
-//       this.$emit('categoryPosted', res.data);
-//     })
-//     .catch((err) => {
-//       this.postError = err;
-//     });
-// }
 
 const categories = useCategoryStore();
 const postCategory = async () => {
   if (!!category.value.id) {
     await categories.update(category.value);
+  } else {
+    await categories.create(category.value);
   }
-  await categories.create(category.value);
   emit('categoryPosted');
 }
 </script>

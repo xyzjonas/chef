@@ -18,19 +18,21 @@
               class="is-rounded p-2"
           >
           <div>
-            <div>
+            <div class="titles">
               <div class="row">
                 <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
                 <!-- <ButtonFavorite :favorite="recipe.favorite" :loading="recipes.loading" @favorite="makeFavorite" class="mr-2"/> -->
               </div>
-              <inline>
+              <div>
                 <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
-              </inline>
+              </div>
             </div>
-            <a v-if="recipe && recipe.source" :href="recipe.source">
-              <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
-              <span v-else>{{ recipe.source }}</span>
-            </a>
+            <div id="recipe-link">
+              <a v-if="recipe && recipe.source" :href="recipe.source">
+                <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
+                <span v-else>{{ recipe.source }}</span>
+              </a>
+            </div>
 
             <div class="tags">
               <pin v-for="(tag, index) in recipe.tags" :key="tag.name"  :text="tag.name"  active />
@@ -330,6 +332,14 @@ img {
     margin-top: -1rem;
     mask-image: linear-gradient(rgb(0 0 0 / 100%) 60%, transparent);
   }
+
+  #recipe-link {
+    text-align: center;
+  }
+
+  .titles > div {
+    text-align: center;
+  }
 }  
 
 #delete-btn {
@@ -340,6 +350,18 @@ img {
   margin-bottom: 1rem;
   text-transform: none;
 }
-  
+
+a:hover {
+  filter: opacity(.8);
+}
+
+
+#recipe-link {
+  margin-bottom: 2rem;
+}
+
+#recipe-link > a {
+  color: var(--primary);
+}
 
 </style>
