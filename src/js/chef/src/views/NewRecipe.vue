@@ -30,5 +30,7 @@ const routeToNewRecipe = (recipe: Recipe) => {
 <style lang="css" scoped>
 h1 {
   font-weight: 100;
+  margin: 0;
+  margin-bottom: 1rem;
 }
 </style>

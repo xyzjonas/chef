@@ -97,6 +97,10 @@ input:focus {
     padding: 0;
     font-size: var(--fontSize);
     text-align: v-bind("textAlign");
+
+    & > text::after {
+        content: "xxx";
+    }
 }
 
 span {

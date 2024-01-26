@@ -36,7 +36,6 @@ span {
 
 .secondary {
     background-color: var(--bg-200);
-    border: 1px solid var(--secondary);
 
     & > .icon {
         color: var(--text);

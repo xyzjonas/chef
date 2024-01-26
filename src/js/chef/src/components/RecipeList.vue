@@ -27,7 +27,12 @@
       </div>
     </div>
     <div v-else class="empty-box">
-      <empty-box  link-text="add new recipe" route-name="new" />
+      <empty-box
+        link-text="add a new recipe"
+        route-name="new"
+        title="Goodness Gracious!"
+        subtitle="The recipe list seems to have taken a tea break. Why not take charge and add your culinary masterpieces?"
+      />
     </div>
 
   </div>  

@@ -99,7 +99,6 @@ const edited = () => {
   emit("categoryEdited");
 };
 
-
 const responseBusId = `delete-category-${props.category.id}`
 
 const bus = useEventBus<Notification>("notifications")
@@ -123,7 +122,7 @@ const onDeleteConfirmListener = (incommingId : string) => {
   });
 }
 
-const unsubscribe = responseBus.on(onDeleteConfirmListener);
+responseBus.on(onDeleteConfirmListener);
 
 
 </script>

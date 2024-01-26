@@ -9,8 +9,8 @@
 
       <!-- choose file -->
       
-      <ui-button v-else icon="fas fa-file" type="secondary">
-        <label for="file">Choose a file</label>
+      <ui-button v-else icon="fas fa-image" type="secondary">
+        <label for="file">upload</label>
       </ui-button>
       <input @change="handleFile" id="file" class="file-input" type="file" name="resume" >
     </div>

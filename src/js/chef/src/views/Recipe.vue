@@ -1,139 +1,127 @@
 <template>
-  <div class="mx-3 mb-3">
-    <div ref="lookHere"></div>
     <div ref="recipeTitle" v-if="recipe">
-      <div v-if="!editMode">
-        <div class="level">
-        <div class="level-left">
-          <div v-show="!missingImage" class="level-item">
-            <p class="image" style="width: 256px; height: 256px">
-              <img
-                ref="r-img"
-                :src="image_url"
-                @error="missingImage = true"
-                alt="recipe image"
-                class="is-rounded p-2">
-            </p>
-          </div>
-          <div class="level-item">
-            <div class="has-text-centered-mobile title-header">
-              <h1 v-if="recipe" class="title is-4">#{{ recipe.id }}</h1>
-              <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
-              <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
-
-              <p v-if="recipe && recipe.source">
-                <a :href="recipe.source">
-                  <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
-                  <span v-else>{{ recipe.source }}</span>
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-        </div>
-
-        <!-- tags -->
-        <div class="tags mt-5">
-          <!-- CURR -->
-          <ButtonFavorite :favorite="recipe.favorite" :loading="recipes.loading" @favorite="makeFavorite" class="mr-2"/>
-          <span class="tag" v-for="(tag, index) in recipe.tags" :key="'item-tag-' + index">{{tag.name}}</span>
-        </div>
-
-        <!-- chevron -->
-        <div ref="chevron" class="tabs is-right is-boxed">
-          <ul>
-            <li class="is-active">
-              <a v-on:click="ingredientsCollapsed = !ingredientsCollapsed">
-                <span :class="{
-                  icon: true,
-                  'is-small': true,
-                  rotate: ingredientsCollapsed,
-                  'animate-icon': true,
-                  }"
-                >
-                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- ingredients -->
-        <transition name="slide-up">
-        <div v-show="!ingredientsCollapsed">
-          <h1 v-if="recipe" class="title is-5">Ingredients</h1>
-
-          <div v-if="recipe && recipe.ingredients" class="px-5">
-            <div
-              v-for="(ingredient, index) in recipe.ingredients" :key="ingredient.ingredient.name + index + 'recipe-detail'"
-              class="level is-mobile">
-              <div class="level-left">
-                <div class="level-item">
-                  <router-link :to="{ name: 'Ingredient', params: {id: ingredient.ingredient.id}}">
-                    {{ingredient.ingredient.name}}
-                    <span v-if="ingredient.note">({{ingredient.note}})</span>
-                  </router-link>
-                </div>
-              </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <p>
-                    <strong>{{ Math.round((ingredient.amount *portions/recipe.portions)*10)/10 }}</strong>
-                    {{ ingredient.unit.name }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- portion counter  -->
-          <div class="my-5">
-            <Counter v-model="portions"></Counter>
-            <label class="label">Enough for {{ Math.round((portions/recipe.portions)*10)/10 }} batch(es).</label>
-          </div>
-
-          <hr>
-        </div>
-        </transition>
-
-        <!-- HTML body -->
-        <div v-html="recipe.body" class="content section pt-1"/>
-      </div>
-
-      <!-- buttons -->
-      <div v-if="!editMode" class="my-5 row">
-        <DeleteButton @delete="deleteRecipe" v-model="deletePrompt" :loading="recipes.loading"/>
-        <ImageUpload
-          v-show="!deletePrompt"
-          :recipe=recipe
-          @uploadSuccess="$router.go($router.currentRoute)"
-        />
-        <button v-show="!deletePrompt" v-on:click="updateRecipe" class="button is-fullwidth is-warning mb-1">
-          <i class="fas fa-pen"></i>
-          <span class="ml-2">Edit</span>
-        </button>
-      </div>
-
       <div v-if="editMode">
+        <h1 id="edit-title">Edit recipe</h1>
         <RecipeForm
           :data="recipe"
           @posted="updateRecipe"
           @cancel="editMode=false"
         />
       </div>
-    </div>
-    <NotFound v-else message="Recipe not found" />
+      <div v-else class="recipe">
+        <div class="row heading">
+          <img
+              ref="r-img"
+              :src="image_url"
+              @error="missingImage = true"
+              alt="recipe image"
+              class="is-rounded p-2"
+          >
+          <div>
+            <div>
+              <div class="row">
+                <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
+                <!-- <ButtonFavorite :favorite="recipe.favorite" :loading="recipes.loading" @favorite="makeFavorite" class="mr-2"/> -->
+              </div>
+              <inline>
+                <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
+              </inline>
+            </div>
+            <a v-if="recipe && recipe.source" :href="recipe.source">
+              <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
+              <span v-else>{{ recipe.source }}</span>
+            </a>
 
-  </div>
+            <div class="tags">
+              <pin v-for="(tag, index) in recipe.tags" :key="tag.name"  :text="tag.name"  active />
+            </div>
+          </div>
+        </div>
+
+        <!-- ingredients -->
+        <section class="ingredient-card">
+          <div class="row">
+            <ui-button
+              :icon="ingredientsCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"
+              type="secondary"
+              @click="ingredientsCollapsed = !ingredientsCollapsed"
+            />
+            <h2 class="title is-5">Ingredients</h2>
+          </div>
+
+          <transition name="slide-up">
+          <div v-show="!ingredientsCollapsed" class="ingredients">
+            <table>
+              <tbody>
+                <tr
+                  v-for="(ingredient, index) in recipe.ingredients"
+                  :key="ingredient.ingredient.id"
+                  :class="ingredient.ingredient.name.endsWith('--') ? 'hide' : ''"
+                >                  
+                  <td class="amount">
+                    <h1>{{ Math.round((ingredient.amount *portions/recipe.portions)*10)/10 }}</h1>
+                    <small>{{ ingredient.unit.name.replace('pcs', 'ks') }}</small>
+                  </td>
+                  <td class="ingredient-link">
+                    <router-link :to="{ name: 'Ingredient', params: {id: ingredient.ingredient.id}}">
+                      {{ingredient.ingredient.name}}
+                      <span v-if="ingredient.note">({{ingredient.note}})</span>
+                    </router-link>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+            
+          </div>
+          </transition>
+        </section>
+        
+        <!-- buttons -->
+        <div v-if="!editMode" class="row">
+          <ui-button @click="clickDelete" id="delete-btn" icon="fas fa-trash" />
+          <!-- portion counter  -->
+          <transition>
+            <div v-if="!ingredientsCollapsed">
+              <Counter v-model="portions"></Counter>
+            </div>
+          </transition>
+          <ImageUpload
+            v-show="!deletePrompt"
+            :recipe=recipe
+            @uploadSuccess="$router.go($router.currentRoute)"
+          />
+          <ui-button v-show="!deletePrompt" @click="updateRecipe" text="edit" icon="fas fa-pen" />
+        </div>
+
+        <!-- HTML body -->
+        <section class="content" v-if="recipe.body">
+          <h2>Steps</h2>
+          <div v-html="recipe.body"/>
+        </section>
+        <section v-else id="empty">
+          <empty-box
+            title="Good Heavens!"
+            subtitle="It seems the recipe remains a blank canvas. Jolly Shame on&nbsp;Us! 🍴"
+          />
+        </section>
+      </div>
+
+
+ 
+    </div>
+    <section v-else id="not-found">
+      <NotFound msg="The recipe seems to have jolly well disappeared" />
+    </section>
 </template>
 
 <script setup lang="ts">
+import Pin from "@/components/ui/Pin.vue";
+import UiButton from "@/components/ui/UiButton.vue";
+import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
 import ImageUpload from "@/components/ui/ImageUpload.vue";
 import NotFound from "@/components/NotFound.vue";
-import DeleteButton from "@/components/ui/DeleteButton.vue";
-import ButtonFavorite from "@/components/ButtonFavorite.vue";
 
 import { useRecipeStore } from "@/stores/recipe";
 import { useRoute, useRouter } from "vue-router";
@@ -143,6 +131,13 @@ import { IMAGES_URL } from "@/constants";
 const router = useRouter();
 const route = useRoute();
 const recipeId = parseInt(route.params.id as string);
+
+import { useEventBus } from "@vueuse/core"
+import type { Notification } from "@/types";
+
+const responseBusId = `delete-recipe-${recipeId}`
+const bus = useEventBus<Notification>("notifications")
+const responseBus = useEventBus<string>(responseBusId)
 
 const recipes = useRecipeStore();
 const { all } = toRefs(recipes)
@@ -169,11 +164,11 @@ const deleteRecipe = async () => {
   recipes.deleteById(recipeId).then(() => router.push('/recipes'));
 }
 
-const makeFavorite = async () => {
-  const data = {...recipe.value}
-  data.favorite = !data.favorite;
-  recipes.update(data);
-}
+// const makeFavorite = async () => {
+//   const data = {...recipe.value}
+//   data.favorite = !data.favorite;
+//   recipes.update(data);
+// }
 
 const ingredientsCollapsed = ref<boolean>(false);
 
@@ -181,27 +176,170 @@ const missingImage = ref<boolean>(false);
 
 const image_url = `${IMAGES_URL}/${recipeId}/medium.jpeg`;
 
+const clickDelete = () => bus.emit({
+  level: "ERROR",
+  message: `Delete recipe ${recipe.value?.title ?? 'N/A'} ?`,
+  action: {
+    id: responseBusId,
+    label: "Delete",
+  },
+})
+
+const onDeleteConfirmListener = () => {
+  recipes.deleteById(recipeId).then(() => router.push('/recipes'));
+}
+
+responseBus.on(onDeleteConfirmListener);
+
 </script>
 
 <style lang="scss" scoped>
-  .row {
-    display: flex;
-    gap: 3px;
+.recipe {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.content, .ingredient-card {
+  border: 1px solid var(--bg-200);
+  border-radius: .3rem;
+  padding: .3rem;
+}
+
+h1 {
+ font-weight: 100;
+ text-transform: uppercase;
+ margin: 0;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: large;
+  text-transform: uppercase;
+  margin: 0;
+}
+.row {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.animate-icon {
+  transition: 0.15s;
+}
+.rotate {
+  transform:rotate(-90deg);
+}
+.title-header {
+  h1, h2 {
+    text-transform: uppercase;
+  }
+}
+.tag {
+  margin-bottom: 0%;
+  padding-top: 1px;
+}
+
+td {
+  padding-block: .4rem;
+  min-width: 6rem;
+}
+
+tr {
+  & > .amount {
+      display: flex;
+      align-items: center;
+      text-align: right;
+      gap: .3rem;
+      // width: 5rem;
+      // border-bottom: 1px solid gray;
+
+      & > h1 {
+        font-size: x-large;
+        font-weight: 400;
+      }
+    }
+
+  &:nth-child(even) > .amount {
+    color: var(--primary)
   }
 
-  .animate-icon {
-    transition: 0.15s;
+  &:nth-child(odd) > .amount {
+    color: var(--text)
   }
-  .rotate {
-    transform:rotate(-90deg);
+
+  &:nth-child(even) > td > a {
+    color: var(--primary);
+    text-decoration: none;
   }
-  .title-header {
-    h1, h2 {
-      text-transform: uppercase;
-    }
+
+  &:nth-child(odd) > td > a {
+    color: var(--text);
+    text-decoration: none;
   }
-  .tag {
-    margin-bottom: 0%;
-    padding-top: 1px;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+#empty {
+  height: 50dvh;
+}
+
+#not-found {
+  height: 70dvh;
+}
+
+img {
+  width: 20dvh;
+  border-radius: 50%;
+  mask-image: radial-gradient(rgb(0 0 0 / 100%) 50%, transparent);
+}
+
+.heading {
+  gap: 3rem;
+}
+
+.tags {
+  margin-top: .5rem;
+}
+
+
+@media (max-width: 575.98px) {
+
+  #empty {
+    height: 40dvh;
   }
+
+  .tags {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .heading {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  img {
+    width: 100dvw;
+    border-radius: 0;
+    margin-top: -1rem;
+    mask-image: linear-gradient(rgb(0 0 0 / 100%) 60%, transparent);
+  }
+}  
+
+#delete-btn {
+  margin-right: auto;
+}
+
+#edit-title {
+  margin-bottom: 1rem;
+  text-transform: none;
+}
+  
+
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="level">
     <ui-button @click="decrement" icon="fas fa-minus" type="secondary" />
-    <ui-input v-model="model" disabled size="small" centered />
+    <ui-input v-model="model" disabled size="small" centered label="portions counter" />
     <ui-button @click="increment" icon="fas fa-plus" type="secondary" />
     </div>
 </template>
