@@ -63,3 +63,16 @@ export interface Recipe {
     tags: Tag[]
     body: string
 }
+
+export type NotificationAction = {
+    id: string,
+    label: string,
+}
+
+export type Notification = {
+    level: "INFO" | "ERROR"
+    icon?: string
+    message: string
+    closable?: boolean
+    action?: NotificationAction
+}

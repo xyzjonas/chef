@@ -7,12 +7,8 @@
   </section>
 </template>
 
-<script>
-export default {
-
-  props: ['loading']
-
-}
+<script lang="ts" setup>
+defineProps<{ loading: boolean }>()
 </script>
 
 <style>

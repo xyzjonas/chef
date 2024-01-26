@@ -1,35 +1,38 @@
 <template>
-  <div>
+  <div class="wrapper">
 
     <!-- RECIPE COUNT -->
-    <div class="mb-2">
-      <h1 class="title is-4 has-text-primary">{{ recipes.length }} {{ title || 'Recipes' }}</h1>
+    <div v-if="allRecipes.length > 0">
+      <h1 id="r-count">{{ displayedRecipes.length }} {{ title || 'Recipes' }}</h1>
     </div>
 
     <!-- TAGS -->
     <div v-if="!hideFilters" class="tags">
-      <a v-for="tag in tagNames" :key="'tag_key' + tag"
+      <pin
+        v-for="tag in tagNames"
+        :text="tag"
+        :active="activeTags.includes(tag)"
+        clickable
         @click="toggleFilter(tag)"
-        :class="{ 'tag':true,  'is-rounded':true, 'is-dark': activeTags.includes(tag), 'noselect': true}"
-        style="text-decoration:none;"
-      >{{ tag }}</a>
+      />
     </div>
 
-    <!-- search -->
-    <p v-if="!hideSearch" class="control has-icons-left mb-4">
-      <input 
-        v-model="search"
-        class="input is-rounded"
-        type="text"
-        placeholder="search">
-      <span class="icon is-small is-left">
-        <i class="fas fa-search"></i>
-      </span>
-    </p>
+    <!-- SEARCH -->
+    <ui-input v-if="allRecipes.length > 0" v-model="search" :icon="Search" size="large" style="margin-block: .8rem;"/>
 
     <!-- LIST -->
-    <div class="recipe-list">
-      <RecipeListItem v-for="(recipe) in recipes" :key="'recipe_a_key+' + recipe.id" :recipe="recipe" />
+    <div class="recipe-list" v-if="allRecipes.length > 0">
+      <div v-for="(recipe) in displayedRecipes" :key="'recipe_a_key+' + recipe.id" :recipe="recipe">
+        <component :is="RecipeListItem" :recipe="recipe" />
+      </div>
+    </div>
+    <div v-else class="empty-box">
+      <empty-box
+        link-text="add a new recipe"
+        route-name="new"
+        title="Goodness Gracious!"
+        subtitle="The recipe list seems to have taken a tea break. Why not take charge and add your culinary masterpieces?"
+      />
     </div>
 
   </div>  
@@ -37,29 +40,29 @@
 
 <script setup lang="ts">
 import RecipeListItem from "@/components/RecipeListItem.vue";
+import EmptyBox from "@/components/ui/EmptyBox.vue";
+import Search from "@/components/icons/Search.vue"
+import UiInput from "./ui/UiInput.vue";
+import Pin from "@/components/ui/Pin.vue";
 import type { Recipe } from "@/types";
 import { replaceUnicode } from "@/utils";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
   allRecipes: Recipe[],
-  title: string,
-  hideSearch: boolean,
-  hideFilters: boolean
+  title?: string,
+  hideSearch?: boolean,
+  hideFilters?: boolean,
 }>()
 
 const activeTags = ref<string[]>([])
 const search = ref<string>()
-const recipesInitiated = ref(false)
-
 
 const tagNames = computed<string[]>(() => {
    return [...new Set(props.allRecipes.map(recipe => recipe.tags.map(tag => tag.name)).flat())]
 })
 
-const recipes = computed<Recipe[]>(() => {
-  recipesInitiated.value = true;
-
+const displayedRecipes = computed<Recipe[]>(() => {
   const recipes = props.allRecipes.filter(r => {
     var recipeTags = r.tags.map(t => t.name);
     if (!recipeTags) return true; // if a recipe has no tags, always show
@@ -77,9 +80,13 @@ const recipes = computed<Recipe[]>(() => {
       return -1
     }
   });
+
   // 2) Search (regex)
-  if (!search.value || search.value === "") return recipes;
-  var re = new RegExp(replaceUnicode(search.value.toLowerCase()));
+  if (!search.value || search.value === "") {
+    return recipes;
+  }
+
+  const re = new RegExp(replaceUnicode(search.value.toLowerCase()));
   return recipes.filter(r => {
     if (re.exec(replaceUnicode(r.title.toLowerCase()))) {
       return true;
@@ -98,9 +105,40 @@ const toggleFilter = (tagName: string) => {
 }
 </script>
 <style scoped lang="scss">
-.recipe-list {
+.wrapper {
   display: flex;
   flex-direction: column;
+  gap: .5rem;
+}
+
+.recipe-list {
+  display: grid;
   gap: 0.3em;
+  grid-template-columns: 1fr 1fr;
+
+  @media (min-width: 768px){
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (min-width: 992px){
+  	grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  gap: .3rem;
+  flex-wrap: wrap;
+}
+
+#r-count {
+  font-weight: 100;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.empty-box {
+  height: 65dvh;;
 }
 </style>

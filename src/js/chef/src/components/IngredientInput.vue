@@ -1,72 +1,27 @@
 <template>
 <div class="ingredient-input">
-    <button class="button is-small arrow" @click="$emit('down')">
-        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-    </button>
-    <button class="button is-small arrow" @click="$emit('up')">
-        <i class="fas fa-chevron-up" aria-hidden="true"></i>
-    </button>
-    <input
-        v-model="ingredientItem.amount"
-        id="amount"
-        type="number"
-        :class="{
-            input: true,
-            'is-small': true,
-            'is-success': ingredientItem.amount,
-            'is-danger': !ingredientItem.amount
-        }"
-    >
-    <input
-        list="units"
-        v-model="selectedUnitName"
-        id="unit"
-        :class="{
-            input: true,
-            'is-small': true,
-            'is-warning': !selectedUnitOk,
-            'is-success': selectedUnitOk,
-            'is-danger': !selectedUnitName
-        }"
-        placeholder="g"
-        type="text"
-        autocomplete="off"
-        @input="event => selectUnit()"
-    >
-    <datalist id="units">
-        <option v-for="unit in units.all" :value="unit.name">{{ unit.name }}</option>
-    </datalist>
+    <ui-button @click="$emit('down')" icon="fas fa-chevron-down" type="secondary" />
 
-    <input
-        list="ingredients"
-        v-model="selectedIngredientName"
-        id="name"
-        :class="{
-            input: true,
-            'is-small': true,
-            'is-warning': !selectedIngredientOk,
-            'is-success': selectedIngredientOk,
-            'is-danger': !selectedIngredientName,
-        }"
-        placeholder="ingredient"
-        type="text"
-        autocomplete="off"
-        @input="event => selectIngredient()"
-    >
-    <datalist id="ingredients">
-        <option v-for="ingredient in ingredients.all" :value="ingredient.name">{{ ingredient.name }}</option>
-    </datalist>
-    <input v-model="ingredientItem.note" id="note" class="input is-small" placeholder="note">
-    <button class="button is-small is-danger is-outlined" @click="$emit('delete')">
-        <i class="fas fa-trash"></i>
-    </button>
+    <ui-button @click="$emit('up')" icon="fas fa-chevron-up" type="secondary" />
+
+    <ui-input class="amount" v-model="ingredientItem.amount" size="small" label="amount" />
+
+    <ui-input class="unit" v-model="selectedUnitName" label="unit" size="small" />
+
+    <ui-input class="ingredient" v-model="selectedIngredientName" label="ingredient" size="small" />
+
+    <ui-input v-model="ingredientItem.note" label="note" size="small" />
+
+    <ui-button @click="$emit('delete')" icon="fas fa-trash" />
 </div>
 </template>
 <script setup lang="ts">
+import UiInput from '@/components/ui/UiInput.vue';
+import UiButton from '@/components/ui/UiButton.vue';
 import { useIngredientStore } from '@/stores/ingredient';
 import { useUnitsStore } from '@/stores/units';
-import type { Ingredient, IngredientItem } from '@/types';
-import { ref, watch } from 'vue';
+import type { IngredientItem } from '@/types';
+import { ref } from 'vue';
 
 const props = defineProps<{'initialData': IngredientItem}>()
 
@@ -129,22 +84,20 @@ select {
 }
 .ingredient-input {
     display: flex;
-    gap: 1px;
-
-    #amount {
-        max-width: 5em;
-    }
-    #unit {
-        max-width: 4em;
-    }
-    #note {
-        width: 5em;
-        transition: width 0.1s ease-in;
-        &:focus {
-            width: 100%;
-            transition: width 0.1s ease-in;
-        }
-    }
+    flex-direction: row;
+    gap: .3rem;
     
+}
+
+.amount {
+    flex-basis: 4rem;
+}
+
+.unit {
+    flex-basis: 2rem;
+}
+
+.ingredient {
+    flex-grow: 2;
 }
 </style>

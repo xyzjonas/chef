@@ -4,10 +4,11 @@ RUN npm run build
 
 
 FROM python:3.11.1 as be-build-stage
-COPY src/python ./src/python
 COPY pyproject.toml .
 COPY poetry.lock .
 RUN pip install poetry
+COPY src/python ./src/python
+COPY ./README.md .
 RUN poetry build
 
 

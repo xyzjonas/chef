@@ -48,3 +48,18 @@ docker run -p 8000:8000 -v ~/.chef:/chef/data chef
 - `IMAGES_FOLDER`: where the app will be looking for and storing uploaded images, has to be somewhere inside your bucket.
 - `DATABASE_URI`: specify your posgres or possibly put an sqlite file in the bucket as well.
 
+
+## Build
+### 1. With Docker
+
+```shell
+docker build . -t chef
+```
+
+### 2. Without Docker
+```shell
+cd ./src/js/chef
+npm run build
+cd -
+poetry build
+```

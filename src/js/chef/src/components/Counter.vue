@@ -1,46 +1,36 @@
 <template>
-  <div class="field has-addons">
-      <p class="control">
-        <a class="button is-small" @click="decrement">
-          <span class="icon is-small">
-            <i class="fas fa-minus"></i>
-          </span>
-        </a>
-      </p>
-      <p class="control is-expanded">
-        <input
-          class="input has-text-centered is-small"
-          type="text"
-          :value="modelValue"
-          disabled
-          @input="$emit('update:modelValue')"
-        >
-      </p>
-      <p class="control">
-        <a class="button is-small" v-on:click="increment">
-          <span class="icon is-small">
-            <i class="fas fa-plus"></i>
-          </span>
-        </a>
-      </p>
+  <div class="level">
+    <ui-button @click="decrement" icon="fas fa-minus" type="secondary" />
+    <ui-input v-model="model" disabled size="small" centered label="portions counter" />
+    <ui-button @click="increment" icon="fas fa-plus" type="secondary" />
     </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ modelValue: number }>();
-const emit = defineEmits(["update:modelValue"]);
+import UiButton from './ui/UiButton.vue';
+import UiInput from './ui/UiInput.vue';
+const model = defineModel<number>();
+// const props = defineProps<{ modelValue: number }>();
+// const emit = defineEmits(["update:modelValue"]);
 
 
 const increment = () => {
-  emit('update:modelValue', props.modelValue + 1);
+  model.value = !!model.value ? model.value + 1 : 1
 }
 
 const decrement = () => {
-  emit('update:modelValue', props.modelValue - 1);
+  model.value = !!model.value ? model.value - 1 : 0
+  if (model.value <= 1) {
+    model.value = 1;
+  }
 }
 
 </script>
 
-<style>
-
+<style lang="css" scoped>
+.level {
+  display: flex;
+  flex-direction: row;
+  gap: .3rem
+}
 </style>

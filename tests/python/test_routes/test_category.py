@@ -54,7 +54,12 @@ def test_update_category(http_client, db_session, category, tag):
 
     tag_data = tag.dictionary
     db_session.expire_all()
-    c = db_session.query(Category).filter_by(id=data["id"]).first()
+
+    all_categories = db_session.query(Category).all()
+    assert len(all_categories) == 1, 'more than 1 category!'
+    c = [c for c in all_categories if c.id == data["id"]]
+    assert len(all_categories) == 1, 'the wrong category!'
+    c = c[0]
     assert c
     assert c.name == data["name"]
     assert len(c.tags) == 1

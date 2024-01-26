@@ -1,22 +1,39 @@
 <template>
-  <div id="app">
+    <div id="app">
     
-    <Navbar class="mb-2" />
+      <Navbar class="mb-2" />
 
-    <div class="container pb-4 px-1">
-      <transition mode="out-in">
-        <keep-alive>
-          <router-view/>
-        </keep-alive>
-      </transition>
+      <main class="container">
+        <RouterView v-slot="{ Component }">
+          <template v-if="Component">
+
+            <Transition mode="out-in">
+              <KeepAlive :exclude="['Recipe', 'CategoryView', 'CategoryTile']">
+                <Suspense>
+                  <component :is="Component"></component>
+                  <template #fallback>
+                    LOADING...
+                  </template>
+                </Suspense>
+              </KeepAlive>
+            </Transition>
+
+          </template>
+        </RouterView>
+      </main>
+
+      <app-footer />
+
+      <Notificaton />
+
     </div>
-
-  </div>
 
 </template>
 
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue';
+import AppFooter from '@/components/AppFooter.vue';
+import Notificaton from './components/ui/Notificaton.vue';
 import { useRecipeStore } from './stores/recipe';
 import { useIngredientStore } from './stores/ingredient';
 import { useTagStore } from './stores/tags';
@@ -41,6 +58,20 @@ units.fetch();
 </script>
 
 <style>
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+main {
+  padding-bottom: .5rem;
+}
+
+footer {
+  margin-top: auto;
+}
 
 .v-enter-from,
 .v-leave-to {
