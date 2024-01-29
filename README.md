@@ -36,8 +36,7 @@ chef
 or run with docker:
 
 ```shell
-docker build . -t chef
-docker run -p 8000:8000 -v ~/.chef:/chef/data chef
+docker run -p 8000:8000 -v ~/.chef:/chef/data scotch3840/chef:latest
 ```
 
 
