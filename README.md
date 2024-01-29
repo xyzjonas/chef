@@ -1,23 +1,10 @@
-# 👨‍🍳 Chef
+# 🍽️ Chef
 
 A simple, customizable recipe management app.
 
 A simple FastAPI + SQLAlchemy app + VueJS frontend.
 Frontend app is built and bundled together with the python build downloadable from PyPI -> the entire app can be run with a single command.
 It's also built as a single container and can be easily hosted (with little tweaks) on GCP Cloud Run.
-
-
-<details>
-
-<summary>Screenshots</summary>
-
-
-<picture><img alt="screenshot1" src="https://github.com/jonasbrauer/chef/assets/10963153/7caf01e0-c1f6-487b-9b09-2483cf938161" height=360></picture>
-<picture><img alt="screenshot2" src="https://github.com/jonasbrauer/chef/assets/10963153/067c5953-79cf-4be5-a2ca-89a293d3db90" height=360></picture>
-<picture><img alt="screenshot3" src="https://github.com/jonasbrauer/chef/assets/10963153/3d237a3f-a3c8-4bd9-afad-43ac4ef57811" height=360></picture>
-<picture><img alt="screenshot4" src="https://github.com/jonasbrauer/chef/assets/10963153/002aad12-4e6c-4815-8793-e6125405d940" height=360></picture>  |
-
-</details>
 
 ## Installation
 
