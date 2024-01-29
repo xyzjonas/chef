@@ -63,7 +63,7 @@ import Pin from "./ui/Pin.vue";
 import { useCategoryStore } from "@/stores/categories";
 import { ref } from "vue";
 import { IMAGES_URL } from "@/constants";
-import type { Category, Notification } from "@/types";
+import type { Category, ChefNotification } from "@/types";
 import { useRouter } from "vue-router";
 
 import { useEventBus } from "@vueuse/core"
@@ -101,7 +101,7 @@ const edited = () => {
 
 const responseBusId = `delete-category-${props.category.id}`
 
-const bus = useEventBus<Notification>("notifications")
+const bus = useEventBus<ChefNotification>("notifications")
 const responseBus = useEventBus<string>(responseBusId)
 
 const clickDelete = () => bus.emit({
@@ -207,7 +207,7 @@ h2 {
 }
 
 .tile {
-  min-height: 12em;
+  height: 12em;
 }
 
 .level {

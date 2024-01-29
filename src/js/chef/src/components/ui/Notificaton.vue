@@ -24,7 +24,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import type { Notification } from '@/types';
+import type { ChefNotification } from '@/types';
 import UiButton from './UiButton.vue';
 
 import { useEventBus } from '@vueuse/core'
@@ -34,12 +34,12 @@ import { ref, type Ref } from 'vue';
 // const { notificaton } = useNotifications();
 const notifications = ref([])
 
-const notificatonInfo = ref<Notification>()
-const notificatonError = ref<Notification>()
-const notificatonSuccess = ref<Notification>()
+const notificatonInfo = ref<ChefNotification>()
+const notificatonError = ref<ChefNotification>()
+const notificatonSuccess = ref<ChefNotification>()
 
-const bus = useEventBus<Notification>("notifications")
-bus.on((not: Notification) => {
+const bus = useEventBus<ChefNotification>("notifications")
+bus.on((not: ChefNotification) => {
     console.info(not)
     if (not.level === 'ERROR') {
         notificatonError.value = not
@@ -48,7 +48,7 @@ bus.on((not: Notification) => {
     }
 })
 
-const actionError = (reference: Ref<Notification | undefined>) => {
+const actionError = (reference: Ref<ChefNotification | undefined>) => {
     const busId = notificatonError.value?.action?.id
     console.info(`Trigger: ${busId}`)
     if (busId) {

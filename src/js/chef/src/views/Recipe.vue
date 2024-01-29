@@ -135,10 +135,10 @@ const route = useRoute();
 const recipeId = parseInt(route.params.id as string);
 
 import { useEventBus } from "@vueuse/core"
-import type { Notification } from "@/types";
+import type { ChefNotification } from "@/types";
 
 const responseBusId = `delete-recipe-${recipeId}`
-const bus = useEventBus<Notification>("notifications")
+const bus = useEventBus<ChefNotification>("notifications")
 const responseBus = useEventBus<string>(responseBusId)
 
 const recipes = useRecipeStore();

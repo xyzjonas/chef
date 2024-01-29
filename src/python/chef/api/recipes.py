@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy.orm import Session
 
 from chef.controllers import RecipesController
@@ -39,11 +39,25 @@ async def delete_recipe(item_id: int) -> None:
 
 @router.post('', status_code=201)
 async def create_recipe(create_data: CreateOrUpdateRecipe) -> Recipe:
+
+    if any(not i.ingredient.name for i in create_data.ingredients):
+        raise HTTPException(
+            status_code=400,
+            detail="Empty ingredient name not allowed."
+        )
+
     with Session(engine()) as session:
         return await recipes.create(session, create_data)
 
 
 @router.put('/{item_id}')
 async def update_recipe(item_id: int, update_data: CreateOrUpdateRecipe) -> Recipe:
+
+    if any(not i.ingredient.name for i in update_data.ingredients):
+        raise HTTPException(
+            status_code=400,
+            detail="Empty ingredient name not allowed."
+        )
+
     with Session(engine()) as session:
         return await recipes.update(session, item_id, update_data)

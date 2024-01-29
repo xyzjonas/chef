@@ -1,16 +1,17 @@
 <template>
 <div class="ingredient-input">
+
     <ui-button @click="$emit('down')" icon="fas fa-chevron-down" type="secondary" />
 
     <ui-button @click="$emit('up')" icon="fas fa-chevron-up" type="secondary" />
 
-    <ui-input class="amount" v-model="ingredientItem.amount" size="small" label="amount" />
+    <ui-input class="amount" v-model="model.amount" size="small" label="amount" />
 
-    <ui-input class="unit" v-model="selectedUnitName" label="unit" size="small" />
+    <ui-input class="unit" v-model="model.unit.name" label="unit" size="small" />
 
-    <ui-input class="ingredient" v-model="selectedIngredientName" label="ingredient" size="small" />
+    <ui-input class="ingredient" v-model="model.ingredient.name" label="ingredient" size="small" :success="ingredientExists" />
 
-    <ui-input v-model="ingredientItem.note" label="note" size="small" />
+    <ui-input v-model="model.note" label="note" size="small" />
 
     <ui-button @click="$emit('delete')" icon="fas fa-trash" />
 </div>
@@ -19,61 +20,33 @@
 import UiInput from '@/components/ui/UiInput.vue';
 import UiButton from '@/components/ui/UiButton.vue';
 import { useIngredientStore } from '@/stores/ingredient';
-import { useUnitsStore } from '@/stores/units';
 import type { IngredientItem } from '@/types';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
-const props = defineProps<{'initialData': IngredientItem}>()
+const model = defineModel<IngredientItem>({ required: true })
 
-
-const ingredientItem = ref<IngredientItem>(
-    JSON.parse(JSON.stringify(props.initialData))
-)
 const emit = defineEmits([
     'update:ingredient',
     'delete',
     'up',
     'down'
 ])
-const emitUpdate = () => {
-    emit('update:ingredient', ingredientItem.value);
-}
 
 const ingredients = useIngredientStore();
-const selectedIngredientName = ref<string>(ingredientItem.value.ingredient.name);
-const selectedIngredientOk = ref();
-const selectIngredient = () => {
-    const match = ingredients.all.find(ing => ing.name === selectedIngredientName.value)
-    if( match ) {
-        selectedIngredientOk.value = true;
-        ingredientItem.value.ingredient = match;
+
+const ingredientExists = ref(false)
+
+watch(model.value.ingredient, (old, n3w) => {
+    n3w.name = n3w.name.toLocaleLowerCase()
+    const match = ingredients.all.find((ing) => n3w.name === ing.name)
+    if (match) {
+        model.value.ingredient.id = match.id
+        ingredientExists.value = true;
     } else {
-        selectedIngredientOk.value = false;
-        ingredientItem.value.ingredient = { name: selectedIngredientName.value };
+        model.value.ingredient.id = undefined;
+        ingredientExists.value = false;
     }
-    emitUpdate();
-}
-selectIngredient();
-
-const units = useUnitsStore();
-const selectedUnitName = ref<string>(ingredientItem.value.unit.name);
-const selectedUnitOk = ref();
-const selectUnit = () => {
-    const match = units.all.find(u => u.name === selectedUnitName.value)
-    if( match ) {
-        selectedUnitOk.value = true;
-        ingredientItem.value.unit = match;
-    } else {
-        selectedUnitOk.value = false;
-        ingredientItem.value.unit = { name: selectedUnitName.value };
-    }
-    emitUpdate();
-}
-selectUnit();
-
-
-
-// const ingredientItem = ref<IngredientItem>()
+})
 </script>
 <style lang="scss" scoped>
 select {

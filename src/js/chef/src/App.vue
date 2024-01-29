@@ -8,7 +8,7 @@
           <template v-if="Component">
 
             <Transition mode="out-in">
-              <KeepAlive :exclude="['Recipe', 'CategoryView', 'CategoryTile']">
+              <KeepAlive :exclude="['Recipe', 'CategoryView', 'CategoryTile', 'RecipeForm']">
                 <Suspense>
                   <component :is="Component"></component>
                   <template #fallback>

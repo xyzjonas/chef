@@ -97,14 +97,15 @@ class IngredientsController(Controller[UpdateIngredient, Ingredient, UpdateIngre
         ingredient = session.get(self.read_schema.Meta.orm_model, item_id)
         if ingredient.ingredients_items:
             recipes = [
-                f"Recipe(id={r.id}, titlee={r.title}"
+                r.title
                 for item in ingredient.ingredients_items
                 for r in item.recipes
             ]
-            raise HTTPException(
-                status_code=400,
-                detail=f"Ingredient still attached to some recipes: {recipes}",
-            )
+            if recipes:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Ingredient still attached to some recipes: {', '.join(recipes)}",
+                )
         return await super().delete_single(session, item_id)
 
 
