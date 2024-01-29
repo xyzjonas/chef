@@ -1,18 +1,15 @@
 <template>
   <div class="level">
     <ui-button @click="decrement" icon="fas fa-minus" type="secondary" />
-    <ui-input v-model="model" disabled size="small" centered label="portions counter" />
+    <ui-input v-model="model" disabled size="small" centered label="portions" />
     <ui-button @click="increment" icon="fas fa-plus" type="secondary" />
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import UiButton from './ui/UiButton.vue';
 import UiInput from './ui/UiInput.vue';
 const model = defineModel<number>();
-// const props = defineProps<{ modelValue: number }>();
-// const emit = defineEmits(["update:modelValue"]);
-
 
 const increment = () => {
   model.value = !!model.value ? model.value + 1 : 1

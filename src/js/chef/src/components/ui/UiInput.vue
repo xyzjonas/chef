@@ -1,5 +1,5 @@
 <template>
-    <label :for="randomId" id="wrapper" :data-focus="focused" >
+    <label :for="randomId" id="wrapper" :data-focus="focused" :class="wrapperClass" >
         <component :is="icon" :width="styleSize" id="icon"/>
         <span>
             <input 
@@ -8,7 +8,6 @@
                 type="text"
                 v-model="model"
                 :disabled="disabled"
-                :class="clazz"
             />
             <label id="actualLabel" :for="randomId" v-if="label" :data-minimize="minimizeLabel">{{ label }}</label>
         </span>
@@ -41,10 +40,13 @@ const props = defineProps<{
     label?: string
     disabled?: boolean
     centered?: boolean
+    success?: boolean
 }>()
 
-const clazz = computed(() => {
-    return `${props.size ?? 'normal'}`
+const wrapperClass = computed(() => {
+    return [
+        props.success ? 'success' : '',
+    ].join(' ')
 })
 
 const styleSize = computed(() => sizes[props.size ?? 'normal'])
@@ -81,10 +83,20 @@ const textAlign = computed(() => props.centered ? 'center' : '')
 
     cursor: text;
     overflow-x: auto;
+
+    border: 1px solid transparent;
+}
+
+#wrapper.success {
+    border: 1px solid #88cc9f9c;
 }
 
 #wrapper[data-focus="true"] {
     background-color: var(--bg-300);
+
+    &.success {
+        border: 1px solid #88cc9f;
+    }
 }
 
 input,

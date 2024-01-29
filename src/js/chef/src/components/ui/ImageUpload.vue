@@ -24,11 +24,11 @@ import UiButton from './UiButton.vue';
 import { API_URL } from '@/constants';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Notification } from '@/types';
+import type { ChefNotification } from '@/types';
 
 import { useEventBus } from '@vueuse/core';
 
-const bus = useEventBus<Notification>("notifications")
+const bus = useEventBus<ChefNotification>("notifications")
 
 // const send = useNotifications();
 

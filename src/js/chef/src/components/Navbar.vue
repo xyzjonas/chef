@@ -38,13 +38,11 @@ nav {
   color: var(--text-inv);
   font-weight: 100;
   font-size: xx-large;
-  /* margin-right: rem; */
 }
 
 .container {
   display: flex;
   flex-direction: row;
-  gap: .3rem;
   align-items: center;
   padding-block: 1rem;
 }

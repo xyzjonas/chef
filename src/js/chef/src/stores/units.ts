@@ -1,6 +1,5 @@
-// import axios from 'axios';
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import { API_URL } from '@/constants';
 
@@ -21,8 +20,8 @@ export const useUnitsStore = defineStore('unit', () => {
     loading.value = true
     recipesApi
         .get<Unit[]>()
-        .then(unit => all.value = unit.sort((a: Unit, b: Unit) => a.name > b.name ? 1 : -1))
-        .catch(err => console.error(err))
+        .then((units: Unit[]) => all.value = units.sort((a: Unit, b: Unit) => a.name > b.name ? 1 : -1))
+        .catch((err: unknown) => console.error(err))
         .finally(() => loading.value = false);
   }
   

@@ -69,10 +69,27 @@ export type NotificationAction = {
     label: string,
 }
 
-export type Notification = {
+export type ChefNotification = {
     level: "INFO" | "ERROR"
     icon?: string
     message: string
     closable?: boolean
     action?: NotificationAction
+}
+
+export type ServerErrorResponse = {
+    body: { detail: string }
+    response: {
+        body: any
+        bodyUsed: boolean
+        headers: {[key: string]: string}
+        ok: boolean
+        redirected: boolean
+        status: number
+        statusText: string
+        type: string
+        url: string
+    }
+    message: string
+    stack: string
 }

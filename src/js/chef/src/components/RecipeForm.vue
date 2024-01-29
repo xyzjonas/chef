@@ -19,17 +19,18 @@
 
     <h3>Ingredients</h3>
     <IngredientInput
-      v-for="(i, index) in recipe.ingredients"
-      :key="i.id"
-      :initialData="i"
+      v-for="(ingredient, index) in recipe.ingredients"
+      :key="ingredient.id"
+      v-model="recipe.ingredients[index]"
+      :index="index"
       @update:ingredient="(ing) => (recipe.ingredients[index] = ing)"
-      @delete="removeIngredient(i)"
+      @delete="removeIngredient(ingredient)"
       @up="up(index)"
       @down="down(index)"
     />
     <div>
       <ui-button
-        @click="recipe.ingredients.push(blankIngredient)"
+        @click="recipe.ingredients.push(generateBlankIngredient())"
         icon="fas fa-plus"
         text="add ingredient"
         type="secondary"
@@ -124,11 +125,13 @@ const updateText = (value: string) => {
   recipe.value.body = value;
 };
 
-const blankIngredient: IngredientItem = {
-  amount: 0,
-  unit: { name: "g" },
-  ingredient: { name: "" },
-  note: "",
+const generateBlankIngredient = (): IngredientItem => {
+  return {
+    amount: 0,
+    unit: { name: "g" },
+    ingredient: { name: "" },
+    note: "",
+  }
 };
 const removeIngredient = (ingredient: IngredientItem) => {
   recipe.value.ingredients = recipe.value.ingredients.filter((i) => {

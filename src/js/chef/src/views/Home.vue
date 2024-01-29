@@ -40,11 +40,6 @@ await recipes.fetch(false)
 </script>
 
 <style lang="scss" scoped>
-
-.view {
-  height: 80dvh;
-}
-
 .category-tiles {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
