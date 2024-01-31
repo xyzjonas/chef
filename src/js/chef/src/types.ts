@@ -62,6 +62,8 @@ export interface Recipe {
     ingredients: IngredientItem[]
     tags: Tag[]
     body: string
+    detail_image?: string
+    thumbnail_image?: string
 }
 
 export type NotificationAction = {
@@ -70,7 +72,7 @@ export type NotificationAction = {
 }
 
 export type ChefNotification = {
-    level: "INFO" | "ERROR"
+    level: "INFO" | "ERROR" | "SUCCESS"
     icon?: string
     message: string
     closable?: boolean

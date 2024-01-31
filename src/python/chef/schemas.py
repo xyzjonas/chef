@@ -137,6 +137,8 @@ class CreateOrUpdateRecipe(BaseRecipe, BaseModel):
 
 class Recipe(Base, BaseRecipe):
     title: str
+    thumbnail_image: Union[str, None]
+    detail_image: Union[str, None]
 
     class Meta:
         orm_model = RecipeDb

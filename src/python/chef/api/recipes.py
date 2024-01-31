@@ -1,8 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile
+from loguru import logger
 from sqlalchemy.orm import Session
 
+from chef.api.common import generic_get
 from chef.controllers import RecipesController
 from chef.models import engine
 from chef.schemas import Recipe, CreateOrUpdateRecipe
@@ -61,3 +63,25 @@ async def update_recipe(item_id: int, update_data: CreateOrUpdateRecipe) -> Reci
 
     with Session(engine()) as session:
         return await recipes.update(session, item_id, update_data)
+
+
+@router.post('/{recipe_id}/thumbnail-image')
+async def post_recipe_thumbnail(recipe_id: int, image: UploadFile):
+    await generic_get(recipes, recipe_id)
+    logger.debug(f"uploading thumbnail for recipe (id={recipe_id}) image: {image.filename}, {image.size / 1000}kB")
+    with Session(engine()) as session:
+        recipes.update_thumbnail(session, recipe_id, image.file)
+        session.commit()
+
+    return await generic_get(recipes, recipe_id)
+
+
+@router.post('/{recipe_id}/detail-image')
+async def post_recipe_image(recipe_id: int, image: UploadFile) -> Recipe:
+    await generic_get(recipes, recipe_id)
+    logger.debug(f"uploading image for recipe (id={recipe_id}) image: {image.filename}, {image.size / 1000}kB")
+    with Session(engine()) as session:
+        recipes.update_image(session, recipe_id, image.file)
+        session.commit()
+
+    return await generic_get(recipes, recipe_id)

@@ -14,6 +14,22 @@
                 <ui-button id="close" @click="notificatonError = undefined" type="primary" icon="fa-solid fa-xmark"/>
             </section>
         </Transition>
+
+        <Transition>
+            <section v-if="notificatonSuccess" class="container success">
+                <ui-button type="link" size="large" disabled icon="fa-solid fa-regular fa-circle-check"/>
+                {{ notificatonSuccess.message }}
+                <ui-button
+                    v-if="notificatonSuccess && notificatonSuccess.action"
+                    id="confirm"
+                    @click="actionError"
+                    type="secondary"
+                    :text="notificatonSuccess.action.label"
+                />
+                <ui-button id="close" @click="notificatonSuccess = undefined" type="link" icon="fa-solid fa-xmark"/>
+            </section>
+        </Transition>
+
         <Transition>
             <section v-if="notificatonInfo" class="container info">
                 <ui-button type="secondary" disabled icon="fa-solid fa-warning"/>
@@ -45,6 +61,8 @@ bus.on((not: ChefNotification) => {
         notificatonError.value = not
     } else if (not.level === "INFO") {
         notificatonInfo.value = not
+    } else if (not.level === "SUCCESS") {
+        notificatonSuccess.value = not
     }
 })
 
@@ -95,6 +113,11 @@ section {
 
 .error {
     background-color: var(--primary);
+    color: var(--text-inv);
+}
+
+.success {
+    background-color: var(--success);
     color: var(--text-inv);
 }
 

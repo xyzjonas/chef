@@ -1,6 +1,8 @@
 import pytest
 from sqlalchemy.orm import Session
 
+from chef.api.common import generic_get
+from chef.controllers import RecipesController
 from chef.models import Recipe, Ingredient, Tag, Unit
 from chef.schemas import Recipe as RecipeSchema
 
@@ -173,3 +175,30 @@ def test_delete_recipe(db_session, http_client, simple_test_data):
     http_client.get(f"/api/recipes/{r.id}").raise_for_status()
     http_client.delete(f"/api/recipes/{r.id}").raise_for_status()
     assert not db_session.query(Recipe).filter_by(id=r.id).first()
+
+
+@pytest.mark.parametrize("image", ["thumbnail_image", "detail_image"])
+@pytest.mark.asyncio
+async def test_upload_image(db_session, http_client, simple_test_data, dummy_image, image):
+    r, _, _, _ = simple_test_data
+
+    path = f"/api/recipes/{r.id}/{image.replace('_', '-')}"
+    response = http_client.post(
+        path,
+        files={
+            "image": ("filename", open(dummy_image, "rb"), "image/jpeg")
+        }
+    )
+    response.raise_for_status()
+    assert response.status_code == 200
+
+    data = response.json()
+    updated_response = RecipeSchema(**data)
+
+    db_session.expunge_all()
+    updated_db = db_session.query(Recipe).filter_by(id=r.id).first()
+
+    for updated, index in zip([updated_db, updated_response], ["DB", "RESPONSE"]):
+        item = getattr(updated, image)
+        assert item, f"EMPTY! - {index}"
+        assert item.endswith(".avif"), f"Wrong ext! - {index}"

@@ -1,3 +1,4 @@
+import argparse
 import os.path
 
 import uvicorn
@@ -5,15 +6,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from starlette.staticfiles import StaticFiles
+import typer
 
 from chef.api import api_router
 from chef.models import ensure_tables
-from chef.settings import settings, HOME_DIR
+from chef.settings import settings, Settings
 
+from chef.scripts.migrate_images import run as migrate_imagesf_fn
+
+
+cli_app = typer.Typer()
 
 app = FastAPI()
 app.include_router(api_router)
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,21 +32,36 @@ app.add_middleware(
 )
 
 
-def serve():
-    options = "\n".join([f"{k.upper()}: '{v}'" for k, v in settings])
+def print_banner(settings_in: Settings):
+    options = "\n".join([f"{k.upper()}: '{v}'" for k, v in settings_in])
     logger.info(f"""
 
-    ███████╗██╗  ██╗███████╗███████╗
-    ██╔════╝██║  ██║██╔════╝██╔════╝
-    ██║     ███████║█████╗  █████╗  
-    ██║     ██╔══██║██╔══╝  ██╔══╝  
-    ║██████ ██║  ██║███████╗██║     
-    ╚═════════╝  ╚═╝╚══════╝╚═╝
+        ███████╗██╗  ██╗███████╗███████╗
+        ██╔════╝██║  ██║██╔════╝██╔════╝
+        ██║     ███████║█████╗  █████╗  
+        ██║     ██╔══██║██╔══╝  ██╔══╝  
+        ║██████ ██║  ██║███████╗██║     
+        ╚═════════╝  ╚═╝╚══════╝╚═╝
 
-    ...starting with following settings:
+        ...starting with following settings:
 
-{options}
-""")
+    {options}
+    """)
+
+
+@cli_app.command()
+def migrate_images():
+    print_banner(settings)
+    should_it_continue = input("continue? [y/n]")
+    if should_it_continue not in ("n", "N", "no", "No", "NO"):
+        migrate_imagesf_fn()
+
+
+@cli_app.command()
+def serve(hostname: str = settings.uvicorn_host, port: int = settings.uvicorn_port):
+    settings.uvicorn_port = port
+    settings.uvicorn_host = hostname
+    print_banner(settings)
 
     if not os.path.isdir(settings.images_folder):
         logger.info(f"Creating images folder: {settings.images_folder}")
@@ -62,8 +82,12 @@ def serve():
         app.mount("/images", StaticFiles(directory=settings.images_folder))
         app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True))
 
-    uvicorn.run(app, host=settings.uvicorn_host, port=settings.uvicorn_port)
+    uvicorn.run(app, host=hostname, port=port)
+
+
+def app_entrypoint():
+    cli_app()
 
 
 if __name__ == '__main__':
-    serve()
+    app_entrypoint()

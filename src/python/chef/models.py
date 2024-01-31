@@ -177,7 +177,9 @@ class Recipe(Base):
         "source",
         "source_name",
         "tags",
-        "portions"
+        "portions",
+        "detail_image",
+        "thumbnail_image",
     ]
 
     title = Column(String(80), nullable=False)
@@ -187,6 +189,8 @@ class Recipe(Base):
     draft = Column(Boolean(), default=False)
     favorite = Column(Boolean(), default=False)
     portions = Column(Integer, default=4)
+    thumbnail_image = Column(String(100), nullable=True)
+    detail_image = Column(String(100), nullable=True)
     ingredients: Mapped[List[IngredientItem]] = relationship(
         secondary=ingredients,
         cascade="all"
