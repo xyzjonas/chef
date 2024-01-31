@@ -28,8 +28,9 @@ ENV LOG_SQL="false"
 RUN mkdir -p $IMAGES_FOLDER
 
 COPY --from=be-build-stage dist/*.whl wheels/
-RUN pip install wheels/*
+RUN pip install --no-cache-dir wheels/*
 
 COPY --from=fe-build-stage dist ./static
 
-CMD chef
+ENTRYPOINT ["chef"]
+CMD ["serve"]

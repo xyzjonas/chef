@@ -139,6 +139,9 @@ const toggleFilter = (tagName: string) => {
 }
 
 .empty-box {
-  height: 65dvh;;
+  min-height: 65dvh;
+  display: flex;
+  flex-direction: column;
 }
+
 </style>

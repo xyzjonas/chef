@@ -28,17 +28,17 @@ def _create_tmp_dir():
     return path
 
 
-@router.post('/recipes/{recipe_id}')
-async def post_recipe_image(recipe_id: int, image: UploadFile):
-    await generic_get(recipes, recipe_id)
-    logger.debug(f"uploading recipe (id={recipe_id}) image: {image.filename}, {image.size}b")
-
-    handler = Handler(image.file, recipe_id)
-    handler.create_images_set()
-
-    return f"Recipe images sent for processing...", 200
-
-
+# @router.post('/recipes/{recipe_id}')
+# async def post_recipe_image(recipe_id: int, image: UploadFile):
+#     await generic_get(recipes, recipe_id)
+#     logger.debug(f"uploading recipe (id={recipe_id}) image: {image.filename}, {image.size}b")
+#
+#     handler = Handler(image.file, recipe_id)
+#     handler.create_images_set()
+#
+#     return f"Recipe images sent for processing...", 200
+#
+#
 @router.post("/categories/{category_id}")
 async def post_category_image(category_id, image: UploadFile):
     await generic_get(categories, category_id)

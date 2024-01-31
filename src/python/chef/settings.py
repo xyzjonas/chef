@@ -1,4 +1,5 @@
 import os.path
+from enum import StrEnum
 from pathlib import Path
 from typing import Union
 from distutils.sysconfig import get_python_lib
@@ -8,6 +9,14 @@ from pydantic import BaseSettings, Field
 
 
 HOME_DIR = Path.home() / '.chef'
+
+
+class StorageType(StrEnum):
+    LOCAL = 'LOCAL'
+
+
+class ImageFormat(StrEnum):
+    AVIF = 'AVIF'
 
 
 def get_bundled_frontend_path():
@@ -33,8 +42,9 @@ class Settings(BaseSettings):
     database_uri: str = "sqlite:///" + os.path.join(HOME_DIR,  "chef.db")
     log_file: Union[str, None] = None
     log_level: str = "DEBUG"
-    log_sql: bool = False
+    log_sql: bool = True
 
+    storage_backend: StorageType = StorageType.LOCAL
     images_folder: str = os.path.join(HOME_DIR,  "images")
 
     uvicorn_host: str = "0.0.0.0"

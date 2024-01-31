@@ -10,10 +10,6 @@
           <ui-button type="link" text="categories" icon="fas fa-folder"></ui-button>
         </router-link>
 
-        <router-link :to="{ name: 'recipes'}">
-          <ui-button type="link" text="recipes" icon="fas fa-list"></ui-button>
-        </router-link>
-
         <router-link :to="{ name: 'new'}" >
           <ui-button type="link" text="recipe" icon="fas fa-plus"></ui-button>
         </router-link>

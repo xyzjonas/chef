@@ -3,13 +3,14 @@ from typing import List, Generic, TypeVar, Union, Type
 
 from fastapi import HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from chef.models import Category as CategoryDb
 from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe, \
     IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
 
+from chef.image.thumbnailer import compress_and_store
 
 C = TypeVar('C', bound=BaseModel)
 R = TypeVar('R', bound=BaseModel)
@@ -212,3 +213,47 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
 
     async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         raise ValueError("Not allowed on this controller!")
+
+    def update_thumbnail(self, session: Session, recipe_id: int, image: any):
+        url = compress_and_store(image, is_thumbnail=True)
+        # recipe = (
+        #     session
+        #     .query(self.read_schema.Meta.orm_model)
+        #     .filter_by(id=recipe_id)
+        #     .first()
+        # )
+        # recipe.thumbnail_image = url
+        # session.add(recipe)
+        # try:
+        #     session.commit()
+        # except:
+        #     session.rollback()
+        #     raise
+        stmt = (
+            update(self.read_schema.Meta.orm_model)
+            .where(self.read_schema.Meta.orm_model.id == recipe_id)
+            .values(thumbnail_image=url)
+        )
+        session.execute(statement=stmt)
+
+    def update_image(self, session: Session, recipe_id: int, image: any):
+        url = compress_and_store(image, is_thumbnail=False)
+        # recipe = (
+        #     session
+        #     .query(self.read_schema.Meta.orm_model)
+        #     .filter_by(id=recipe_id)
+        #     .first()
+        # )
+        # recipe.detail_image = url
+        # session.add(recipe)
+        # try:
+        #     session.commit()
+        # except:
+        #     session.rollback()
+        #     raise
+        stmt = (
+            update(self.read_schema.Meta.orm_model)
+            .where(self.read_schema.Meta.orm_model.id == recipe_id)
+            .values(detail_image=url)
+        )
+        session.execute(statement=stmt)

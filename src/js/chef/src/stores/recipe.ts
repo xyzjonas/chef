@@ -49,13 +49,18 @@ export const useRecipeStore = defineStore("recipe", () => {
   async function fetchSingle(recipeId: number): Promise<Recipe | undefined> {
     loading.value = true;
     try {
-      const recipe = await recipesApi.get<Recipe>(recipeId);
-      recipes.value.map((r) => (r.id === recipe.id ? recipe : r));
+      const newRecipe = await recipesApi.get<Recipe>(recipeId);
+      recipes.value.filter(r => r.id !== newRecipe.id)
+      recipes.value.push(newRecipe)
       loading.value = false;
-      return recipe;
-    } catch (err) {
+      return newRecipe;
+
+    } catch (err: unknown) {
+      bus.emit({ level: "ERROR", message: `failed to fetch recipe #${recipeId}` });
+      throw err
+
+    } finally {
       loading.value = false;
-      console.error(err);
     }
   }
 
