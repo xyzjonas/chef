@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chef-recipes"
-version = "2.1.0"
+version = "2.1.1"
 description = "Personal recipe management app."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -10,7 +10,8 @@ keywords = ["food", "recipes", "culinary"]
 classifiers = ["Framework :: FastAPI"]
 
 packages = [
-    { include = "chef", from = "src/python" }
+    { include = "chef", from = "src/python" },
+    { include = "migrations", from = "src/python" }
 ]
 
 include = [

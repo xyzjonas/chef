@@ -8,11 +8,13 @@ from loguru import logger
 from starlette.staticfiles import StaticFiles
 import typer
 
+from migrations.migrate import run as migrate_db_fn
+
 from chef.api import api_router
 from chef.models import ensure_tables
 from chef.settings import settings, Settings
 
-from chef.scripts.migrate_images import run as migrate_imagesf_fn
+from chef.scripts.migrate_images import run as migrate_images_fn
 
 
 cli_app = typer.Typer()
@@ -54,7 +56,12 @@ def migrate_images():
     print_banner(settings)
     should_it_continue = input("continue? [y/n]")
     if should_it_continue not in ("n", "N", "no", "No", "NO"):
-        migrate_imagesf_fn()
+        migrate_images_fn()
+
+
+@cli_app.command()
+def migrate_db():
+    migrate_db_fn()
 
 
 @cli_app.command()
