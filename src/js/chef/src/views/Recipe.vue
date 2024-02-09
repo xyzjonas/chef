@@ -157,6 +157,7 @@ import { IMAGES_HOST } from "@/constants";
 const router = useRouter();
 const route = useRoute();
 const recipeId = parseInt(route.params.id as string);
+console.info(router)
 
 import { useEventBus } from "@vueuse/core";
 import type { ChefNotification, Recipe } from "@/types";

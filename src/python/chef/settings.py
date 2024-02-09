@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     database_uri: str = "sqlite:///" + os.path.join(HOME_DIR,  "chef.db")
     log_file: Union[str, None] = None
     log_level: str = "DEBUG"
-    log_sql: bool = True
+    log_sql: bool = False
 
     storage_backend: StorageType = StorageType.LOCAL
     images_folder: str = os.path.join(HOME_DIR,  "images")
