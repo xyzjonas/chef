@@ -5,7 +5,8 @@ from typing import Union
 from distutils.sysconfig import get_python_lib
 from loguru import logger
 
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings
 
 
 HOME_DIR = Path.home() / '.chef'
