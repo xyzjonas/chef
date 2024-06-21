@@ -51,5 +51,7 @@ class Settings(BaseSettings):
     uvicorn_host: str = "0.0.0.0"
     uvicorn_port: int = 8000
 
+    public_url: str = "http://localhost:8000"
+
 
 settings = Settings()

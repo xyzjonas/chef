@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, cast
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from loguru import logger
@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from chef.api.common import generic_get
 from chef.controllers import RecipesController
 from chef.models import engine
-from chef.schemas import Recipe, CreateOrUpdateRecipe
+from chef.schemas import Recipe, CreateOrUpdateRecipe, RecipeListItem
 
 router = APIRouter()
 recipes = RecipesController()
@@ -18,13 +18,24 @@ CURRENT_RECIPES_IDS = []
 
 
 @router.get("")
-async def get_recipes(category: int = None, favorite: bool = False) -> List[Recipe]:
+async def get_recipes(category: int = None, favorite: bool = False) -> List[RecipeListItem]:
     with Session(engine()) as session:
         if favorite:
-            return await recipes.get_all_and_filter(session, favorite=favorite)
+            return cast(
+                List[RecipeListItem],
+                await recipes.get_all_and_filter(session, favorite=favorite)
+            )
+
         if category:
-            return await recipes.get_by_category(session, category)
-        return await recipes.get_all(session)
+            return cast(
+                List[RecipeListItem],
+                await recipes.get_by_category(session, category)
+            )
+
+        return cast(
+            List[RecipeListItem],
+            await recipes.get_all(session)
+        )
 
 
 @router.get("/{item_id}")

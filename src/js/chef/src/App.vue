@@ -65,14 +65,6 @@ units.fetch();
   height: 100%;
 }
 
-main {
-  padding-bottom: .5rem;
-}
-
-footer {
-  margin-top: auto;
-}
-
 .v-enter-from,
 .v-leave-to {
   transform: translateY(10px);

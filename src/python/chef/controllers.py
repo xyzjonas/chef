@@ -11,6 +11,7 @@ from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe
     IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
 
 from chef.image.thumbnailer import compress_and_store
+from chef.settings import settings
 
 C = TypeVar('C', bound=BaseModel)
 R = TypeVar('R', bound=BaseModel)
@@ -38,9 +39,12 @@ class Controller(Generic[C, R, U]):
 
     async def get_all(self, session: Session) -> List[R]:
         return [
-            self.read_schema(**item.dictionary)
+            self.get_transform(self.read_schema(**item.dictionary))
             for item in session.scalars(select(self.read_schema.Meta.orm_model)).all()
         ]
+
+    def get_transform(self, item: R) -> R:
+        return item
 
     async def get_single(self, session: Session, item_id: int) -> R:
         db_item = session.get(self.read_schema.Meta.orm_model, item_id)
@@ -48,7 +52,7 @@ class Controller(Generic[C, R, U]):
             raise HTTPException(
                 status_code=404, detail=f"{self.read_schema.__class__} id={item_id} not found"
             )
-        return self.read_schema(**db_item.dictionary)
+        return self.get_transform(self.read_schema(**db_item.dictionary))
 
     async def delete_single(self, session: Session, item_id: int) -> None:
         item = session.get(self.read_schema.Meta.orm_model, item_id)
@@ -153,6 +157,15 @@ class UnitsController(Controller[Unit, Unit, Unit]):
 
 
 class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateRecipe]):
+
+    def get_transform(self, item: Recipe) -> Recipe:
+        if item.detail_image:
+            item.detail_image = settings.public_url + item.detail_image
+
+        if item.thumbnail_image:
+            item.thumbnail_image = settings.public_url + item.thumbnail_image
+
+        return item
 
     @staticmethod
     async def _get_ingredients_and_tags(session: Session, data: CreateOrUpdateRecipe):

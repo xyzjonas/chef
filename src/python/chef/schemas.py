@@ -114,8 +114,17 @@ class CreateIngredientItem(IngredientItemBase, BaseModel):
 
 # ------- Recipe ------- #
 
-
 class BaseRecipe(BaseModel):
+    subtitle: Union[str, None] = None
+    source_name: Union[str, None] = None
+    source: Union[str, None] = None
+    draft: bool = False
+    favorite: bool = False
+    portions: int = 4
+    tags: List[Tag] = []
+
+
+class RecipeDetail(BaseRecipe):
     subtitle: Union[str, None] = None
     source_name: Union[str, None] = None
     source: Union[str, None] = None
@@ -129,16 +138,22 @@ class BaseRecipe(BaseModel):
     body: Union[str, None] = None
 
 
-class CreateOrUpdateRecipe(BaseRecipe, BaseModel):
+class CreateOrUpdateRecipe(RecipeDetail, BaseModel):
     title: str  # mandatory
     ingredients: List[CreateIngredientItem] = Field(default_factory=list)
     tags: List[UpdateTag] = Field(default_factory=list)
 
 
-class Recipe(Base, BaseRecipe):
+class Recipe(Base, RecipeDetail):
     title: str
     thumbnail_image: Union[str, None]
     detail_image: Union[str, None]
 
     class Meta:
         orm_model = RecipeDb
+
+
+class RecipeListItem(Base, RecipeDetail):
+    title: str
+    thumbnail_image: Union[str, None]
+    detail_image: Union[str, None]
