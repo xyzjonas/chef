@@ -37,7 +37,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     }
 
     loading.value = true;
-    const result = await recipesApi.get<Recipe[]>();
+    const result = await recipesApi.get<Recipe[]>("details");
     recipes.value = result.sort((a: Recipe, b: Recipe) =>
       a.title > b.title ? 1 : -1
     );

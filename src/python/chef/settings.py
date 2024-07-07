@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     """Default config will store all user data in ~/.chef"""
     serve_frontend_path: Union[str, None] = Field(default_factory=get_default_frontend_path)
     serve_frontend: bool = True
+    serve_static: bool = True
     database_uri: str = "sqlite:///" + os.path.join(HOME_DIR,  "chef.db")
     log_file: Union[str, None] = None
     log_level: str = "DEBUG"
@@ -52,6 +53,7 @@ class Settings(BaseSettings):
     uvicorn_port: int = 8000
 
     public_url: str = "http://localhost:8000"
+    gpt_enpoint_url: str = "http://localhost:8001"
 
 
 settings = Settings()

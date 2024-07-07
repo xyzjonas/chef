@@ -153,7 +153,7 @@ class Recipe(Base, RecipeDetail):
         orm_model = RecipeDb
 
 
-class RecipeListItem(Base, RecipeDetail):
+class RecipeListItem(Base):
     title: str
     thumbnail_image: Union[str, None]
     detail_image: Union[str, None]

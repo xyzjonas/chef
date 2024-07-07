@@ -1,5 +1,5 @@
 import typing
-from typing import List, Generic, TypeVar, Union, Type
+from typing import List, Generic, TypeVar, Union, Type, Optional
 
 from fastapi import HTTPException
 from pydantic import BaseModel
@@ -29,6 +29,10 @@ class Controller(Generic[C, R, U]):
         return typing.get_args(self.__orig_bases__[0])[1]
 
     @property
+    def orm(self):
+        return self.read_schema.Meta.orm_model
+
+    @property
     def update_schema(self) -> Type[U]:
         return typing.get_args(self.__orig_bases__[0])[2]
 
@@ -46,13 +50,20 @@ class Controller(Generic[C, R, U]):
     def get_transform(self, item: R) -> R:
         return item
 
-    async def get_single(self, session: Session, item_id: int) -> R:
+    async def get_single_or_none(self, session: Session, item_id: int) -> Optional[R]:
         db_item = session.get(self.read_schema.Meta.orm_model, item_id)
-        if not db_item:
+        if db_item:
+            return self.get_transform(self.read_schema(**db_item.dictionary))
+
+        return None
+
+    async def get_single(self, session: Session, item_id: int) -> R:
+        recipe = await self.get_single_or_none(session, item_id)
+        if not recipe:
             raise HTTPException(
                 status_code=404, detail=f"{self.read_schema.__class__} id={item_id} not found"
             )
-        return self.get_transform(self.read_schema(**db_item.dictionary))
+        return recipe
 
     async def delete_single(self, session: Session, item_id: int) -> None:
         item = session.get(self.read_schema.Meta.orm_model, item_id)

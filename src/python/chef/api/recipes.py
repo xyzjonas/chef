@@ -1,16 +1,19 @@
-from typing import List, cast
+from typing import List, cast, Union
 
+import httpx
 from fastapi import APIRouter, HTTPException, UploadFile
 from loguru import logger
 from sqlalchemy.orm import Session
 
 from chef.api.common import generic_get
-from chef.controllers import RecipesController
+from chef.controllers import RecipesController, IngredientsController
 from chef.models import engine
 from chef.schemas import Recipe, CreateOrUpdateRecipe, RecipeListItem
+from chef.settings import settings
 
 router = APIRouter()
 recipes = RecipesController()
+ingredients = IngredientsController()
 
 
 # Store the current recipe id in memory
@@ -18,7 +21,10 @@ CURRENT_RECIPES_IDS = []
 
 
 @router.get("")
-async def get_recipes(category: int = None, favorite: bool = False) -> List[RecipeListItem]:
+async def get_recipes(
+        category: int = None,
+        favorite: bool = False,
+) -> list[RecipeListItem]:
     with Session(engine()) as session:
         if favorite:
             return cast(
@@ -34,14 +40,46 @@ async def get_recipes(category: int = None, favorite: bool = False) -> List[Reci
 
         return cast(
             List[RecipeListItem],
-            await recipes.get_all(session)
+            sorted(await recipes.get_all(session), key=lambda rec: rec.title)
         )
+
+
+@router.get("/details")
+async def get_recipes_with_details(category: int = None, favorite: bool = False) -> list[Recipe]:
+    with Session(engine()) as session:
+        if favorite:
+            return await recipes.get_all_and_filter(session, favorite=favorite)
+
+        if category:
+            return await recipes.get_by_category(session, category)
+
+        return sorted(await recipes.get_all(session), key=lambda rec: rec.title)
 
 
 @router.get("/{item_id}")
 async def get_recipe(item_id: int) -> Recipe:
     with Session(engine()) as session:
         return await recipes.get_single(session, item_id)
+
+
+@router.post("/{item_id}/parse", response_model=None)
+async def parse_recipe(item_id: int) -> any:
+    with Session(engine()) as session:
+        recipe = await recipes.get_single(session, item_id)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            settings.gpt_enpoint_url,
+            json={
+                "message": recipe.body,
+            },
+            headers={"content_type": "application/json"},
+            timeout=30.0
+        )
+        response.raise_for_status()
+    parsed_ingredients = response.json()["response"]["ingredients"]
+
+    return parsed_ingredients
 
 
 @router.delete("/{item_id}")
@@ -56,7 +94,7 @@ async def create_recipe(create_data: CreateOrUpdateRecipe) -> Recipe:
     if any(not i.ingredient.name for i in create_data.ingredients):
         raise HTTPException(
             status_code=400,
-            detail="Empty ingredient name not allowed."
+            detail="Empty ingredient name not allowed.",
         )
 
     with Session(engine()) as session:

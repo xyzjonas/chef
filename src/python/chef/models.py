@@ -145,8 +145,8 @@ class IngredientItem(Base):
 
     ingredient_id = Column(Integer, ForeignKey(Ingredient.id))
     ingredient = relationship(Ingredient, uselist=False, back_populates="ingredients_items")
-    amount = Column(Float, default=0)
-    unit_id = Column(Integer, ForeignKey('unit.id'))
+    amount = Column(Float, nullable=True)
+    unit_id = Column(Integer, ForeignKey('unit.id'), nullable=True)
     unit = relationship("Unit")
 
     note = Column(String(10), nullable=True)

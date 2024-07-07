@@ -19,7 +19,11 @@ from chef.scripts.migrate_images import run as migrate_images_fn
 
 cli_app = typer.Typer()
 
-app = FastAPI()
+app = FastAPI(
+    title="Chef",
+    summary="Personal recipe management app.",
+    version="2.2.0"
+)
 app.include_router(api_router)
 
 app.add_middleware(

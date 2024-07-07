@@ -77,3 +77,21 @@ def test_ingredient_item_dict(db_session, ingredient, ingredient_item):
     assert ii.dictionary["unit"] == {'id': 1, 'name': 'kg', 'grams': 0.0}
     assert ii.dictionary["note"] == note
     assert ii.dictionary["ingredient"] == i.dictionary
+
+
+def test_ingredient_empty(db_session, ingredient):
+    name = "ingredient"
+    i = ingredient(db_session, name=name)
+
+    ii = IngredientItem(ingredient=i)
+    db_session.add(ii)
+    db_session.commit()
+    assert ii.id
+    assert ii.dictionary
+    assert len(ii.dictionary) == 5
+    assert ii.dictionary["id"] == ii.id
+    assert ii.dictionary["amount"] is None
+    assert ii.dictionary["unit"] is None
+    assert ii.dictionary["note"] is None
+    assert ii.dictionary["ingredient"] == i.dictionary
+

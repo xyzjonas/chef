@@ -7,7 +7,7 @@ from loguru import logger
 
 from chef.api.common import generic_get
 from chef.controllers import RecipesController, CategoriesController
-from chef.images import Handler, CategoryHandler
+from chef.images import  CategoryHandler
 from chef.settings import settings
 
 recipes = RecipesController()
