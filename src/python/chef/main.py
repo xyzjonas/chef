@@ -22,7 +22,7 @@ cli_app = typer.Typer()
 app = FastAPI(
     title="Chef",
     summary="Personal recipe management app.",
-    version="2.2.0"
+    version="2.2.2"
 )
 app.include_router(api_router)
 

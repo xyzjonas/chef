@@ -157,3 +157,4 @@ class RecipeListItem(Base):
     title: str
     thumbnail_image: Union[str, None]
     detail_image: Union[str, None]
+    tags: List[Tag] = []
