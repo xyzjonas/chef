@@ -4,6 +4,7 @@ import os.path
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.models import Response
 from loguru import logger
 from starlette.staticfiles import StaticFiles
 import typer
@@ -22,7 +23,7 @@ cli_app = typer.Typer()
 app = FastAPI(
     title="Chef",
     summary="Personal recipe management app.",
-    version="2.2.2"
+    version="2.3.2"
 )
 app.include_router(api_router)
 
@@ -68,6 +69,22 @@ def migrate_db():
     migrate_db_fn()
 
 
+class StaticFilesCache(StaticFiles):
+    def __init__(
+            self,
+            *args,
+            cachecontrol="public, max-age=31536000, s-maxage=31536000, immutable",
+            **kwargs
+    ):
+        self.cachecontrol = cachecontrol
+        super().__init__(*args, **kwargs)
+
+    def file_response(self, *args, **kwargs) -> Response:
+        resp: Response = super().file_response(*args, **kwargs)
+        resp.headers.setdefault("Cache-Control", self.cachecontrol)
+        return resp
+
+
 @cli_app.command()
 def serve(hostname: str = settings.uvicorn_host, port: int = settings.uvicorn_port):
     settings.uvicorn_port = port
@@ -90,7 +107,7 @@ def serve(hostname: str = settings.uvicorn_host, port: int = settings.uvicorn_po
                 f"frontend can't be served."
             )
             return
-        app.mount("/images", StaticFiles(directory=settings.images_folder))
+        app.mount("/images", StaticFilesCache(directory=settings.images_folder))
         app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True))
 
     uvicorn.run(app, host=hostname, port=port)
