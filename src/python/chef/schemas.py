@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator, Field
+from pydantic import BaseModel, validator, Field, ConfigDict
 
 from typing import List, Union
 
@@ -107,9 +107,11 @@ class IngredientItem(IngredientItemBase, Base):
         orm_model = IngredientItemDb
 
 
-class CreateIngredientItem(IngredientItemBase, BaseModel):
+class CreateOrUpdateIngredientItem(IngredientItemBase, BaseModel):
+    id: Union[int, None] = None
     ingredient: UpdateIngredient
     unit: Unit = Unit(name="pcs")
+    model_config = ConfigDict(extra='allow')
 
 
 # ------- Recipe ------- #
@@ -140,7 +142,7 @@ class RecipeDetail(BaseRecipe):
 
 class CreateOrUpdateRecipe(RecipeDetail, BaseModel):
     title: str  # mandatory
-    ingredients: List[CreateIngredientItem] = Field(default_factory=list)
+    ingredients: List[CreateOrUpdateIngredientItem] = Field(default_factory=list)
     tags: List[UpdateTag] = Field(default_factory=list)
 
 

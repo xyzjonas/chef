@@ -1,29 +1,25 @@
-import argparse
 import os.path
 
+import typer
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.models import Response
 from loguru import logger
 from starlette.staticfiles import StaticFiles
-import typer
-
-from migrations.migrate import run as migrate_db_fn
 
 from chef.api import api_router
 from chef.models import ensure_tables
-from chef.settings import settings, Settings
-
 from chef.scripts.migrate_images import run as migrate_images_fn
-
+from chef.settings import settings, Settings
+from migrations.migrate import run as migrate_db_fn
 
 cli_app = typer.Typer()
 
 app = FastAPI(
     title="Chef",
     summary="Personal recipe management app.",
-    version="2.3.2"
+    version="2.3.3"
 )
 app.include_router(api_router)
 
@@ -54,6 +50,11 @@ def print_banner(settings_in: Settings):
 
     {options}
     """)
+
+
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request, exc):
+#     raise exc
 
 
 @cli_app.command()

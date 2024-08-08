@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from chef.models import Category as CategoryDb
+from chef.models import Category as CategoryDb, Base
 from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe, \
     IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
 
@@ -185,9 +185,18 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         ingredients_controller = IngredientsController()
         units_controller = UnitsController()
         for ingredient_item in data.ingredients:
-            updated_item = IngredientItem.Meta.orm_model(
-                **ingredient_item.dict(exclude={'ingredient': True, 'unit': True})
-            )
+            updated_item = None
+            if ingredient_item.id:
+                updated_item = session.get(IngredientItem.Meta.orm_model, ingredient_item.id)
+                for attr, value in ingredient_item.dict(
+                        exclude_none=True, exclude={"unit": True, "ingredient": True, 'id': True}
+                ).items():
+                    setattr(updated_item, attr, value)
+
+            if not updated_item:
+                updated_item = IngredientItem.Meta.orm_model(
+                    **ingredient_item.dict(exclude={'ingredient': True, 'unit': True, 'id': True})
+                )
             u = await units_controller.create_or_update(session, ingredient_item.unit)
             updated_item.unit_id = u.id
             i = await ingredients_controller.create_or_update(session, ingredient_item.ingredient)
