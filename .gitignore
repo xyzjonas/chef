@@ -13,3 +13,5 @@ dist.tar
 static
 
 chef.code-workspace
+
+.env*

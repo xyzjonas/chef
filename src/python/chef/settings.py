@@ -55,5 +55,7 @@ class Settings(BaseSettings):
     public_url: str = "http://localhost:8000"
     gpt_enpoint_url: str = "http://localhost:8001"
 
+    sentry_dsn: str = None
 
-settings = Settings()
+
+settings = Settings(_env_file=".env")

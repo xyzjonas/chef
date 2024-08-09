@@ -16,6 +16,32 @@ from migrations.migrate import run as migrate_db_fn
 
 cli_app = typer.Typer()
 
+if settings.sentry_dsn:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+    from sentry_sdk.integrations.starlette import StarletteIntegration
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+        integrations=[
+            StarletteIntegration(
+                transaction_style="endpoint",
+                failed_request_status_codes=[403, range(500, 599)],
+            ),
+            FastApiIntegration(
+                transaction_style="endpoint",
+                failed_request_status_codes=[403, range(500, 599)],
+            ),
+        ],
+    )
+
+
 app = FastAPI(
     title="Chef",
     summary="Personal recipe management app.",
@@ -50,11 +76,6 @@ def print_banner(settings_in: Settings):
 
     {options}
     """)
-
-
-# @app.exception_handler(RequestValidationError)
-# async def validation_exception_handler(request, exc):
-#     raise exc
 
 
 @cli_app.command()
