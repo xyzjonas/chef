@@ -1,71 +1,54 @@
 <template>
   <div>
     <div v-if="ingredient">
-      
-      <!-- error message -->
-      <div v-if="error" class="level-item">
-        <p class="help is-danger">{{ error }}</p>
+      <h1>{{ ingredient.name }}</h1>
+      <h3 class="m-0 text-[1rem] line-height-[1rem] opacity-[0.9]">
+        Ingredient Detail
+      </h3>
+      <div class="flex flex-row items-center justify-end mt-5 gap-1 mb-3">
+        <q-btn
+          unelevated
+          color="primary"
+          :label="edit ? 'cancel' : 'edit ingredient'"
+          @click="edit = !edit"
+        ></q-btn>
+        <q-btn
+          unelevated
+          color="secondary"
+          flat
+          icon="delete"
+          label="delete"
+          @click="deleteIngredient()"
+        ></q-btn>
       </div>
 
-      <nav class="level is-mobile my-1">
-        <div class="level-left">
-          <div class="level-item">
-            <p class="title is-5">
-              {{ ingredient.name.toUpperCase() }}
-            </p>
-          </div>
-        </div>
-        <div class="level-right">
-          
-          <!-- delete button -->
-          <div v-if="!error" class="level-item">
-            <button v-on:click="deleteIngredient()" class="button has-icons is-danger">
-              <span class="icon">
-                <i class="fas fa-trash"/>
-              </span>
-            </button>
-          </div>      
-          <!-- edit button -->
-          <div class="level-item">
-            <button v-on:click="edit=!edit" class="button has-icons is-warning">
-              <span class="icon">
-                <i class="fas fa-pen"/>
-              </span>
-            </button>
-          </div>
-
-        </div>
-      </nav>
-
-      <hr>
-
-      <!-- tags -->
-      <div v-if="!edit">
-
-        <div v-for="(value, key) in attributes" :key="key+'ingredientDetail'"
-          class="level is-mobile px-5">
-          <div class="level-left">
-            <div class="level-item">
-              <span class="tag">{{ key }}</span>
-            </div>
-          </div>
-          <div class="level-right">
-            <div class="level-item">
-              <strong>{{ value }}</strong>
-            </div>
-          </div>
-        </div>
+      <div v-if="!edit" class="flex gap-1 flex-wrap wrapper">
+        <q-card
+          class="my-card"
+          v-for="(value, key) in attributes"
+          :key="key"
+          flat
+          bordered
+        >
+          <q-card-section
+            class="grid justify-center text-center items-center h-full"
+          >
+            <span class="uppercase text-xl font-500">{{ key }}</span>
+            <span>{{ value }}</span>
+          </q-card-section>
+        </q-card>
       </div>
 
       <div v-if="edit">
-        <IngredientForm :ingredientProp="ingredient"
-        @cancel="edit=false"
-        @posted="edit=false;fetchIngredient()"
-      />
+        <IngredientForm
+          :ingredientProp="ingredient"
+          @cancel="edit = false"
+          @posted="edit = false"
+        />
       </div>
     </div>
     <div v-else>
-      <NotFound/>
+      <NotFound />
     </div>
   </div>
 </template>
@@ -74,29 +57,63 @@
 import IngredientForm from "@/components/IngredientForm.vue";
 import NotFound from "@/components/NotFound.vue";
 import { useIngredientStore } from "@/stores/ingredient";
+import type { IngredientFull } from "@/types";
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
-const ingredientId = parseInt(useRoute().params.id);
+const router = useRouter();
+const ingredientId = parseInt(router.currentRoute.value.params.id as string);
 
 const ingredients = useIngredientStore();
+const { current, currentId } = storeToRefs(ingredients);
 
-if (!ingredients.all.find(ing => ing.id === ingredientId)) {
-  ingredients.fetchSingle(ingredientId);
+currentId.value = ingredientId;
+
+if (!current.value) {
+  try {
+    await ingredients.fetchSingle(ingredientId);
+  } catch {}
 }
 
-const ingredient = computed(() => {
-  return ingredients.all.find(r => r.id === ingredientId);
-});
+if (!current.value) {
+  router.push({
+    name: "notfound",
+    query: { path: router.currentRoute.value.fullPath },
+  });
+}
 
+const ingredient = computed<IngredientFull>(
+  () => current.value as IngredientFull
+);
 
 const edit = ref(false);
-const attributes = ref({})
+const attributes = computed(() => ({
+  energy: `${current.value?.energy} kcal`,
+  carbs: `${current.value?.carbs} g`,
+  fats: `${current.value?.fats} g`,
+  proteins: `${current.value?.proteins} g`,
+  fibres: `${current.value?.fibres} g`,
+  salt: `${current.value?.salt} g`,
+}));
 
-const emit = defineEmits(["ingredientDeleted"])
-const deleteIngredient = () => {
-  ingredients.deleteById(ingredientId).then(() => emit("ingredientDeleted"));
-}
+const emit = defineEmits(["ingredientDeleted"]);
+const deleteIngredient = async () => {
+  await ingredients.deleteById(ingredientId);
+  router.push({ name: "ingredients" });
+};
 </script>
 
-<style></style>
+<style lang="css" scoped>
+.my-card {
+  flex: 1;
+  min-width: 10rem;
+  height: 10rem;
+}
+
+@media (min-width: 768px) {
+  .my-card {
+    min-width: 15rem;
+  }
+}
+</style>

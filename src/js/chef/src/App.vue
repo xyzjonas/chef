@@ -1,44 +1,56 @@
 <template>
-    <div id="app">
-    
-      <Navbar class="mb-2" />
+  <q-layout view="hHh lpR fff" class="font-sans light:text-[#273440] dark:text-white">
+    <q-header class="bg-primary text-white py-1">
+      <app-header />
+    </q-header>
 
-      <main class="container">
-        <RouterView v-slot="{ Component }">
+    <app-left-drawer />
+
+    <q-page-container class="max-w-[1200px] mx-auto">
+      <RouterView v-slot="{ Component }" class="p-2">
           <template v-if="Component">
-
-            <Transition mode="out-in">
-              <KeepAlive :exclude="['Recipe', 'CategoryView', 'CategoryTile', 'RecipeForm']">
+            <!-- <Transition mode="out-in" name="blur"> -->
+              <!-- <KeepAlive> -->
                 <Suspense>
                   <component :is="Component"></component>
                   <template #fallback>
-                    LOADING...
+                      <div class="spinner">
+                        <div class="flex flex-col items-center gap-2">
+                          <q-spinner color="primary" size="4rem" :thickness="1" ></q-spinner>
+                          <h1 class="uppercase text-xl text-primary">Loading</h1>
+                        </div>
+                    </div>
                   </template>
                 </Suspense>
-              </KeepAlive>
-            </Transition>
-
+              <!-- </KeepAlive> -->
+            <!-- </Transition> -->
           </template>
         </RouterView>
-      </main>
+    </q-page-container>
 
+
+    <Notificaton />
+
+    <q-footer class="bg-grey-8 text-white">
       <app-footer />
-
-      <Notificaton />
-
-    </div>
-
+    </q-footer>
+  </q-layout>
 </template>
 
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue';
-import AppFooter from '@/components/AppFooter.vue';
-import Notificaton from './components/ui/Notificaton.vue';
-import { useRecipeStore } from './stores/recipe';
-import { useIngredientStore } from './stores/ingredient';
-import { useTagStore } from './stores/tags';
-import { useUnitsStore } from './stores/units';
-import { useCategoryStore } from './stores/categories';
+import AppFooter from "@/components/layout/AppFooter.vue";
+import AppHeader from "@/components/layout/AppHeader.vue";
+import Notificaton from "@/components/ui/Notificaton.vue";
+import AppLeftDrawer from "./components/layout/AppLeftDrawer.vue";
+import { useCategoryStore } from "./stores/categories";
+import { useIngredientStore } from "./stores/ingredient";
+import { useRecipeStore } from "./stores/recipe";
+import { useTagStore } from "./stores/tags";
+import { useUnitsStore } from "./stores/units";
+
+import { useLayoutDrawer } from "@/composables/drawer";
+
+const { isOpened, toggle } = useLayoutDrawer();
 
 const recipes = useRecipeStore();
 recipes.fetch();
@@ -54,15 +66,22 @@ tags.fetch();
 
 const units = useUnitsStore();
 units.fetch();
-
 </script>
 
-<style>
+<style lang="css">
+.spinner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+}
 
-#app {
+#brand {
+  text-decoration: none;
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  align-items: center;
+  gap: 4px;
 }
 
 .v-enter-from,
@@ -80,7 +99,6 @@ units.fetch();
 }
 
 /* ----------------- */
-
 
 .loading-leave-to {
   opacity: 0;
@@ -113,6 +131,18 @@ units.fetch();
 }
 
 /* ----------------- */
+
+.blur-leave-to, .blur-enter {
+  filter: blur(50px);
+}
+
+.blur-leave-active,
+.blur-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+/* ----------------- */
+
 
 .slide-leave-active,
 .slide-enter-active {

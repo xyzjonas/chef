@@ -5,7 +5,7 @@
     <RecipeForm
       :data="blankRecipe"
       @posted="routeToNewRecipe"
-      @cancel="$router.push({ name: 'home' })"
+      @cancel="$router.push({ name: 'recipes' })"
     />
   </div>
 </template>
@@ -27,10 +27,3 @@ const routeToNewRecipe = (recipe: Recipe) => {
   router.push({ name: "recipe", params: { id: recipe.id } });
 };
 </script>
-<style lang="css" scoped>
-h1 {
-  font-weight: 100;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-</style>

@@ -141,13 +141,14 @@ class IngredientItem(Base):
     -> [x] 400 g tomatoes (roughly chopped)
     """
     __tablename__ = "ingredient_item"
-    __items__ = ["id", "ingredient", "amount", "unit", "note"]
+    __items__ = ["id", "ingredient", "amount", "unit", "note", "order"]
 
     ingredient_id = Column(Integer, ForeignKey(Ingredient.id))
     ingredient = relationship(Ingredient, uselist=False, back_populates="ingredients_items")
     amount = Column(Float, nullable=True)
     unit_id = Column(Integer, ForeignKey('unit.id'), nullable=True)
     unit = relationship("Unit")
+    order = Column(Integer, default=0)
 
     note = Column(String(10), nullable=True)
     exclude = Column(Boolean(), default=False)  # todo: remove?
@@ -193,7 +194,8 @@ class Recipe(Base):
     detail_image = Column(String(100), nullable=True)
     ingredients: Mapped[List[IngredientItem]] = relationship(
         secondary=ingredients,
-        cascade="all"
+        cascade="all",
+        order_by="IngredientItem.order"
     )
     tags = relationship(
         Tag,

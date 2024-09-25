@@ -1,55 +1,51 @@
 <template>
-  <form v-if="recipe">
+  <q-form ref="$form" v-if="recipe">
     
-    <ui-input v-model="recipe.title" label="title" size="small" />
-    <p v-if="!recipe.title" class="help is-danger">Title is required</p>
+    <q-input outlined v-model="recipe.title" label="Title" autocomplete="off" hint="The main title" :rules="[(val: string) => !!val || 'Title is required']"/>
 
-    <ui-input v-model="recipe.subtitle" label="subtitle" size="small" />
+    <q-input outlined v-model="recipe.subtitle" label="Subtitle" autocomplete="off" hint="Recipe's subtitle"/>
 
-    <ui-input v-model="recipe.source" label="source link" size="small" />
+    <q-input outlined v-model="recipe.source" label="Source Link" hint="Link to the original recipe, needs to be a valid URL" autocomplete="off"/>
 
-    <ui-input v-model="recipe.source_name" label="source name" size="small" />
+    <q-input outlined v-model="recipe.source_name" label="Source Name" hint="Display name of the link" autocomplete="off"/>
 
-    <!-- idea only -->
-    <!-- <label class="checkbox my-2">
-      <input type="checkbox" v-model="recipe.draft" />
-      Recipe idea
-      <i class="far fa-lightbulb"></i>
-    </label> -->
-
-    <h3>Ingredients</h3>
-    <IngredientInput
-      v-for="(ingredient, index) in recipe.ingredients"
-      :key="ingredient.id"
-      v-model="recipe.ingredients[index]"
-      :index="index"
-      @update:ingredient="(ing) => (recipe.ingredients[index] = ing)"
-      @delete="removeIngredient(ingredient)"
-      @up="up(index)"
-      @down="down(index)"
-    />
+    <div class="flex items-center">
+      <h3 class="text-2xl uppercase mr-5">Ingredients</h3>
+      <Counter v-model="recipe.portions" @counterUpdate="updateCounter" class="mx-auto sm:m-0"/>
+    </div>
+    <transition-group name="ingredientlist">
+      <IngredientInput
+        v-for="(ingredient, index) in recipe.ingredients"
+        :key="ingredient.uuid"
+        v-model="recipe.ingredients[index]"
+        :index="index"
+        @update:ingredient="(ing) => (recipe.ingredients[index] = ing)"
+        @delete="removeIngredient(ingredient)"
+        @up="up(index)"
+        @down="down(index)"
+      />
+    </transition-group>
     <div>
-      <ui-button
+      <q-btn
+        flat
+        color="primary"
         @click="recipe.ingredients.push(generateBlankIngredient())"
-        icon="fas fa-plus"
-        text="add ingredient"
-        type="secondary"
+        icon="add"
+        label="add ingredient"
       />
     </div>
     
-    <h3>Portions</h3>
-    <Counter v-model="recipe.portions" @counterUpdate="updateCounter" />
-
-    <h3></h3>
+    <q-separator />
 
     <div v-if="!recipe.draft" class="field my-2">
       <TextEditor @editorUpdate="updateText" :text="recipe.body"></TextEditor>
     </div>
 
-    <h3>Tags</h3>
+    <h3 class="text-2xl uppercase mt-5 mb-0">Tags</h3>
     <article v-if="availableTags.length < 1" class="message is-warning p-0">
       <small class="message-body p-2">no tags created yet</small>
     </article>
+    {{ availableTags }}
     <div class="tags">
       <pin
         v-for="(tag, index) in availableTags"
@@ -61,13 +57,13 @@
       />
     </div>
     <div class="level mt">
-      <ui-button @click="createTag" icon="fas fa-plus" />
-      <ui-input v-model="createTagField" size="small" label="new tag" />
+      <q-input outlined v-model="createTagField" label="New Tag Name" autocomplete="off"/>
+      <ui-button flat @click="createTag" icon="new_label" color="secondary" text="new tag" :disable="!createTagField"/>
     </div>
 
-    <div class="level mt">
-      <ui-button @click="postRecipe" :disabled="!recipe.title" text="save" />
-      <ui-button @click="$emit('cancel')" text="cancel" type="secondary" />
+    <div class="flex mt-5 gap-2 h-[3rem]">
+      <q-btn unelevated color="primary" @click="postRecipe" :disabled="!recipe.title" label="save" class="flex-1" />
+      <ui-button color="secondary" flat @click="$emit('cancel')" text="cancel" type="secondary" class="flex-1" />
     </div>
 
     <!-- msg -->
@@ -77,7 +73,7 @@
     <article v-if="postError" class="message is-danger">
       <div class="message-body">{{ postError }}</div>
     </article>
-  </form>
+  </q-form>
 </template>
 
 <script setup lang="ts">
@@ -88,15 +84,18 @@ import IngredientInput from "@/components/IngredientInput.vue";
 import UiButton from "@/components/ui/UiButton.vue";
 import UiInput from "@/components/ui/UiInput.vue";
 import type { Recipe, IngredientItem, Tag, CreateRecipe } from "@/types";
-import { computed, ref } from "vue";
+import { computed, ref, useTemplateRef } from "vue";
 import { useRecipeStore } from "@/stores/recipe";
 import { useTagStore } from "@/stores/tags";
-import { deepCopy } from "@/utils";
+import { deepCopy, generateUUID } from "@/utils";
 import { storeToRefs } from "pinia";
+import { QForm } from "quasar";
 
 const recipeStore = useRecipeStore();
 const tagStore = useTagStore();
 const { all: availableTags} = storeToRefs(tagStore);
+
+const $form = useTemplateRef('$form')
 
 const props = defineProps<{
   data: Recipe | CreateRecipe;
@@ -107,14 +106,10 @@ if (!recipe.value.portions) {
 }
 
 const counter = ref<number>(4);
-const createTagField = ref<string>();
+const createTagField = ref<string>("");
 
 const postSuccess = ref();
 const postError = ref();
-
-const formIsValid = computed(() => {
-  // todo
-});
 
 const updateCounter = (val: number) => {
   counter.value = val;
@@ -131,6 +126,7 @@ const generateBlankIngredient = (): IngredientItem => {
     unit: { name: "g" },
     ingredient: { name: "" },
     note: "",
+    uuid: generateUUID()
   }
 };
 const removeIngredient = (ingredient: IngredientItem) => {
@@ -148,18 +144,19 @@ const up = (index: number) => {
   if (index === 0) {
     return;
   }
-  const item = recipe.value.ingredients[index];
-  recipe.value.ingredients[index] = recipe.value.ingredients[index - 1];
-  recipe.value.ingredients[index - 1] = item;
+  const item = recipe.value.ingredients.splice(index, 1)[0];
+  setTimeout(() => recipe.value.ingredients.splice(index - 1, 0, item), 300)
+  // recipe.value.ingredients[index] = recipe.value.ingredients[index - 1];
+  // recipe.value.ingredients[index - 1] = item;
 };
 
 const down = (index: number) => {
   if (index === recipe.value.ingredients.length - 1) {
     return;
   }
-  const item = recipe.value.ingredients[index];
-  recipe.value.ingredients[index] = recipe.value.ingredients[index + 1];
-  recipe.value.ingredients[index + 1] = item;
+  const item = recipe.value.ingredients.splice(index, 1)[0];
+  // recipe.value.ingredients[index] = recipe.value.ingredients[index + 1];
+  setTimeout(() => recipe.value.ingredients.splice(index + 1, 0, item), 300 )
 };
 
 const toggleTag = (tag: Tag) => {
@@ -181,7 +178,10 @@ const createTag = () => {
 };
 
 const emit = defineEmits(["posted", "created", "cancel"]);
-const postRecipe = () => {
+const postRecipe = async () => {
+  if (! await $form.value?.validate()) {
+    return
+  }
   if (recipe.value.id) {
     console.debug("Updating existing recipe.");
     recipeStore.update(recipe.value).then((r) => emit("posted", r));
@@ -192,7 +192,24 @@ const postRecipe = () => {
 };
 </script>
 
-<style>
+<style lang="css" scoped>
+
+.ingredientlist-enter-active {
+  transition: all 0.3s ease-out;
+}
+.ingredientlist-leave-active {
+  transition: all 0.3s ease-in;
+}
+.ingredientlist-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.ingredientlist-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -210,12 +227,6 @@ form {
   font-size: x-small;
   margin: 0;
   color: var(--primary);
-}
-
-h3 {
-  font-weight: 100;
-  margin: 0;
-  margin-top: 1rem;
 }
 
 .tags {

@@ -1,0 +1,172 @@
+<template>
+  <q-drawer v-model="isOpened" bordered side="left" :width="280" persistent>
+    <q-scroll-area class="h-full flex flex-col">
+      <q-list separator>
+        <q-item
+          :active="currentRoute.name === 'recipes'"
+          clickable
+          v-ripple
+          active-class="dark:bg-primary dark:text-white font-semibold"
+          :to="{ name: 'recipes' }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="restaurant_menu" />
+          </q-item-section>
+
+          <q-item-section> Recipes </q-item-section>
+        </q-item>
+
+        <q-item
+          :active="currentRoute.name === 'categories'"
+          clickable
+          v-ripple
+          active-class="dark:bg-primary dark:text-white font-semibold"
+          :to="{ name: 'categories' }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="apps" />
+          </q-item-section>
+
+          <q-item-section> Categories </q-item-section>
+        </q-item>
+
+        <q-item
+          :active="currentRoute.name === 'ingredients'"
+          clickable
+          v-ripple
+          active-class="dark:bg-primary dark:text-white font-semibold"
+          :to="{ name: 'ingredients' }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+
+          <q-item-section> Ingredients </q-item-section>
+        </q-item>
+
+        <q-item
+          :active="currentRoute.name === 'new'"
+          clickable
+          v-ripple
+          active-class="dark:bg-primary dark:text-white font-semibold"
+          :to="{ name: 'new' }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="post_add" />
+          </q-item-section>
+
+          <q-item-section> Add a Recipe </q-item-section>
+        </q-item>
+
+        <q-item
+          :active="currentRoute.name === 'newcategory'"
+          clickable
+          v-ripple
+          active-class="dark:bg-primary dark:text-white font-semibold"
+          :to="{ name: 'newcategory' }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="new_label" />
+          </q-item-section>
+
+          <q-item-section> Add a Category </q-item-section>
+        </q-item>
+
+        <q-separator />
+        <q-item-label header v-if="showRecipeControls"
+          >Recipe Controls</q-item-label
+        >
+
+        <q-item v-if="showRecipeControls">
+          <q-item-section avatar>
+            <q-icon name="image" />
+          </q-item-section>
+          <ImageUpload type="thumbnail" :recipe="current" @upload-success="close" />
+        </q-item>
+
+        <q-item v-if="showRecipeControls">
+          <q-item-section avatar>
+            <q-icon name="image" />
+          </q-item-section>
+          <ImageUpload type="detail" :recipe="current" @upload-success="close" />
+        </q-item>
+
+        <q-item
+          v-if="current && showRecipeControls"
+          clickable
+          :to="{ name: 'editrecipe', params: { id: current.id } }"
+          @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="edit" />
+          </q-item-section>
+          <q-item-section> Edit Recipe </q-item-section>
+        </q-item>
+
+        <q-item
+          v-if="showRecipeControls"
+          clickable
+          @click="toggleDeleteDialog = !toggleDeleteDialog"
+        >
+          <q-item-section avatar>
+            <q-icon name="delete" />
+          </q-item-section>
+          <q-item-section> Delete Recipe </q-item-section>
+        </q-item>
+      </q-list>
+      <q-list class="absolute-bottom">
+        <q-item clickable v-ripple @click="toggle">
+          <q-item-section avatar>
+            <q-icon :name="isDark ? 'light_mode' : 'dark_mode'" />
+          </q-item-section>
+
+          <q-item-section>{{
+            isDark ? "Light Mode" : "Dark Mode"
+          }}</q-item-section>
+        </q-item>
+      </q-list>
+
+      <recipe-delete-dialog
+        v-if="current"
+        v-model="toggleDeleteDialog"
+        :recipe="current"
+      />
+    </q-scroll-area>
+  </q-drawer>
+</template>
+
+<script setup lang="ts">
+import { useDarkmode } from "@/composables/darkmode";
+import { useLayoutDrawer } from "@/composables/drawer";
+import { useRecipeStore } from "@/stores/recipe";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+
+import ImageUpload from "@/components/ui/ImageUpload.vue";
+import RecipeDeleteDialog from "@/components/recipe/RecipeDeleteDialog.vue";
+import { computed, ref } from "vue";
+
+const store = useRecipeStore();
+const { current } = storeToRefs(store);
+
+const { isOpened } = useLayoutDrawer();
+const { isDark, toggle } = useDarkmode();
+
+const { currentRoute } = useRouter();
+
+const showRecipeControls = computed(
+  () => current.value && currentRoute.value.name === "recipe"
+);
+const toggleDeleteDialog = ref(false);
+
+const close = () => {
+  setTimeout(() => (isOpened.value = false), 80);
+};
+</script>
+
+<style lang="css" scoped></style>

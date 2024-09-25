@@ -8,32 +8,30 @@ import type {
   Ingredient,
   ChefNotification,
   ServerErrorResponse,
+  IngredientFull,
 } from "@/types";
 import { mande } from "mande";
 
 import { useEventBus } from "@vueuse/core";
 
 const api = mande(API_URL + "/ingredients");
+const currentId = ref<number>()
 
 export const useIngredientStore = defineStore("ingredient", () => {
   const loading = ref<boolean>(false);
 
-  const all = ref<Ingredient[]>([]);
+  const all = ref<IngredientFull[]>([]);
 
-  const getById = computed(() => {
-    return (ingredientId: number) => {
-      all.value.find((r) => r.id === ingredientId);
-    };
-  });
+  const current = computed(() => all.value.find(i => i.id === currentId.value))
 
   const bus = useEventBus<ChefNotification>("notifications");
 
   async function fetch() {
     loading.value = true;
     api
-      .get<Ingredient[]>()
+      .get<IngredientFull[]>()
       .then(
-        (ingredients: Ingredient[]) =>
+        (ingredients: IngredientFull[]) =>
           (all.value = ingredients.sort((a: Ingredient, b: Ingredient) =>
             a.name > b.name ? 1 : -1
           ))
@@ -44,26 +42,26 @@ export const useIngredientStore = defineStore("ingredient", () => {
 
   async function fetchSingle(ingredientId: number) {
     loading.value = true;
-    api
-      .get<Ingredient>(ingredientId)
-      .then((newIng: Ingredient) => all.value.map((r) => (r.id === newIng.id ? newIng : r)))
-      .catch((err: unknown) => console.error(err))
-      .finally(() => (loading.value = false));
+    try {
+      const response = await api.get<IngredientFull>(ingredientId)
+      if (all.value.find(i => i.id === ingredientId)) {
+        all.value = all.value.map((r) => (r.id === response.id ? response : r))
+      } else {
+        all.value.push(response)
+      }
+    } finally {
+      loading.value = false;
+    }
   }
 
   async function update(ingredientData: Ingredient): Promise<Ingredient> {
     loading.value = true;
     try {
-      const result = await api.put<Ingredient>(
+      const result = await api.put<IngredientFull>(
         ingredientData.id,
         ingredientData
       );
-      all.value = all.value.filter((ing) => ing.id !== ingredientData.id);
-      all.value.push(result);
-      all.value.sort((a: Ingredient, b: Ingredient) =>
-        a.name > b.name ? 1 : -1
-      );
-      return result;
+      all.value = all.value.map((ing) => ing.id === ingredientData.id ? result : ing);
     } catch (err) {
       console.error(err);
       throw err;
@@ -88,7 +86,7 @@ export const useIngredientStore = defineStore("ingredient", () => {
     loading.value = false;
   }
 
-  return { all, loading, fetch, update, fetchSingle, deleteById };
+  return { all, loading, current, currentId, fetch, update, fetchSingle, deleteById };
 });
 
 if (import.meta.hot) {

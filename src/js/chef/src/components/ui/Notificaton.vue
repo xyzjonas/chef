@@ -1,23 +1,23 @@
 <template>
     <div id="notification-drawer">
         <Transition>
-            <section v-if="notificatonError" class="container error">
-                <ui-button type="primary" size="large" disabled icon="fa-solid fa-circle-exclamation"/>
-                {{ notificatonError.message }}
+            <section v-if="notificatonError" class="container error shadow">
+                <q-icon name="warning" size="1.3rem" class="mr-3" />
+                <span class="mr-3">{{ notificatonError.message }}</span>
                 <ui-button
                     v-if="notificatonError && notificatonError.action"
+                    flat
                     id="confirm"
                     @click="actionError"
-                    type="secondary"
                     :text="notificatonError.action.label"
                 />
-                <ui-button id="close" @click="notificatonError = undefined" type="primary" icon="fa-solid fa-xmark"/>
+                <ui-button dense id="close" @click="notificatonError = undefined" icon="close"/>
             </section>
         </Transition>
 
         <Transition>
-            <section v-if="notificatonSuccess" class="container success">
-                <ui-button type="link" size="large" disabled icon="fa-solid fa-regular fa-circle-check"/>
+            <section v-if="notificatonSuccess" class="container success shadow">
+                <q-icon name="check" size="1.3rem" class="mr-3" />
                 {{ notificatonSuccess.message }}
                 <ui-button
                     v-if="notificatonSuccess && notificatonSuccess.action"
@@ -26,7 +26,7 @@
                     type="secondary"
                     :text="notificatonSuccess.action.label"
                 />
-                <ui-button id="close" @click="notificatonSuccess = undefined" type="link" icon="fa-solid fa-xmark"/>
+                <ui-button dense id="close" @click="notificatonSuccess = undefined" type="link" icon="fa-solid fa-xmark"/>
             </section>
         </Transition>
 
@@ -34,7 +34,7 @@
             <section v-if="notificatonInfo" class="container info">
                 <ui-button type="secondary" disabled icon="fa-solid fa-warning"/>
                 {{ notificatonInfo.message }}
-                <ui-button id="close" @click="notificatonInfo = undefined" type="secondary" icon="fa-solid fa-xmark"/>
+                <ui-button dense id="close" @click="notificatonInfo = undefined" type="secondary" icon="fa-solid fa-xmark"/>
             </section>
         </Transition>
     </div>
@@ -45,9 +45,6 @@ import UiButton from './UiButton.vue';
 
 import { useEventBus } from '@vueuse/core'
 import { ref, type Ref } from 'vue';
-// import { useNotifications } from "@/composables/notifications"
-
-// const { notificaton } = useNotifications();
 const notifications = ref([])
 
 const notificatonInfo = ref<ChefNotification>()
@@ -85,14 +82,14 @@ const actionError = (reference: Ref<ChefNotification | undefined>) => {
     position: fixed;
     width: 100%;
     bottom: 2rem;
-
+    z-index: 10000;
 }
 
 section {
     padding: 1rem;
 
     border-radius: .2rem;
-    box-shadow: 1px 1px 7px var(--text), 3px 3px 20px var(--text);
+    /* box-shadow: 1px 1px 7px var(--text), 3px 3px 20px var(--text); */
 
     width: var(--w);
     margin-inline: auto;

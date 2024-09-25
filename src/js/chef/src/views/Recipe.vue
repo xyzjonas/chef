@@ -1,202 +1,143 @@
 <template>
-  <div ref="recipeTitle" v-if="recipe">
-    <div v-if="editMode">
-      <h1 id="edit-title">Edit recipe</h1>
-      <RecipeForm
-        :data="recipe"
-        @posted="updateRecipe"
-        @cancel="editMode = false"
+  <main v-if="recipe" class="">
+    <div class="flex flex-row gap-3">
+      <q-img
+        v-if="!readerMode"
+        :src="recipe.detail_image ?? 'none'"
+        spinner-color="white"
+        error-src="@/assets/notfound.jpg"
+        class="rounded-md flex-1 min-w-[20rem] mb-3"
       />
-    </div>
-    <div v-else class="recipe">
-      <div class="row heading">
-        <img
-          v-if="recipe.detail_image"
-          ref="r-img"
-          :src="image_url"
-          @error="missingImage = true"
-          alt="recipe image"
-        />
-        <img v-else src="@/assets/notfound.jpg" alt="no image" />
-        <div class="heading-right">
-          <div class="titles">
-            <div class="row">
-              <h1 v-if="recipe" class="title is-4">{{ recipe.title }}</h1>
-            </div>
-            <div>
-              <h2 v-if="recipe && recipe.subtitle">{{ recipe.subtitle }}</h2>
-            </div>
-          </div>
-          <div id="recipe-link">
-            <a v-if="recipe && recipe.source" :href="recipe.source">
-              <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
-              <span v-else>{{ recipe.source }}</span>
-            </a>
-          </div>
-
-          <div class="tags">
-            <pin
-              v-for="(tag, index) in recipe.tags"
-              :key="tag.name"
-              :text="tag.name"
-              active
-            />
-          </div>
-
-          <div class="row tags">
-            <ImageUpload type="thumbnail" :recipe="recipe" />
-            <ImageUpload
-              type="detail"
-              :recipe="recipe"
-              @uploadSuccess="imageUploaded"
-            />
-          </div>
+      <div class="flex-1 flex flex-col gap-5 min-w-[10rem]">
+        <div v-if="!readerMode" class="overflow-hidden max-w-[100%]">
+          <h1 class="recipe-title">{{ recipe.title }}</h1>
+          <h2
+            v-if="recipe.subtitle"
+            class="text-[1.5rem] font-400 uppercase color-gray m-0 line-height-snug"
+          >
+            {{ recipe.subtitle }}
+          </h2>
         </div>
-      </div>
+        <span v-if="recipe.source">
+          <q-icon name="link" size="1.6rem" class="mr-1"/>
+          <a :href="recipe.source" class="light:text-dark dark:text-white text-lg">
+            <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
+            <span v-else>{{ recipe.source }}</span>
+          </a>
+        </span>
 
-      <!-- ingredients -->
-      <section class="ingredient-card">
-        <div class="row">
-          <ui-button
-            :icon="
-              ingredientsCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up'
-            "
-            type="secondary"
-            @click="ingredientsCollapsed = !ingredientsCollapsed"
+        <div class="flex flex-wrap gap-1 pointer-events-none select-none">
+          <pin
+            v-for="tag in recipe.tags"
+            :key="tag.name"
+            :text="tag.name"
+            active
           />
-          <h2 class="title is-5">Ingredients</h2>
         </div>
 
-        <transition name="slide-up">
-          <div v-show="!ingredientsCollapsed" class="ingredients">
-            <table>
-              <tbody>
-                <tr
-                  v-for="(ingredient, index) in recipe.ingredients"
-                  :key="ingredient.ingredient.id"
-                  :class="
-                    ingredient.ingredient.name.endsWith('--') ? 'hide' : ''
-                  "
-                >
-                  <td class="amount">
-                    <h1>
-                      {{
-                        Math.round(
-                          ((ingredient.amount * portions) / recipe.portions) *
-                            10
-                        ) / 10
-                      }}
-                    </h1>
-                    <small>{{
-                      ingredient.unit.name.replace("pcs", "ks")
-                    }}</small>
-                  </td>
-                  <td class="ingredient-link">
-                    <router-link
-                      :to="{
-                        name: 'Ingredient',
-                        params: { id: ingredient.ingredient.id },
-                      }"
-                    >
-                      {{ ingredient.ingredient.name }}
-                      <span v-if="ingredient.note"
-                        >({{ ingredient.note }})</span
-                      >
-                    </router-link>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="flex mt-auto items-center">
+          <q-toggle
+            v-model="readerMode"
+            color="primary"
+            class="ml-auto"
+            checked-icon="soup_kitchen"
+            size="3.5rem"
+          />
+          <div class="flex flex-col">
+            <span>Cooking mode</span>
+            <span class="text-[.6rem] text-gray-4">Keep display turned on</span>
           </div>
-        </transition>
-      </section>
 
-      <!-- buttons -->
-      <div v-if="!editMode" class="row">
-        <ui-button @click="clickDelete" id="delete-btn" icon="fas fa-trash" />
-        <!-- portion counter  -->
-        <transition>
-          <div v-if="!ingredientsCollapsed">
-            <Counter v-model="portions"></Counter>
-          </div>
-        </transition>
-        <ui-button @click="updateRecipe" text="edit" icon="fas fa-pen" />
+        </div>
       </div>
-
-      <!-- HTML body -->
-      <section class="content" v-if="recipe.body">
-        <div v-html="recipe.body" />
-      </section>
-      <section v-else id="empty">
-        <empty-box
-          title="Good Heavens!"
-          subtitle="It seems the recipe remains a&nbsp;blank canvas. Jolly&nbsp;shame&nbsp;on&nbsp;us!&nbsp;🍴"
-        />
-      </section>
     </div>
-  </div>
-  <section v-else id="not-found">
-    <NotFound msg="The recipe seems to have jolly well disappeared" />
-  </section>
+
+    <recipe-ingredients-section :recipe="recipe" />
+
+    <!-- HTML body -->
+    <section class="ProseMirror" v-if="recipe.body" ref="reader">
+      <div v-html="recipe.body" />
+    </section>
+    <section v-else id="empty">
+      <empty-box
+        title="recipe is missing"
+        subtitle="...shame on us!"
+        :icon="Pot"
+      />
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
-import Pin from "@/components/ui/Pin.vue";
-import UiButton from "@/components/ui/UiButton.vue";
-import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Counter from "@/components/Counter.vue";
 import RecipeForm from "@/components/RecipeForm.vue";
+import EmptyBox from "@/components/ui/EmptyBox.vue";
 import ImageUpload from "@/components/ui/ImageUpload.vue";
-import NotFound from "@/components/NotFound.vue";
+import Pin from "@/components/ui/Pin.vue";
+import UiButton from "@/components/ui/UiButton.vue";
+import RecipeIngredientsSection from "@/components/recipe/RecipeIngredientsSection.vue";
+import Pot from "@/components/icons/Pot.vue";
 
-import { useRecipeStore } from "@/stores/recipe";
-import { useRoute, useRouter } from "vue-router";
-import { computed, ref, toRefs } from "vue";
 import { IMAGES_HOST } from "@/constants";
+import { useRecipeStore } from "@/stores/recipe";
+import { computed, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import type { ChefNotification, Recipe } from "@/types";
+import {
+  useEventBus,
+  useFullscreen,
+  useLocalStorage,
+  useWakeLock,
+} from "@vueuse/core";
+import { storeToRefs } from "pinia";
+import { useLayoutDrawer } from "@/composables/drawer";
+
+const recipes = useRecipeStore();
+const { current, currentId } = storeToRefs(recipes);
 
 const router = useRouter();
 const route = useRoute();
 const recipeId = parseInt(route.params.id as string);
-console.info(router)
 
-import { useEventBus } from "@vueuse/core";
-import type { ChefNotification, Recipe } from "@/types";
+currentId.value = recipeId;
+
+if (!current.value) {
+  await recipes.fetchSingle(recipeId);
+}
+
+if (!current.value) {
+  router.push({
+    name: "notfound",
+    query: { path: router.currentRoute.value.fullPath },
+  });
+}
+
+const recipe = computed<Recipe>(() => current.value as Recipe);
 
 const responseBusId = `delete-recipe-${recipeId}`;
 const bus = useEventBus<ChefNotification>("notifications");
 const responseBus = useEventBus<string>(responseBusId);
 
-const recipes = useRecipeStore();
-const { all } = toRefs(recipes);
+const portions = ref<number>(current.value?.portions ?? 4);
 
-if (!all.value.find((r) => r.id === recipeId)) {
-  await recipes.fetchSingle(recipeId);
-}
-
-const recipe = computed(() => {
-  const match = all.value.find((r) => r.id === recipeId);
-  if (!match) {
-    throw Error("This should never happen");
-  }
-  return match;
-});
-const portions = ref<number>(recipe.value?.portions ?? 4);
-
-const editMode = ref(false);
+const editMode = useLocalStorage(`${recipeId}-recipe-edit-mode`, false);
 const updateRecipe = () => {
-  editMode.value = !editMode.value;
+  router.push({ name: "editrecipe", params: { id: recipe.value.id } });
 };
 
 const ingredientsCollapsed = ref<boolean>(false);
 
 const missingImage = ref<boolean>(false);
 
-const image_url = computed(() => `${IMAGES_HOST}${recipe.value?.detail_image}`);
+const image_url = computed(
+  () => `${IMAGES_HOST}${current.value?.detail_image}`
+);
 
 const clickDelete = () =>
   bus.emit({
     level: "ERROR",
-    message: `Delete recipe ${recipe.value?.title ?? "N/A"} ?`,
+    message: `Delete recipe ${current.value?.title ?? "N/A"} ?`,
     action: {
       id: responseBusId,
       label: "Delete",
@@ -209,98 +150,42 @@ const onDeleteConfirmListener = () => {
 
 responseBus.on(onDeleteConfirmListener);
 
-const imageUploaded = async (newRecipe: Recipe) => {
-  console.info(newRecipe);
-  recipe.value.detail_image = newRecipe.detail_image;
-};
+// const imageUploaded = async (newRecipe: Recipe) => {
+//   console.info(newRecipe);
+//   current.value.detail_image = newRecipe.detail_image;
+// };
+
+const { request, release } = useWakeLock();
+const { isOpened } = useLayoutDrawer();
+let stateBefore = isOpened.value;
+const readerMode = ref(false);
+
+function enterReaderMode() {
+  stateBefore = isOpened.value;
+  isOpened.value = false;
+  request("screen");
+}
+
+function exitReaderMode() {
+  isOpened.value = stateBefore;
+  release();
+}
+
+function toggleReaderMode() {
+  if (readerMode.value) {
+    exitReaderMode();
+  } else {
+    enterReaderMode();
+  }
+  readerMode.value = !readerMode.value;
+}
 </script>
 
 <style lang="scss" scoped>
-.recipe {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
 
-.content,
-.ingredient-card {
-  border: 1px solid var(--bg-200);
-  border-radius: 0.3rem;
-  padding: 0.3rem;
-}
-
-h1 {
-  font-weight: 100;
-  text-transform: uppercase;
-  margin: 0;
-}
-
-h2 {
-  font-weight: 400;
-  font-size: large;
-  text-transform: uppercase;
-  margin: 0;
-}
-.row {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.animate-icon {
-  transition: 0.15s;
-}
-.rotate {
-  transform: rotate(-90deg);
-}
-.title-header {
-  h1,
-  h2 {
-    text-transform: uppercase;
-  }
-}
 .tag {
   margin-bottom: 0%;
   padding-top: 1px;
-}
-
-td {
-  padding-block: 0.4rem;
-  min-width: 6rem;
-}
-
-tr {
-  & > .amount {
-    display: flex;
-    align-items: center;
-    text-align: right;
-    gap: 0.3rem;
-    // width: 5rem;
-    // border-bottom: 1px solid gray;
-
-    & > h1 {
-      font-size: x-large;
-      font-weight: 400;
-    }
-  }
-
-  &:nth-child(even) > .amount {
-    color: var(--primary);
-  }
-
-  &:nth-child(odd) > .amount {
-    color: var(--text);
-  }
-
-  &:nth-child(even) > td > a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  &:nth-child(odd) > td > a {
-    color: var(--text);
-    text-decoration: none;
-  }
 }
 
 .hide {
@@ -323,40 +208,6 @@ img {
 
 .heading {
   gap: 3rem;
-}
-
-@media (max-width: 575.98px) {
-  #empty {
-    height: 40dvh;
-  }
-
-  .tags {
-    align-items: center;
-    justify-content: center;
-  }
-
-  .heading {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  img {
-    width: 100dvw;
-    border-radius: 0;
-    margin-top: -1rem;
-    mask-image: linear-gradient(rgb(0 0 0 / 100%) 60%, transparent);
-    z-index: -1000;
-  }
-
-  #recipe-link {
-    text-align: center;
-  }
-
-  .titles > div {
-    text-align: center;
-  }
 }
 
 #delete-btn {
@@ -384,5 +235,18 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.ProseMirror {
+  background-color: transparent !important;
+  outline-color: transparent !important;
+  outline-style: none !important;
+  outline-width: 0px !important;
+}
+
+.recipe-title {
+  --size: 3.5rem;
+  font-size: var(--size);
+  line-height: calc(var(--size) * 0.95);
 }
 </style>

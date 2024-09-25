@@ -1,9 +1,9 @@
-FROM node:20-alpine as fe-build-stage
+FROM node:20-alpine AS fe-build-stage
 COPY ./src/js/chef .
 RUN npm run build
 
 
-FROM python:3.11.1 as be-build-stage
+FROM python:3.11.1 AS be-build-stage
 COPY pyproject.toml .
 COPY poetry.lock .
 RUN pip install poetry
@@ -32,5 +32,8 @@ RUN pip install --no-cache-dir wheels/*
 
 COPY --from=fe-build-stage dist ./static
 
-ENTRYPOINT ["chef"]
-CMD ["serve"]
+COPY entrypoint.sh .
+
+#ENTRYPOINT ["./entrypoint.sh"]
+CMD ["./entrypoint.sh"]
+#CMD ["serve"]

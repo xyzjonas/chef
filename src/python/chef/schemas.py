@@ -1,6 +1,8 @@
+from uuid import UUID, uuid4
+
 from pydantic import BaseModel, validator, Field, ConfigDict
 
-from typing import List, Union
+from typing import List, Union, Optional
 
 from chef.models import Recipe as RecipeDb
 from chef.models import Category as CategoryDb
@@ -16,6 +18,9 @@ class Base(BaseModel):
     class Meta:
         orm_model = None
 
+    @staticmethod
+    def get_excluded_fields():
+        return []
 
 class Named(Base):
     name: str
@@ -73,6 +78,10 @@ class Ingredient(Named):
     is_liquid: bool = False
     density: float = 1000.0  # g / L
 
+    @staticmethod
+    def get_excluded_fields():
+        return ["uuid"]
+
     class Meta:
         orm_model = IngredientDb
 
@@ -93,6 +102,8 @@ class IngredientItemBase(BaseModel):
     ingredient: Ingredient
     amount: float
     unit: Unit
+    order: Optional[int] = None
+    uuid: UUID = Field(default_factory=uuid4)
 
     note: Union[str, None] = None
     exclude: bool = False  # todo: remove?
@@ -105,6 +116,7 @@ class IngredientItem(IngredientItemBase, Base):
     """
     class Meta:
         orm_model = IngredientItemDb
+        exclude_items = ["uuid"]
 
 
 class CreateOrUpdateIngredientItem(IngredientItemBase, BaseModel):

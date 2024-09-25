@@ -3,7 +3,7 @@
 
     <!-- RECIPE COUNT -->
     <div v-if="allRecipes.length > 0">
-      <h1 id="r-count">{{ displayedRecipes.length }} {{ title || 'Recipes' }}</h1>
+      <h4 class="my-1 uppercase">{{ displayedRecipes.length }} {{ title || `Recipe${displayedRecipes.length === 1 ? '' : 's'}` }}</h4>
     </div>
 
     <!-- TAGS -->
@@ -18,20 +18,19 @@
     </div>
 
     <!-- SEARCH -->
-    <ui-input v-if="allRecipes.length > 0" v-model="search" :icon="Search" size="large" style="margin-block: .8rem;"/>
+    <ui-input v-if="allRecipes.length > 0" v-model="search" icon-before="search" placeholder="Search" style="margin-block: .8rem;"/>
 
     <!-- LIST -->
-    <div class="recipe-list" v-if="allRecipes.length > 0">
-      <div v-for="(recipe) in displayedRecipes" :key="'recipe_a_key+' + recipe.id" :recipe="recipe">
-        <component :is="RecipeListItem" :recipe="recipe" />
-      </div>
+    <div class="recipe-list" v-if="displayedRecipes.length > 0">
+      <recipe-grid-item :recipe="recipe" v-for="(recipe) in displayedRecipes" :key="'recipe_a_key+' + recipe.id" />
     </div>
     <div v-else class="empty-box">
       <empty-box
-        link-text="add a new recipe"
+        link-text="Add a new recipe"
         route-name="new"
-        title="Goodness Gracious!"
-        subtitle="The recipe list seems to have taken a tea break. Why not take charge and add your culinary masterpieces?"
+        :title="allRecipes.length === 0 ? 'No recipes created yet' : 'no matches'"
+        :subtitle="allRecipes.length === 0 ? ' Start by adding a new recipe.' : 'no recipes match the search criteria'"
+        :icon="allRecipes.length === 0 ? Rocket : Search"
       />
     </div>
 
@@ -39,14 +38,15 @@
 </template>
 
 <script setup lang="ts">
-import RecipeListItem from "@/components/RecipeListItem.vue";
 import EmptyBox from "@/components/ui/EmptyBox.vue";
-import Search from "@/components/icons/Search.vue"
-import UiInput from "./ui/UiInput.vue";
 import Pin from "@/components/ui/Pin.vue";
 import type { Recipe } from "@/types";
 import { replaceUnicode } from "@/utils";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
+import RecipeGridItem from "@/components/recipe/RecipeGridItem.vue";
+import UiInput from "@/components/ui/UiInput.vue";
+import Search from "@/components/icons/Search.vue";
+import Rocket from "@/components/icons/Rocket.vue";
 
 const props = defineProps<{
   allRecipes: Recipe[],
@@ -56,7 +56,8 @@ const props = defineProps<{
 }>()
 
 const activeTags = ref<string[]>([])
-const search = ref<string>()
+// const activeTags = useLocalStorage('active-tags', [])
+const search = ref<string>("")
 
 const tagNames = computed<string[]>(() => {
    return [...new Set(props.allRecipes.map(recipe => recipe.tags.map(tag => tag.name)).flat())]
@@ -115,13 +116,14 @@ const toggleFilter = (tagName: string) => {
   display: grid;
   gap: 0.3em;
   grid-template-columns: 1fr 1fr;
+  // grid-template-rows: auto-fill;
 
   @media (min-width: 768px){
     grid-template-columns: 1fr 1fr 1fr;
   }
 
   @media (min-width: 992px){
-  	grid-template-columns: 1fr 1fr 1fr 1fr;
+  	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   }
 }
 
@@ -130,12 +132,6 @@ const toggleFilter = (tagName: string) => {
   flex-direction: row;
   gap: .3rem;
   flex-wrap: wrap;
-}
-
-#r-count {
-  font-weight: 100;
-  margin-top: 0;
-  margin-bottom: 1rem;
 }
 
 .empty-box {

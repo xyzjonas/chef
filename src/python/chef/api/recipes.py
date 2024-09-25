@@ -25,6 +25,7 @@ async def get_recipes(
         category: int = None,
         favorite: bool = False,
 ) -> list[RecipeListItem]:
+
     with Session(engine()) as session:
         if favorite:
             return cast(

@@ -17,6 +17,7 @@ import { useUnitsStore } from "./units";
 import { useEventBus } from "@vueuse/core";
 
 const recipesApi = mande(API_URL + "/recipes");
+const currentId = ref<number>()
 
 export const useRecipeStore = defineStore("recipe", () => {
   const tagsStore = useTagStore();
@@ -28,6 +29,8 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   const all = computed(() => recipes);
   const favorites = computed(() => recipes.value.filter((rec) => rec.favorite));
+
+  const current = computed(() => recipes.value.find(r => r.id === currentId.value))
 
   const bus = useEventBus<ChefNotification>("notifications");
 
@@ -66,7 +69,12 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   async function create(recipeData: CreateRecipe): Promise<Recipe> {
     loading.value = true;
-    console.debug("Creating recipe.");
+
+    if (recipeData.ingredients) {
+      for (let index = 0; index < recipeData.ingredients.length; index++) {
+        recipeData.ingredients[index].order = index;      
+      }
+    }
 
     let recipe: Recipe;
     try {
@@ -93,11 +101,19 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   async function update(recipeData: Recipe): Promise<Recipe | undefined> {
     loading.value = true;
-    console.debug(`Updating recipe id=${recipeData.id}.`);
+    const data = JSON.parse(JSON.stringify(recipeData))
+    
+    if (data.ingredients) {
+      for (let index = 0; index < data.ingredients.length; index++) {
+        console.info(`${data.ingredients[index].ingredient.name}: ${index}`)
+        data.ingredients[index].order = index;      
+      }
+    }
 
     let result;
     try {
-      result = await recipesApi.put<Recipe>(recipeData.id, recipeData);
+      console.info(data)
+      result = await recipesApi.put<Recipe>(data.id, data);
     } catch (e: unknown) {
       const err = e as ServerErrorResponse;
       bus.emit({
@@ -105,8 +121,10 @@ export const useRecipeStore = defineStore("recipe", () => {
         message: err.body?.detail ?? err.message,
       });
       throw e;
+    } finally {
+      loading.value = false
     }
-    recipes.value = recipes.value.filter((r) => r?.id !== recipeData.id);
+    recipes.value = recipes.value.filter((r) => r?.id !== data.id);
     recipes.value.push(result);
     recipes.value.sort((a: Recipe, b: Recipe) => (a.title > b.title ? 1 : -1));
     loading.value = false;
@@ -138,6 +156,8 @@ export const useRecipeStore = defineStore("recipe", () => {
     all,
     favorites,
     loading,
+    current,
+    currentId,
     fetch,
     fetchSingle,
     create,

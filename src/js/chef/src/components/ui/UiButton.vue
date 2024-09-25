@@ -1,22 +1,31 @@
 <template>
+    <q-btn :icon="icon" unelevated :flat="flat" :label="text" :disable="disabled" :dense="dense" :color="color" :to="to">
+        <slot />
+    </q-btn>
+
+    <!-- </q-btn>
     <button :class="type ?? 'primary'" :disabled="disabled" >
         <span class="icon" v-if="icon">
             <i :class="icon"></i>
         </span>
         {{ text ?? ""}}
         <slot />
-    </button>
+    </button> -->
 </template>
 <script lang="ts" setup>
 const props = defineProps<{
-    type?: "primary" | "secondary" | "link"
-    icon?: string,
-    disabled?: boolean,
-    text?: string,
+    // type?: "primary" | "secondary" | "link"
+    color?: "primary" | "secondary" | "accent" | "negative" | "positive" | "white"
+    flat?: boolean
+    icon?: string
+    dense?: boolean
+    disabled?: boolean
+    text?: string
+    to?: any
 }>()
 </script>
 <style lang="css" scoped>
-
+/* 
 .primary {
     color: var(--text-inv);
     background-color: var(--primary);
@@ -79,5 +88,5 @@ button {
 button:disabled {
     pointer-events: none;
     filter: opacity(.5);
-}
+} */
 </style>

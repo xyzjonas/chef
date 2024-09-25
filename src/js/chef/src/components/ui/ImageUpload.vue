@@ -1,42 +1,47 @@
 <template>
-  <div class="level">
+  <div class="flex gap-1 justify-center items-center w-full">
     <!-- upload -->
-    <ui-button v-if="file" @click="upload" icon="fas fa-upload" text="upload" />
+    <q-btn
+      v-if="file"
+      color="primary"
+      unelevated
+      @click="upload"
+      label="upload"
+    />
 
     <!-- choose file -->
-    <label v-else :for="inputId">
-      <ui-button
-        icon="fas fa-image"
-        class="label-btn"
-        type="secondary"
-        :text="type"
-      />
-    </label>
-    <input
-      @change="handleFile"
-      :id="inputId"
-      class="file-input"
-      type="file"
-      name="resume"
-    />
-    <ui-button
+    <q-file
+      v-else
+      dense
+      borderless
+      v-model="file"
+      :label="`New ${type ?? ''} Image`"
+      class="capitalize"
+    >
+    </q-file>
+
+    <q-btn
       v-if="file"
       @click="file = undefined"
-      icon="fa-solid fa-ban"
-      text="cancel"
-      type="secondary"
+      flat
+      color="secondary"
+      icon="close"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import UiButton from "./UiButton.vue";
 import { API_URL } from "@/constants";
+import type { Category, ChefNotification, Recipe } from "@/types";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import type { Category, ChefNotification, Recipe } from "@/types";
 
+import { useRecipeStore } from "@/stores/recipe";
 import { useEventBus } from "@vueuse/core";
+import { storeToRefs } from "pinia";
+
+const store = useRecipeStore();
+const { current } = storeToRefs(store);
 
 const bus = useEventBus<ChefNotification>("notifications");
 
@@ -104,6 +109,15 @@ const upload = async () => {
       body: formData,
     });
     const data = await result.json();
+
+    if (props.type === "detail" && current.value) {
+      current.value.detail_image = data.detail_image;
+    }
+
+    if (props.type === "thumbnail" && current.value) {
+      current.value.thumbnail_image = data.thumbnail_image;
+    }
+
     file.value = undefined;
     bus.emit({
       level: "SUCCESS",

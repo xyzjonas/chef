@@ -5,6 +5,7 @@
       editable
       @categoryDeleted="$router.push({ name: 'home' })"
       @categoryEdited="$router.push(route.fullPath)"
+      class="h-[12rem] mb-3"
     />
 
     <RecipeList :allRecipes="categories.recipes" />

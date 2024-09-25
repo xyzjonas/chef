@@ -36,9 +36,11 @@ class Controller(Generic[C, R, U]):
     def update_schema(self) -> Type[U]:
         return typing.get_args(self.__orig_bases__[0])[2]
 
-    async def _fill_model(self,  session: Session, model, data: Union[C, U]):
+    async def _fill_model(self, session: Session, model, data: Union[C, U]):
         """Override for more complex models."""
         for attr, value in data.dict(exclude_none=True).items():
+            if attr in data.get_excluded_fields():
+                continue
             setattr(model, attr, value)
 
     async def get_all(self, session: Session) -> List[R]:
@@ -189,13 +191,16 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
             if ingredient_item.id:
                 updated_item = session.get(IngredientItem.Meta.orm_model, ingredient_item.id)
                 for attr, value in ingredient_item.dict(
-                        exclude_none=True, exclude={"unit": True, "ingredient": True, 'id': True}
+                        exclude_none=True,
+                        exclude={"unit": True, "ingredient": True, 'id': True, 'uuid': True}
                 ).items():
                     setattr(updated_item, attr, value)
 
             if not updated_item:
                 updated_item = IngredientItem.Meta.orm_model(
-                    **ingredient_item.dict(exclude={'ingredient': True, 'unit': True, 'id': True})
+                    **ingredient_item.dict(
+                        exclude={'ingredient': True, 'unit': True, 'id': True, 'uuid': True}
+                    )
                 )
             u = await units_controller.create_or_update(session, ingredient_item.unit)
             updated_item.unit_id = u.id

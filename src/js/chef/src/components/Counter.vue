@@ -1,8 +1,11 @@
 <template>
-  <div class="level">
-    <ui-button @click="decrement" icon="fas fa-minus" type="secondary" />
-    <ui-input v-model="model" disabled size="small" centered label="portions" />
-    <ui-button @click="increment" icon="fas fa-plus" type="secondary" />
+  <div class="flex items-center gap-5 p-1">
+    <ui-button dense flat @click="decrement" icon="remove" color="secondary" />
+    <span class="flex items-center gap-3">
+      <span class="font-bold text-lg">{{ model }}</span>SERVINGS
+    </span>
+    <!-- <ui-input v-model="model" disabled size="small" centered label="portions" /> -->
+    <ui-button dense flat @click="increment" icon="add" color="secondary" />
   </div>
 </template>
 
@@ -25,9 +28,4 @@ const decrement = () => {
 </script>
 
 <style lang="css" scoped>
-.level {
-  display: flex;
-  flex-direction: row;
-  gap: .3rem
-}
 </style>

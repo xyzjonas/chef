@@ -1,76 +1,47 @@
 <template>
-  <div>
-    <!-- EDIT -->
+  <div v-on:click="clicked" class="card">
+    <!-- title -->
+    <h1>{{ category.name }}</h1>
 
-    <transition name="slide" mode="out-in">
-      <div id="edit" v-if="edit">
-        <h5 class="title is-3">Edit category</h5>
-        <CategoryForm
-          class="p-3"
-          :inputCategory="category"
-          @categoryPosted="edited"
-          @cancel="edit = !edit"
-        />
+    <div class="flex mt-auto gap-2">
+      <div class="tags">
+        <q-badge v-for="tag in category.tags" rounded>{{ tag.name }}</q-badge>
       </div>
-      <div v-else v-on:click="clicked" class="card">
-        <!-- title -->
-        <h1>{{ category.name }}</h1>
 
-        <!-- TAGS -->
-        <div class="tags">
-          <pin v-for="(tag) in category.tags" :text="tag.name" active />
-        </div>
-
-        <!-- buttons -->
-        <div class="level" v-if="editable">
-          <p class="control mr-1">
-            <ImageUpload
-              :category="category"
-              :small="true"
-              @uploadFailed="imageUploadFailed"
-              @uploadSuccess="edited"
-            />
-          </p>
-
-          <ui-button icon="fas fa-pen" @click="edit = !edit" id="edit-btn"/>
-          <ui-button @click="clickDelete" text="DELETE" />
-          <!-- <DeleteButton
-            @delete="deleteCategory"
-            v-model="youSure"
-            :small="true"
-            :rounded="true"
-            :loading="categories.loading"
-          /> -->
-        </div>
-        <span v-if="uploadError" class="help is-danger">
-          Upload failed...
-        </span>
-        <!-- delete you sure? -->
-        <!-- <span v-show="youSure" class="help">
-          You absolutely sure you want to delete this category?
-          <a v-on:click="deleteCategory">Yep, let's do this!</a>
-        </span> -->
-      </div>
-    </transition>
+      <q-btn
+        v-if="editable"
+        dense
+        color="primary"
+        unelevated
+        icon="edit"
+        @click="$router.push({ name: 'editcategory', params: { id: category.id } })"
+        id="edit-btn"
+      />
+      <q-btn
+        v-if="editable"
+        dense
+        color="white"
+        flat
+        unelevated
+        @click="clickDelete"
+        icon="delete"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import CategoryForm from "@/components/CategoryForm.vue";
 import ImageUpload from "@/components/ui/ImageUpload.vue";
-import UiButton from "./ui/UiButton.vue";
-import Pin from "./ui/Pin.vue";
-import { useCategoryStore } from "@/stores/categories";
-import { ref } from "vue";
 import { IMAGES_URL } from "@/constants";
+import { useCategoryStore } from "@/stores/categories";
 import type { Category, ChefNotification } from "@/types";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { useEventBus } from "@vueuse/core"
+import { useEventBus } from "@vueuse/core";
 
 const categories = useCategoryStore();
-
-// const youSure = ref(false);
 
 const props = defineProps<{
   category: Category;
@@ -79,15 +50,13 @@ const props = defineProps<{
 const emit = defineEmits(["categoryEdited", "categoryDeleted", "clicked"]);
 
 const uploadError = ref(null);
-const imageUploadFailed = (err) => {
+const imageUploadFailed = (err: any) => {
   uploadError.value = err;
 };
 
 const edit = ref(false);
 const clicked = () => {
-  if (!props.editable) {
-    emit("clicked", props.category);
-  }
+  emit("clicked", props.category);
 };
 
 const backgroundStyle = `url('${IMAGES_URL}/categories/${props.category.id}/landscape.jpeg')`;
@@ -99,32 +68,29 @@ const edited = () => {
   emit("categoryEdited");
 };
 
-const responseBusId = `delete-category-${props.category.id}`
+const responseBusId = `delete-category-${props.category.id}`;
 
-const bus = useEventBus<ChefNotification>("notifications")
-const responseBus = useEventBus<string>(responseBusId)
+const bus = useEventBus<ChefNotification>("notifications");
+const responseBus = useEventBus<string>(responseBusId);
 
-const clickDelete = () => bus.emit({
-  level: "ERROR",
-  message: `Delete category ${props.category.name}?`,
-  action: {
-    id: responseBusId,
-    label: "Delete",
-  },
-})
+const clickDelete = () =>
+  bus.emit({
+    level: "ERROR",
+    message: `Delete category ${props.category.name}?`,
+    action: {
+      id: responseBusId,
+      label: "Delete",
+    },
+  });
 
-const onDeleteConfirmListener = (incommingId : string) => {
-  console.info(`INTERCEPTED: ${incommingId}`)
-  console.info(`deleting: ${props.category.id}`)
+const onDeleteConfirmListener = (incommingId: string) => {
   categories.deleteById(props.category.id).then((res) => {
     emit("categoryDeleted", res);
     router.push({ name: "categories" });
   });
-}
+};
 
 responseBus.on(onDeleteConfirmListener);
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -164,10 +130,6 @@ responseBus.on(onDeleteConfirmListener);
   cursor: pointer;
 
   transition: filter 0.2s ease-in-out;
-
-  &:hover {
-    filter: contrast(1.2);
-  }
 }
 
 h1,
@@ -239,7 +201,7 @@ h2 {
   }
 
   border: 1px solid var(--bg-300);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   background-color: var(--bg-100);
   padding: 1rem;
 }

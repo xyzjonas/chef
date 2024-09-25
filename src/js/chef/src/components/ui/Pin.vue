@@ -26,7 +26,7 @@ const clazz = computed(() => {
 <style lang="css" scoped>
 span {
     background-color: #eee;
-    border-radius: 12px;
+    border-radius: 1rem;
 
     text-decoration: none;
 
@@ -49,7 +49,7 @@ span {
 
 .active {
     background-color: var(--primary);
-    color: var(--text-inv);
+    color: white;
 }
 
 .normal {

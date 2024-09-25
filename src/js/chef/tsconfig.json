@@ -13,5 +13,5 @@
       "es2021"
     ]
   },
-  "types": ["@types/node", "@nuxt/types", "mande/nuxt"]
+  "types": ["@types/node", "mande/nuxt"]
 }

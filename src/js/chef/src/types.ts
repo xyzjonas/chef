@@ -3,6 +3,16 @@ export interface Ingredient {
     name: string
 }
 
+export interface IngredientFull extends Ingredient {
+    energy: number;
+    fats: number;
+    carbs: number;
+    proteins: number;
+    fibres: number;
+    salt: number;
+    is_liquid: boolean;
+    density: number;
+}
 
 export interface Unit {
     id?: number
@@ -21,6 +31,8 @@ export interface IngredientItem {
     amount: number
     unit: Unit
     note: string
+    uuid: string // key for the ingredient list
+    order?: number
 }
 
 

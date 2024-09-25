@@ -1,69 +1,80 @@
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
-import Home from "@/views/Home.vue"
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from "vue-router";
+import CategoryListingView from "@/views/CategoryListingView.vue";
 import Recipes from "@/views/Recipes.vue";
 import Recipe from "@/views/Recipe.vue";
+import RecipeEditView from "@/views/RecipeEditView.vue";
 import CategoryView from "@/views/CategoryView.vue";
-import NewCategoryView from "@/views/NewCategoryView.vue";
+import CategoryNewView from "@/views/CategoryNewView.vue";
+import CategoryEditView from "@/views/CategoryEditView.vue";
 import NewRecipe from "@/views/NewRecipe.vue";
 import Ingredients from "@/views/Ingredients.vue";
 import Ingredient from "@/views/Ingredient.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  // history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Recipes
-    },
-    {
-      path: "/recipes",
       name: "recipes",
-      component: Recipes
+      component: Recipes,
     },
     {
       path: "/ingredients",
-      name: "Ingredients",
-      component: Ingredients
+      name: "ingredients",
+      component: Ingredients,
     },
     {
       path: "/ingredients/:id",
-      name: "Ingredient",
-      component: Ingredient
+      name: "ingredient",
+      component: Ingredient,
     },
     {
       path: "/recipes/new",
       name: "new",
-      component: NewRecipe
-    },
-    {
-      path: "/recipes/newcategory",
-      name: "newcategory",
-      component: NewCategoryView
+      component: NewRecipe,
     },
     {
       path: "/recipes/:id",
       name: "recipe",
-      component: Recipe
+      component: Recipe,
+    },
+    {
+      path: "/recipes/:id/edit",
+      name: "editrecipe",
+      component: RecipeEditView,
     },
     {
       path: "/categories",
       name: "categories",
-      component: Home
+      component: CategoryListingView,
     },
     {
       path: "/categories/:id",
       name: "category",
-      component: CategoryView
+      component: CategoryView,
+    },
+    {
+      path: "/recipes/newcategory",
+      name: "newcategory",
+      component: CategoryNewView,
+    },
+    {
+      path: "/categories/:id/edit",
+      name: "editcategory",
+      component: CategoryEditView,
+    },
+    {
+      path: "/404",
+      name: "notfound",
+      component: NotFoundView,
     },
   ],
-  scrollBehavior (to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    } else {
-      return { top: 0 }
-    }
-  },
-})
+});
 
-export default router
+export default router;

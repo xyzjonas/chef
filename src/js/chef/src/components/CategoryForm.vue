@@ -1,9 +1,7 @@
 <template>
   <form>
     <!-- title -->
-    <ui-input v-model="category.name" label="name" />
-    <p v-if="!category.name" class="help">Name is required</p>
-
+    <q-input v-model="category.name" label="name" autocomplete="off" :rules="[(val: string) => !!val || 'This field is required']" hint="Category name"/>
     <!-- tags -->
     <div class="tags">
       <pin
@@ -19,11 +17,9 @@
       <small class="message-body p-2">no tags created yet</small>
     </article>
 
-    <!-- BUTTONS -->
-
     <div class="level">
-      <ui-button @click="postCategory" :disabled="!category.name" text="save" type="primary" icon="fas fa-save" />
-      <ui-button @click="$emit('cancel')" text="cancel" type="secondary"/>
+      <ui-button @click="postCategory" :disabled="!category.name" text="save" color="primary"/>
+      <ui-button flat @click="$emit('cancel')" text="cancel" color="secondary"/>
     </div>
   </form>
 </template>
@@ -32,7 +28,6 @@
 import UiInput from "@/components/ui/UiInput.vue";
 import UiButton from "./ui/UiButton.vue";
 import Pin from "@/components/ui/Pin.vue";
-import Search from "./icons/Search.vue";
 import { useCategoryStore } from "@/stores/categories";
 import { useTagStore } from "@/stores/tags";
 import type { CreateCategory, Tag } from "@/types";
@@ -42,7 +37,7 @@ import { ref } from "vue";
 const tags = useTagStore();
 
 const props = defineProps<{
-  inputCategory: CreateCategory | undefined
+  inputCategory?: CreateCategory
 }>()
 
 const category = ref<CreateCategory>({

@@ -1,45 +1,55 @@
 <template>
-  <div>
-    <!-- title -->
-    <h1 class="title is-4 mt-5">{{ ingredients.length }} Ingredients</h1>
+  <main>
+    <q-table
+      flat
+      
+      :title="`${ingredients.length} INGREDIENT${ingredients.length === 1 ? '' : 's'}`"
+      :rows="ingredients"
+      :columns="columns"
+      row-key="id"
+      :filter="search"
+      hide-pagination
+      :rows-per-page-options="[0]"
+      @row-click="(_, row: IngredientFull) => $router.push({ name: 'ingredient', params: { id: row.id } })"
+    >
+      <template v-slot:body-cell-name="props: { row: IngredientFull }" >
+        <q-td :props="props">
+          <span class="text-lg capitalize font-400">
+            {{props.row.name }}
+          </span>
+        </q-td>
+      </template>
+      <template v-slot:top>
+        <h1>{{ `${ingredients.length} INGREDIENT${ingredients.length === 1 ? '' : 's'}` }}</h1>
+        <q-input outlined dense v-model="search" placeholder="Search" class="ml-auto">
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </template>
 
-    <!-- search -->
-    <p class="control has-icons-left">
-      <input 
-        v-model="search"
-        class="input is-rounded"
-        type="text"
-        placeholder="search">
-      <span class="icon is-small is-left">
-        <i class="fas fa-search"></i>
-      </span>
-    </p>
-
-    <div class="section px-3 pt-4">
-      <IngredientListItem
-        v-for="(ingredient, index) in ingredients" :key="`${ingredient},${index},list`"
-        :ingredient="ingredient"
-      />
-    </div>
-  </div>
+    </q-table>
+  </main>
 </template>
 
 <script setup lang="ts">
-import IngredientListItem from "@/components/IngredientListItem.vue";
 import { useIngredientStore } from "@/stores/ingredient";
 import { computed, ref } from "vue";
 import { replaceUnicode } from "@/utils";
+import type { Ingredient, IngredientFull } from "@/types";
+import { storeToRefs } from "pinia";
 
 const ingredientsStore = useIngredientStore();
+const { all } = storeToRefs(ingredientsStore)
 
 const search = ref<string>();
 
 const ingredients = computed(() => {
   if (!search.value || search.value === ""){
-    return ingredientsStore.all;
+    return all.value;
   }
   const re = new RegExp(replaceUnicode(search.value.toLowerCase()));
-  return ingredientsStore.all.filter(ing => {
+  return all.value.filter(ing => {
     const match = re.exec(replaceUnicode(ing.name.toLowerCase()))
     if (match) {
       return true;
@@ -47,6 +57,56 @@ const ingredients = computed(() => {
     return false;
   })
 })
+
+const columns = [
+  {
+    name: 'name',
+    required: true,
+    label: 'Ingredient',
+    align: 'left',
+    field: (row: any) => row.name,
+    format: (val: string) => `${val}`,
+    sortable: true
+  },
+  {
+    name: 'energy',
+    required: true,
+    label: 'Energy',
+    align: 'left',
+    field: (row: any) => row.energy,
+    format: (val: string) => `${val} kcal`,
+    sortable: true
+  },
+  {
+    name: 'fat',
+    required: true,
+    label: 'Fats',
+    align: 'left',
+    field: (row: IngredientFull) => row.fats,
+    format: (val: string) => `${val} g`,
+    sortable: true
+  },
+  {
+    name: 'proteins',
+    required: true,
+    label: 'Proteins',
+    align: 'left',
+    field: (row: IngredientFull) => row.proteins,
+    format: (val: string) => `${val} g`,
+    sortable: true
+  },
+  {
+    name: 'carbs',
+    required: true,
+    label: 'Carbs',
+    align: 'left',
+    field: (row: IngredientFull) => row.carbs,
+    format: (val: string) => `${val} g`,
+    sortable: true
+  },
+]
+
+
 </script>
 
 <style>

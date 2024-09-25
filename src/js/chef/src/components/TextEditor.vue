@@ -3,52 +3,53 @@
     <div class="editor-wrapper content">
       <div v-if="editor" class="buttons">
         <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
-          <i class="fa fa-paragraph" aria-hidden="true"></i>
+          <q-icon name="segment" />
         </button>
         <button @click="editor.chain().focus().toggleBold().run()" :disabled="!editor.can().chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-          <i class="fa fa-bold" aria-hidden="true"></i>
+          <q-icon name="format_bold" />
         </button>
         <button @click="editor.chain().focus().toggleItalic().run()" :disabled="!editor.can().chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
-          <i class="fa fa-italic" aria-hidden="true"></i>
+          <q-icon name="format_italic" />
         </button>
         <button @click="editor.chain().focus().toggleStrike().run()" :disabled="!editor.can().chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">
-          <i class="fa fa-strikethrough" aria-hidden="true"></i>
+          <q-icon name="strikethrough_s" />
         </button>
         <button @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }">
-          <i class="fa fa-heading" aria-hidden="true"></i>
+          H
         </button>
         <button @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }">
-          <i class="fa fa-heading" aria-hidden="true"></i>2
+          H2
         </button>
         <button @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }">
-          <i class="fa fa-heading" aria-hidden="true"></i>3
+          H3
         </button>
-        <button @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }">
-          <i class="fa fa-heading" aria-hidden="true"></i>4
+        <!-- <button @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }">
+          H4
         </button>
         <button @click="editor.chain().focus().toggleHeading({ level: 5 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }">
-          <i class="fa fa-heading" aria-hidden="true"></i>5
-        </button>
+          H5
+        </button> -->
         <button @click="editor.chain().focus().toggleBulletList().run()" :class="{ 'is-active': editor.isActive('bulletList') }">
-          <i class="fa fa-list-ul" aria-hidden="true"></i>
+          <q-icon name="format_list_bulleted" />
         </button>
         <button @click="editor.chain().focus().toggleOrderedList().run()" :class="{ 'is-active': editor.isActive('orderedList') }">
-          <i class="fa fa-list-ol" aria-hidden="true"></i>
+          <q-icon name="format_list_numbered" />
         </button>
-        <button @click="editor.chain().focus().toggleCodeBlock().run()" :class="{ 'is-active': editor.isActive('codeBlock') }">
-          <i class="fa fa-code" aria-hidden="true"></i>
-        </button>
+        <!-- <button @click="editor.chain().focus().toggleCodeBlock().run()" :class="{ 'is-active': editor.isActive('codeBlock') }">
+          <q-icon name="code" />
+        </button> -->
         <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
-          <i class="fa-solid fa-comment-dots"></i>
+          <q-icon name="comment" />
         </button>
         <button @click="editor.chain().focus().setHorizontalRule().run()">
+          <q-icon name="horizontal_rule" />
           <i class="fa-solid fa-ruler-horizontal"></i>
         </button>
         <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
-          <i class="fa-solid fa-rotate-left"></i>
+          <q-icon name="undo" />
         </button>
         <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
-          <i class="fa-solid fa-rotate-right"></i>
+          <q-icon name="redo" />
         </button>
       </div>
       <editor-content :editor="editor" />
