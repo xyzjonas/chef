@@ -45,7 +45,7 @@ if settings.sentry_dsn:
 app = FastAPI(
     title="Chef",
     summary="Personal recipe management app.",
-    version="2.3.4"
+    version="2.4.0"
 )
 app.include_router(api_router)
 
