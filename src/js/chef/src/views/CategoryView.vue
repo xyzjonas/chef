@@ -8,7 +8,7 @@
       class="h-[12rem] mb-3"
     />
 
-    <RecipeList :allRecipes="categories.recipes" />
+    <RecipeList :allRecipes="categories.recipes"/>
   </div>
 </template>
 

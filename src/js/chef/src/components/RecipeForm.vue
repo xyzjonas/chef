@@ -1,17 +1,45 @@
 <template>
   <q-form ref="$form" v-if="recipe">
-    
-    <q-input outlined v-model="recipe.title" label="Title" autocomplete="off" hint="The main title" :rules="[(val: string) => !!val || 'Title is required']"/>
+    <q-input
+      outlined
+      v-model="recipe.title"
+      label="Title"
+      autocomplete="off"
+      hint="The main title"
+      :rules="[(val: string) => !!val || 'Title is required']"
+    />
 
-    <q-input outlined v-model="recipe.subtitle" label="Subtitle" autocomplete="off" hint="Recipe's subtitle"/>
+    <q-input
+      outlined
+      v-model="recipe.subtitle"
+      label="Subtitle"
+      autocomplete="off"
+      hint="Recipe's subtitle"
+    />
 
-    <q-input outlined v-model="recipe.source" label="Source Link" hint="Link to the original recipe, needs to be a valid URL" autocomplete="off"/>
+    <q-input
+      outlined
+      v-model="recipe.source"
+      label="Source Link"
+      hint="Link to the original recipe, needs to be a valid URL"
+      autocomplete="off"
+    />
 
-    <q-input outlined v-model="recipe.source_name" label="Source Name" hint="Display name of the link" autocomplete="off"/>
+    <q-input
+      outlined
+      v-model="recipe.source_name"
+      label="Source Name"
+      hint="Display name of the link"
+      autocomplete="off"
+    />
 
     <div class="flex items-center">
       <h3 class="text-2xl uppercase mr-5">Ingredients</h3>
-      <Counter v-model="recipe.portions" @counterUpdate="updateCounter" class="mx-auto sm:m-0"/>
+      <Counter
+        v-model="recipe.portions"
+        @counterUpdate="updateCounter"
+        class="mx-auto sm:m-0"
+      />
     </div>
     <transition-group name="ingredientlist">
       <IngredientInput
@@ -34,45 +62,50 @@
         label="add ingredient"
       />
     </div>
-    
+
     <q-separator />
 
     <div v-if="!recipe.draft" class="field my-2">
       <TextEditor @editorUpdate="updateText" :text="recipe.body"></TextEditor>
     </div>
 
-    <h3 class="text-2xl uppercase mt-5 mb-0">Tags</h3>
+    <h3 class="text-2xl uppercase mt-5 mb-0">Labels</h3>
     <article v-if="availableTags.length < 1" class="message is-warning p-0">
       <small class="message-body p-2">no tags created yet</small>
     </article>
-    {{ availableTags }}
-    <div class="tags">
-      <pin
-        v-for="(tag, index) in availableTags"
-        :key="`${tag},${index}`"
-        @click="toggleTag(tag)"
-        clickable
-        :active="recipe.tags.map((t) => t.name).includes(tag.name)"
-        :text="tag.name"
-      />
-    </div>
-    <div class="level mt">
-      <q-input outlined v-model="createTagField" label="New Tag Name" autocomplete="off"/>
-      <ui-button flat @click="createTag" icon="new_label" color="secondary" text="new tag" :disable="!createTagField"/>
-    </div>
+
+    <q-select
+      filled
+      v-model="recipe.tags"
+      multiple
+      :options="availableTags"
+      :option-label="(opt) => opt.name"
+      use-chips
+      use-input
+      @new-value="addTag"
+      stack-label
+      label="Recipe Labels"
+      hint="Select labels to help define recipe's category"
+    />
 
     <div class="flex mt-5 gap-2 h-[3rem]">
-      <q-btn unelevated color="primary" @click="postRecipe" :disabled="!recipe.title" label="save" class="flex-1" />
-      <ui-button color="secondary" flat @click="$emit('cancel')" text="cancel" type="secondary" class="flex-1" />
+      <q-btn
+        unelevated
+        color="primary"
+        @click="postRecipe"
+        :disabled="!recipe.title"
+        label="save"
+        class="flex-1"
+      />
+      <ui-button
+        color="secondary"
+        flat
+        @click="$emit('cancel')"
+        text="cancel"
+        type="secondary"
+        class="flex-1"
+      />
     </div>
-
-    <!-- msg -->
-    <article v-if="postSuccess" class="message is-success">
-      <div class="message-body">{{ postSuccess }}</div>
-    </article>
-    <article v-if="postError" class="message is-danger">
-      <div class="message-body">{{ postError }}</div>
-    </article>
   </q-form>
 </template>
 
@@ -93,9 +126,9 @@ import { QForm } from "quasar";
 
 const recipeStore = useRecipeStore();
 const tagStore = useTagStore();
-const { all: availableTags} = storeToRefs(tagStore);
+const { all: availableTags } = storeToRefs(tagStore);
 
-const $form = useTemplateRef('$form')
+const $form = useTemplateRef("$form");
 
 const props = defineProps<{
   data: Recipe | CreateRecipe;
@@ -126,8 +159,8 @@ const generateBlankIngredient = (): IngredientItem => {
     unit: { name: "g" },
     ingredient: { name: "" },
     note: "",
-    uuid: generateUUID()
-  }
+    uuid: generateUUID(),
+  };
 };
 const removeIngredient = (ingredient: IngredientItem) => {
   recipe.value.ingredients = recipe.value.ingredients.filter((i) => {
@@ -145,7 +178,7 @@ const up = (index: number) => {
     return;
   }
   const item = recipe.value.ingredients.splice(index, 1)[0];
-  setTimeout(() => recipe.value.ingredients.splice(index - 1, 0, item), 300)
+  setTimeout(() => recipe.value.ingredients.splice(index - 1, 0, item), 300);
   // recipe.value.ingredients[index] = recipe.value.ingredients[index - 1];
   // recipe.value.ingredients[index - 1] = item;
 };
@@ -156,7 +189,7 @@ const down = (index: number) => {
   }
   const item = recipe.value.ingredients.splice(index, 1)[0];
   // recipe.value.ingredients[index] = recipe.value.ingredients[index + 1];
-  setTimeout(() => recipe.value.ingredients.splice(index + 1, 0, item), 300 )
+  setTimeout(() => recipe.value.ingredients.splice(index + 1, 0, item), 300);
 };
 
 const toggleTag = (tag: Tag) => {
@@ -166,6 +199,11 @@ const toggleTag = (tag: Tag) => {
   } else {
     recipe.value.tags = recipe.value.tags.filter((t) => t.name != tag.name);
   }
+};
+
+const addTag = (value: string, done: (val: any) => void) => {
+  const newTag = { name: value };
+  done(newTag);
 };
 
 const createTag = () => {
@@ -179,8 +217,8 @@ const createTag = () => {
 
 const emit = defineEmits(["posted", "created", "cancel"]);
 const postRecipe = async () => {
-  if (! await $form.value?.validate()) {
-    return
+  if (!(await $form.value?.validate())) {
+    return;
   }
   if (recipe.value.id) {
     console.debug("Updating existing recipe.");
@@ -193,7 +231,6 @@ const postRecipe = async () => {
 </script>
 
 <style lang="css" scoped>
-
 .ingredientlist-enter-active {
   transition: all 0.3s ease-out;
 }
@@ -213,7 +250,7 @@ const postRecipe = async () => {
 form {
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 .ingredient-items {
   display: flex;
@@ -233,13 +270,13 @@ form {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: .3rem;
+  gap: 0.3rem;
 }
 
 .level {
   display: flex;
   flex-direction: row;
-  gap: .3rem;
+  gap: 0.3rem;
 }
 
 .mt {

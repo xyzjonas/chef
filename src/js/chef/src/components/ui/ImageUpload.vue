@@ -17,6 +17,7 @@
       v-model="file"
       :label="`New ${type ?? ''} Image`"
       class="capitalize"
+      accept=".jpg,.jpeg,.png,.avif"
     >
     </q-file>
 
@@ -39,18 +40,18 @@ import { useRoute } from "vue-router";
 import { useRecipeStore } from "@/stores/recipe";
 import { useEventBus } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar()
 
 const store = useRecipeStore();
 const { current } = storeToRefs(store);
-
-const bus = useEventBus<ChefNotification>("notifications");
 
 const props = defineProps<{
   recipe?: Recipe;
   category?: Category;
   type: "thumbnail" | "detail" | "category";
 }>();
-const inputId = `image-${props.type}`;
 const file = ref();
 const loading = ref();
 
@@ -73,28 +74,32 @@ const getURL = () => {
 };
 const url = getURL();
 
-const isExtensionAllowed = (filename: string) => {
-  return (
-    filename.endsWith(".jpg") ||
-    filename.endsWith(".jpeg") ||
-    filename.endsWith(".png") ||
-    filename.endsWith("PNG")
-  );
-};
+// const isExtensionAllowed = (filename: string) => {
+//   return (
+//     filename.endsWith(".jpg") ||
+//     filename.endsWith(".jpeg") ||
+//     filename.endsWith(".png") ||
+//     filename.endsWith("PNG")
+//   );
+// };
 
-const handleFile = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length >= 1) {
-    file.value = target.files[0];
-    if (!isExtensionAllowed(file.value.name)) {
-      file.value = undefined;
-      bus.emit({
-        level: "ERROR",
-        message: "File extension not allowed. Choose an image instead.",
-      });
-    }
-  }
-};
+// const handleFile = (event: Event) => {
+//   const target = event.target as HTMLInputElement;
+//   if (target.files && target.files.length >= 1) {
+//     file.value = target.files[0];
+//     if (!isExtensionAllowed(file.value.name)) {
+//       $q.notify({
+//         type: "negative"
+
+//       })
+//       file.value = undefined;
+//       bus.emit({
+//         level: "ERROR",
+//         message: "File extension not allowed. Choose an image instead.",
+//       });
+//     }
+//   }
+// };
 
 const emit = defineEmits(["uploadSuccess"]);
 
@@ -119,16 +124,16 @@ const upload = async () => {
     }
 
     file.value = undefined;
-    bus.emit({
-      level: "SUCCESS",
-      message: "Image uploaded",
-    });
+    $q.notify({
+      type: 'positive',
+      message: "Image uploaded!",
+    })
     emit("uploadSuccess", data);
   } catch (e: unknown) {
-    bus.emit({
-      level: "ERROR",
-      message: "Image upload failed",
-    });
+    $q.notify({
+      type: 'negative',
+      message: "Image upload failed...",
+    })
   } finally {
     loading.value = false;
   }

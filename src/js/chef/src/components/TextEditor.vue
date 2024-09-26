@@ -1,56 +1,104 @@
 <template>
   <div>
     <div class="editor-wrapper content">
-      <div v-if="editor" class="buttons">
-        <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
+      <div v-if="editor" class="q-btns mb-1">
+        <q-btn
+          flat
+          @click="editor.chain().focus().setParagraph().run()"
+          :class="{ 'is-active': editor.isActive('paragraph') }"
+          :color="editor.isActive('paragraph') ? 'primary' : ''"
+        >
           <q-icon name="segment" />
-        </button>
-        <button @click="editor.chain().focus().toggleBold().run()" :disabled="!editor.can().chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleBold().run()"
+          :disabled="!editor.can().chain().focus().toggleBold().run()"
+          :class="{ 'is-active': editor.isActive('bold') }"
+          :color="editor.isActive('bold') ? 'primary' : ''"
+          
+        >
           <q-icon name="format_bold" />
-        </button>
-        <button @click="editor.chain().focus().toggleItalic().run()" :disabled="!editor.can().chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleItalic().run()"
+          :disabled="!editor.can().chain().focus().toggleItalic().run()"
+          :class="{ 'is-active': editor.isActive('italic') }"
+          :color="editor.isActive('italic') ? 'primary' : ''"
+        >
           <q-icon name="format_italic" />
-        </button>
-        <button @click="editor.chain().focus().toggleStrike().run()" :disabled="!editor.can().chain().focus().toggleStrike().run()" :class="{ 'is-active': editor.isActive('strike') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleStrike().run()"
+          :disabled="!editor.can().chain().focus().toggleStrike().run()"
+          :class="{ 'is-active': editor.isActive('strike') }"
+          :color="editor.isActive('strike') ? 'primary' : ''"
+        >
           <q-icon name="strikethrough_s" />
-        </button>
-        <button @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }">
-          H
-        </button>
-        <button @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 1 }) }"
+          :color="editor.isActive('heading', { level: 1 }) ? 'primary' : ''"
+        >
+          H1
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+          :class="{ 'is-active': editor.isActive('heading', { level: 2 }) }"
+          :color="editor.isActive('heading', { level: 2 }) ? 'primary' : ''"
+        >
           H2
-        </button>
-        <button @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 3 }) }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+          :color="editor.isActive('heading', { level: 3 }) ? 'primary' : ''"
+        >
           H3
-        </button>
-        <!-- <button @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 4 }) }">
-          H4
-        </button>
-        <button @click="editor.chain().focus().toggleHeading({ level: 5 }).run()" :class="{ 'is-active': editor.isActive('heading', { level: 5 }) }">
-          H5
-        </button> -->
-        <button @click="editor.chain().focus().toggleBulletList().run()" :class="{ 'is-active': editor.isActive('bulletList') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleBulletList().run()"
+          :color="editor.isActive('bulletList') ? 'primary' : ''"
+        >
           <q-icon name="format_list_bulleted" />
-        </button>
-        <button @click="editor.chain().focus().toggleOrderedList().run()" :class="{ 'is-active': editor.isActive('orderedList') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleOrderedList().run()"
+          :color="editor.isActive('orderedList') ? 'primary' : ''"
+        >
           <q-icon name="format_list_numbered" />
-        </button>
-        <!-- <button @click="editor.chain().focus().toggleCodeBlock().run()" :class="{ 'is-active': editor.isActive('codeBlock') }">
-          <q-icon name="code" />
-        </button> -->
-        <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().toggleBlockquote().run()"
+          :color="editor.isActive('blockquote') ? 'primary' : ''"
+        >
           <q-icon name="comment" />
-        </button>
-        <button @click="editor.chain().focus().setHorizontalRule().run()">
+        </q-btn>
+        <q-btn flat @click="editor.chain().focus().setHorizontalRule().run()">
           <q-icon name="horizontal_rule" />
-          <i class="fa-solid fa-ruler-horizontal"></i>
-        </button>
-        <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().undo().run()"
+          :disabled="!editor.can().chain().focus().undo().run()"
+        >
           <q-icon name="undo" />
-        </button>
-        <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
+        </q-btn>
+        <q-btn
+          flat
+          @click="editor.chain().focus().redo().run()"
+          :disabled="!editor.can().chain().focus().redo().run()"
+        >
           <q-icon name="redo" />
-        </button>
+        </q-btn>
       </div>
       <editor-content :editor="editor" />
     </div>
@@ -58,24 +106,22 @@
 </template>
 
 <script setup lang="ts">
-import { useEditor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
+import { useEditor, EditorContent } from "@tiptap/vue-3";
+import StarterKit from "@tiptap/starter-kit";
 
-import { onBeforeUnmount } from 'vue';
+import { onBeforeUnmount } from "vue";
 
-const textUpdated = defineEmits(['editorUpdate'])
-const props = defineProps(["text"])
+const textUpdated = defineEmits(["editorUpdate"]);
+const props = defineProps(["text"]);
 const editor = useEditor({
   content: props.text,
-  onUpdate: ({ editor }) => { 
-    textUpdated('editorUpdate', editor.getHTML() );
+  onUpdate: ({ editor }) => {
+    textUpdated("editorUpdate", editor.getHTML());
   },
-  extensions: [
-    StarterKit
-  ],
-})
+  extensions: [StarterKit],
+});
 
-onBeforeUnmount(() => editor.value?.destroy())
+onBeforeUnmount(() => editor.value?.destroy());
 </script>
 
 <style lang="scss">
@@ -97,7 +143,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 }
 
 .editor-wrapper {
-  button {
+  q-btn {
     border: none;
     padding: 10px 20px;
     text-align: center;
@@ -112,9 +158,8 @@ onBeforeUnmount(() => editor.value?.destroy())
     }
 
     &:hover {
-      background-color: lightgray; 
+      background-color: lightgray;
     }
   }
 }
-
 </style>

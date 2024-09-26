@@ -1,12 +1,12 @@
-import type { PaginatedResponse, PaginationOptions, Request } from '@/types/api'
+import type { Category, Ingredient, Recipe, Tag, Unit } from '@/types'
 import { ofetch, type FetchContext } from 'ofetch'
 import { useQuasar } from 'quasar'
 
-export const useSmeltApi = () => {
+export const useChefApi = () => {
   const $q = useQuasar()
 
   // Shared ofetch instance with a simple PoC error handling (with a notification pop-up)
-  const smeltFetch = ofetch.create({
+  const chefFetch = ofetch.create({
     baseURL: '/api',
     async onRequestError(context: FetchContext) {
       $q.notify({
@@ -24,25 +24,38 @@ export const useSmeltApi = () => {
   })
 
   // Define generic types of request (common methods and return types)
-  function paginatedGet<T>(path: string) {
-    return async (options: PaginationOptions) => {
-      const { page } = options
-      return await smeltFetch<T>(`${path}?page=${page ?? 1}`)
+  function getOne<T>(path: string) {
+    return async (id: number | string) => {
+      return await chefFetch<T>(`${path}/${id}`)
     }
   }
 
-  // ...
+  function getList<T>(path: string) {
+    return async () => {
+      return await chefFetch<T[]>(path)
+    }
+  }
 
-  // Define the api object, so that it can be easily stepped through
-  const v1 = {
-    overview: {
-      released: {
-        get: paginatedGet<PaginatedResponse<Request>>('/api/v1/overview/released')
-      }
+  const api = {
+    recipes: {
+      get: getList<Recipe>("recipes/details"),
+      getOne: getOne<Recipe>("recipes")
+    },
+    categories: {
+      get: getList<Category>("categories")
+    },
+    ingredients: {
+      get: getList<Ingredient>("ingredients")
+    },
+    tags: {
+      get: getList<Tag>("tags")
+    },
+    units: {
+      get: getList<Unit>("units")
     }
   }
 
   return {
-    v1
+    api
   }
 }

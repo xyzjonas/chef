@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { computed, ref } from "vue";
 
@@ -15,11 +14,15 @@ import type {
 import { useTagStore } from "./tags";
 import { useUnitsStore } from "./units";
 import { useEventBus } from "@vueuse/core";
+import { useChefApi } from "@/composables/api";
 
 const recipesApi = mande(API_URL + "/recipes");
 const currentId = ref<number>()
 
+
 export const useRecipeStore = defineStore("recipe", () => {
+  const { api } = useChefApi()
+  
   const tagsStore = useTagStore();
   const unitsStore = useUnitsStore();
 
@@ -34,13 +37,23 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   const bus = useEventBus<ChefNotification>("notifications");
 
+  function replaceRecipe(newRecipe: Recipe) {
+    recipes.value = recipes.value.filter((r) => r?.id !== newRecipe.id);
+    recipes.value.push(newRecipe);
+    recipes.value.sort((a: Recipe, b: Recipe) => (a.title > b.title ? 1 : -1));
+  }
+
+  function removeRecipe(id: number) {
+    recipes.value = recipes.value.filter((rec) => rec.id !== id);
+  }
+
   async function fetch(force: boolean = true) {
     if (recipes.value.length > 0 && !force) {
       return;
     }
 
     loading.value = true;
-    const result = await recipesApi.get<Recipe[]>("details");
+    const result = await api.recipes.get()
     recipes.value = result.sort((a: Recipe, b: Recipe) =>
       a.title > b.title ? 1 : -1
     );
@@ -52,16 +65,11 @@ export const useRecipeStore = defineStore("recipe", () => {
   async function fetchSingle(recipeId: number): Promise<Recipe | undefined> {
     loading.value = true;
     try {
-      const newRecipe = await recipesApi.get<Recipe>(recipeId);
+      const newRecipe = await api.recipes.getOne(recipeId);
       recipes.value.filter(r => r.id !== newRecipe.id)
       recipes.value.push(newRecipe)
       loading.value = false;
       return newRecipe;
-
-    } catch (err: unknown) {
-      bus.emit({ level: "ERROR", message: `failed to fetch recipe #${recipeId}` });
-      throw err
-
     } finally {
       loading.value = false;
     }
@@ -105,15 +113,14 @@ export const useRecipeStore = defineStore("recipe", () => {
     
     if (data.ingredients) {
       for (let index = 0; index < data.ingredients.length; index++) {
-        console.info(`${data.ingredients[index].ingredient.name}: ${index}`)
         data.ingredients[index].order = index;      
       }
     }
 
     let result;
     try {
-      console.info(data)
       result = await recipesApi.put<Recipe>(data.id, data);
+      replaceRecipe(result)
     } catch (e: unknown) {
       const err = e as ServerErrorResponse;
       bus.emit({
@@ -124,11 +131,6 @@ export const useRecipeStore = defineStore("recipe", () => {
     } finally {
       loading.value = false
     }
-    recipes.value = recipes.value.filter((r) => r?.id !== data.id);
-    recipes.value.push(result);
-    recipes.value.sort((a: Recipe, b: Recipe) => (a.title > b.title ? 1 : -1));
-    loading.value = false;
-
     // Let's update other stores in case new items were added.
     tagsStore.fetch();
     unitsStore.fetch();
@@ -137,14 +139,12 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   async function deleteById(recipeId: number) {
     loading.value = true;
-    console.debug(`Deleting recipe id=${recipeId}.`);
     try {
       await recipesApi.delete(recipeId);
-      recipes.value = recipes.value.filter((rec) => rec.id !== recipeId);
-    } catch (err) {
-      console.error(err);
+      removeRecipe(recipeId)
+    } finally {
+      loading.value = false;
     }
-    loading.value = false;
 
     // Let's update other stores in case new items were removed.
     tagsStore.fetch();

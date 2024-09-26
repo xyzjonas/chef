@@ -4,7 +4,6 @@
     :height="height ?? width"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    color="#000000"
     fill="none"
   >
     <path
@@ -28,13 +27,8 @@
   </svg>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
-
-const props = defineProps<{
+defineProps<{
   width: string;
   height?: string;
-  color?: string;
 }>();
-
-const strokeColor = computed(() => props.color ?? "var(--border)");
 </script>

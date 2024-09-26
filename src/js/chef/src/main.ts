@@ -2,7 +2,7 @@
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import { Quasar } from "quasar";
+import { Quasar, Notify } from "quasar";
 
 import 'virtual:uno.css'
 
@@ -21,10 +21,16 @@ import router from "./router";
 const pinia = createPinia();
 const app = createApp(App);
 
+Notify.setDefaults({
+  position: 'top',
+})
+
 app.use(router);
 app.use(pinia);
 app.use(Quasar, {
-  plugins: {}, // import Quasar plugins and add here
+  plugins: {
+    Notify
+  }, // import Quasar plugins and add here
 });
 
 app.mount("#app");

@@ -1,5 +1,5 @@
 <template>
-  <main v-if="recipe" class="">
+  <main v-if="recipe" class="pb-10">
     <div class="flex flex-row gap-3">
       <q-img
         v-if="!readerMode"
@@ -18,15 +18,10 @@
             {{ recipe.subtitle }}
           </h2>
         </div>
-        <span v-if="recipe.source">
-          <q-icon name="link" size="1.6rem" class="mr-1"/>
-          <a :href="recipe.source" class="light:text-dark dark:text-white text-lg">
-            <span v-if="recipe.source_name">{{ recipe.source_name }}</span>
-            <span v-else>{{ recipe.source }}</span>
-          </a>
-        </span>
 
-        <div class="flex flex-wrap gap-1 pointer-events-none select-none">
+        <recipe-external-link v-if="!readerMode && recipe.source" :href="recipe.source" :label="recipe.source_name" />
+
+        <div v-if="!readerMode" class="flex flex-wrap gap-1 pointer-events-none select-none">
           <pin
             v-for="tag in recipe.tags"
             :key="tag.name"
@@ -55,7 +50,7 @@
     <recipe-ingredients-section :recipe="recipe" />
 
     <!-- HTML body -->
-    <section class="ProseMirror" v-if="recipe.body" ref="reader">
+    <section class="ProseMirror mt-3" v-if="recipe.body" ref="reader">
       <div v-html="recipe.body" />
     </section>
     <section v-else id="empty">
@@ -69,29 +64,25 @@
 </template>
 
 <script setup lang="ts">
-import Counter from "@/components/Counter.vue";
-import RecipeForm from "@/components/RecipeForm.vue";
-import EmptyBox from "@/components/ui/EmptyBox.vue";
-import ImageUpload from "@/components/ui/ImageUpload.vue";
-import Pin from "@/components/ui/Pin.vue";
-import UiButton from "@/components/ui/UiButton.vue";
-import RecipeIngredientsSection from "@/components/recipe/RecipeIngredientsSection.vue";
 import Pot from "@/components/icons/Pot.vue";
+import RecipeIngredientsSection from "@/components/recipe/RecipeIngredientsSection.vue";
+import EmptyBox from "@/components/ui/EmptyBox.vue";
+import Pin from "@/components/ui/Pin.vue";
+import RecipeExternalLink from "@/components/recipe/RecipeExternalLink.vue";
 
 import { IMAGES_HOST } from "@/constants";
 import { useRecipeStore } from "@/stores/recipe";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { useLayoutDrawer } from "@/composables/drawer";
 import type { ChefNotification, Recipe } from "@/types";
 import {
   useEventBus,
-  useFullscreen,
   useLocalStorage,
-  useWakeLock,
+  useWakeLock
 } from "@vueuse/core";
 import { storeToRefs } from "pinia";
-import { useLayoutDrawer } from "@/composables/drawer";
 
 const recipes = useRecipeStore();
 const { current, currentId } = storeToRefs(recipes);
@@ -115,49 +106,10 @@ if (!current.value) {
 
 const recipe = computed<Recipe>(() => current.value as Recipe);
 
-const responseBusId = `delete-recipe-${recipeId}`;
-const bus = useEventBus<ChefNotification>("notifications");
-const responseBus = useEventBus<string>(responseBusId);
-
-const portions = ref<number>(current.value?.portions ?? 4);
-
-const editMode = useLocalStorage(`${recipeId}-recipe-edit-mode`, false);
-const updateRecipe = () => {
-  router.push({ name: "editrecipe", params: { id: recipe.value.id } });
-};
-
-const ingredientsCollapsed = ref<boolean>(false);
-
-const missingImage = ref<boolean>(false);
-
-const image_url = computed(
-  () => `${IMAGES_HOST}${current.value?.detail_image}`
-);
-
-const clickDelete = () =>
-  bus.emit({
-    level: "ERROR",
-    message: `Delete recipe ${current.value?.title ?? "N/A"} ?`,
-    action: {
-      id: responseBusId,
-      label: "Delete",
-    },
-  });
-
-const onDeleteConfirmListener = () => {
-  recipes.deleteById(recipeId).then(() => router.push("/recipes"));
-};
-
-responseBus.on(onDeleteConfirmListener);
-
-// const imageUploaded = async (newRecipe: Recipe) => {
-//   console.info(newRecipe);
-//   current.value.detail_image = newRecipe.detail_image;
-// };
-
 const { request, release } = useWakeLock();
 const { isOpened } = useLayoutDrawer();
 let stateBefore = isOpened.value;
+
 const readerMode = ref(false);
 
 function enterReaderMode() {
@@ -171,14 +123,13 @@ function exitReaderMode() {
   release();
 }
 
-function toggleReaderMode() {
-  if (readerMode.value) {
-    exitReaderMode();
+watch(readerMode, (value) => {
+  if (value) {
+    enterReaderMode()
   } else {
-    enterReaderMode();
+    exitReaderMode()
   }
-  readerMode.value = !readerMode.value;
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -217,10 +168,6 @@ img {
 #edit-title {
   margin-bottom: 1rem;
   text-transform: none;
-}
-
-a:hover {
-  filter: opacity(0.8);
 }
 
 #recipe-link {

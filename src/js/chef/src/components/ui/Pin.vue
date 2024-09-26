@@ -26,13 +26,10 @@ const clazz = computed(() => {
 <style lang="css" scoped>
 span {
     background-color: #eee;
+    color: var(--q-dark);
     border-radius: 1rem;
-
     text-decoration: none;
-
-
-    transition: background-color 0.2s ease-in-out;
-
+    transition: background-color 0.1s ease-in-out;
 }
 
 .clickable {
@@ -41,13 +38,9 @@ span {
         background-color: rgb(from var(--primary) r g b / 0.2);
         color: var(--text-inv);
     }
-
-    &:hover, .active {
-        background-color: rgb(from var(--primary) r g b / 0.9);
-    }
 }
 
-.active {
+.active, .clickable:hover {
     background-color: var(--primary);
     color: white;
 }

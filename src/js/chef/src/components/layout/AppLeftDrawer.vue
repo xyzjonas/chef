@@ -6,7 +6,6 @@
           :active="currentRoute.name === 'recipes'"
           clickable
           v-ripple
-          active-class="dark:bg-primary dark:text-white font-semibold"
           :to="{ name: 'recipes' }"
           @click="close"
         >
@@ -21,7 +20,6 @@
           :active="currentRoute.name === 'categories'"
           clickable
           v-ripple
-          active-class="dark:bg-primary dark:text-white font-semibold"
           :to="{ name: 'categories' }"
           @click="close"
         >
@@ -36,7 +34,6 @@
           :active="currentRoute.name === 'ingredients'"
           clickable
           v-ripple
-          active-class="dark:bg-primary dark:text-white font-semibold"
           :to="{ name: 'ingredients' }"
           @click="close"
         >
@@ -51,7 +48,6 @@
           :active="currentRoute.name === 'new'"
           clickable
           v-ripple
-          active-class="dark:bg-primary dark:text-white font-semibold"
           :to="{ name: 'new' }"
           @click="close"
         >
@@ -66,7 +62,6 @@
           :active="currentRoute.name === 'newcategory'"
           clickable
           v-ripple
-          active-class="dark:bg-primary dark:text-white font-semibold"
           :to="{ name: 'newcategory' }"
           @click="close"
         >
@@ -78,18 +73,18 @@
         </q-item>
 
         <q-separator />
-        <q-item-label header v-if="showRecipeControls"
-          >Recipe Controls</q-item-label
+        <q-item-label header v-if="showRecipeControls" class="uppercase font-bold mt-3"
+          >{{ current?.title ?? 'Recipe' }}</q-item-label
         >
 
-        <q-item v-if="showRecipeControls">
+        <q-item v-if="showRecipeControls" clickable>
           <q-item-section avatar>
             <q-icon name="image" />
           </q-item-section>
           <ImageUpload type="thumbnail" :recipe="current" @upload-success="close" />
         </q-item>
 
-        <q-item v-if="showRecipeControls">
+        <q-item v-if="showRecipeControls" clickable>
           <q-item-section avatar>
             <q-icon name="image" />
           </q-item-section>
@@ -150,6 +145,7 @@ import { useRouter } from "vue-router";
 import ImageUpload from "@/components/ui/ImageUpload.vue";
 import RecipeDeleteDialog from "@/components/recipe/RecipeDeleteDialog.vue";
 import { computed, ref } from "vue";
+import { useQuasar } from "quasar";
 
 const store = useRecipeStore();
 const { current } = storeToRefs(store);
@@ -164,8 +160,11 @@ const showRecipeControls = computed(
 );
 const toggleDeleteDialog = ref(false);
 
+const $q = useQuasar()
 const close = () => {
-  setTimeout(() => (isOpened.value = false), 80);
+  if ($q.screen.lt.md) {
+    isOpened.value = false
+  }
 };
 </script>
 

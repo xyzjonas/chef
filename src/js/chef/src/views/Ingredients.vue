@@ -11,6 +11,7 @@
       hide-pagination
       :rows-per-page-options="[0]"
       @row-click="(_, row: IngredientFull) => $router.push({ name: 'ingredient', params: { id: row.id } })"
+      no-data-label="No ingredients added yet"
     >
       <template v-slot:body-cell-name="props: { row: IngredientFull }" >
         <q-td :props="props">

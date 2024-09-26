@@ -3,9 +3,15 @@
     <!-- title -->
     <h1>{{ category.name }}</h1>
 
-    <div class="flex mt-auto gap-2">
-      <div class="tags">
-        <q-badge v-for="tag in category.tags" rounded>{{ tag.name }}</q-badge>
+    <div class="flex mt-auto">
+      <div class="flex flex-wrap gap-1">
+        <pin
+          color="primary"
+          v-for="tag in category.tags"
+          rounded
+          :text="tag.name"
+          size="small"
+        ></pin>
       </div>
 
       <q-btn
@@ -14,7 +20,9 @@
         color="primary"
         unelevated
         icon="edit"
-        @click="$router.push({ name: 'editcategory', params: { id: category.id } })"
+        @click="
+          $router.push({ name: 'editcategory', params: { id: category.id } })
+        "
         id="edit-btn"
       />
       <q-btn
@@ -40,6 +48,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { useEventBus } from "@vueuse/core";
+import Pin from "@/components/ui/Pin.vue";
 
 const categories = useCategoryStore();
 

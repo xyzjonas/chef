@@ -1,34 +1,41 @@
 .ProseMirror {
   background-color: var(--bg-100);
   overflow: hidden;
+  font-size: large;
 }
 
-.ProseMirror h1 {
-  font-size: 3rem;
-  line-height: 4rem;
-  font-weight: 400;
+.ProseMirror p {
+  margin-block: 0.5rem;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  font-size: 2.5rem;
+  line-height: 3rem;
+  font-weight: 500;
   margin: 0;
   text-transform: uppercase;
 }
 
 .ProseMirror h2 {
-  font-size: xx-large;
-  line-height: 4rem;
-  font-weight: 300;
-  margin: 0;
+  font-size: 2.0rem;
+  text-transform: none;
 }
 
 .ProseMirror h3 {
-  font-size: x-large;
-  margin: 0;
+  text-transform: none;
+  font-size: 1.5rem;
+  filter: opacity(0.8);
 }
 
 .ProseMirror blockquote {
   background-color: var(--bg-200);
-  padding: 1.5rem;
+  padding: 0.8rem 1rem;
   border: 1px solid var(--border-100);
   border-radius: 0.3rem;
   margin: 0;
+  margin-top: 0.5rem;
 }
 
 .ProseMirror strong {
@@ -38,6 +45,7 @@
 .ProseMirror ol,
 .ProseMirror ul {
   margin: 0;
+  margin-block: 0.5rem;
   padding: 0;
   padding-left: 0;
 }
@@ -53,4 +61,8 @@
 .ProseMirror a {
   text-decoration: underline;
   color: var(--primary-100);
+}
+
+.ProseMirror > p {
+  font-size: large;
 }
