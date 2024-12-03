@@ -1,7 +1,7 @@
 <template>
-  <main>
-    <recipe-list :allRecipes="recipes"/>
-  </main>
+  <q-page>
+    <recipe-list :allRecipes="recipes" :loading="loading"/>
+  </q-page>
 </template>
 
 <script lang="ts" setup>
@@ -9,9 +9,21 @@ import RecipeList from "@/components/RecipeList.vue";
 
 import { useRecipeStore } from "@/stores/recipe";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
 
 const store = useRecipeStore();
-await store.fetch(false);
+const { loading, recipes } = storeToRefs(store)
+let loaded = false
 
-const { recipes } = storeToRefs(store)
+if (recipes.value.length === 0) {
+  await store.fetch();
+  loaded = true
+}
+
+onMounted(() => {
+  if (!loaded) {
+    store.fetch()
+  }
+})
+
 </script>

@@ -1,7 +1,7 @@
 import os.path
 from enum import StrEnum
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 from distutils.sysconfig import get_python_lib
 from loguru import logger
 
@@ -55,7 +55,7 @@ class Settings(BaseSettings):
     public_url: str = "http://localhost:8000"
     gpt_enpoint_url: str = "http://localhost:8001"
 
-    sentry_dsn: str = None
+    sentry_dsn: Optional[str] = None
 
 
 settings = Settings(_env_file=".env")

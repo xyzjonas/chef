@@ -76,6 +76,8 @@ export interface Recipe {
     body: string
     detail_image?: string
     thumbnail_image?: string
+    updated_at: string
+    created_at: string
 }
 
 export type NotificationAction = {

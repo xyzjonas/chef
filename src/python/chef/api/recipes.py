@@ -1,4 +1,5 @@
-from typing import List, cast, Union
+import asyncio
+from datetime import datetime
 
 import httpx
 from fastapi import APIRouter, HTTPException, UploadFile
@@ -24,37 +25,20 @@ CURRENT_RECIPES_IDS = []
 async def get_recipes(
         category: int = None,
         favorite: bool = False,
-) -> list[RecipeListItem]:
-
+        since: datetime = None,
+) -> list[Recipe | RecipeListItem]:
     with Session(engine()) as session:
         if favorite:
-            return cast(
-                List[RecipeListItem],
-                await recipes.get_all_and_filter(session, favorite=favorite)
-            )
+            result = await recipes.get_all_and_filter(session, favorite=favorite)
 
-        if category:
-            return cast(
-                List[RecipeListItem],
-                await recipes.get_by_category(session, category)
-            )
+        elif category:
+            result = await recipes.get_by_category(session, category)
+        elif since:
+            result = await recipes.get_all_since(session, since=since)
+        else:
+            result = await recipes.get_all(session)
 
-        return cast(
-            List[RecipeListItem],
-            sorted(await recipes.get_all(session), key=lambda rec: rec.title)
-        )
-
-
-@router.get("/details")
-async def get_recipes_with_details(category: int = None, favorite: bool = False) -> list[Recipe]:
-    with Session(engine()) as session:
-        if favorite:
-            return await recipes.get_all_and_filter(session, favorite=favorite)
-
-        if category:
-            return await recipes.get_by_category(session, category)
-
-        return sorted(await recipes.get_all(session), key=lambda rec: rec.title)
+        return sorted(result, key=lambda rec: rec.title)
 
 
 @router.get("/{item_id}")

@@ -1,4 +1,5 @@
 import typing
+from datetime import datetime
 from typing import List, Generic, TypeVar, Union, Type, Optional
 
 from fastapi import HTTPException
@@ -6,7 +7,7 @@ from pydantic import BaseModel
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from chef.models import Category as CategoryDb, Base
+from chef.models import Category as CategoryDb, Recipe as RecipeDb
 from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe, \
     IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
 
@@ -246,6 +247,13 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         recipes = session.scalars(
             select(self.read_schema.Meta.orm_model)
             .filter_by(**filters)
+        ).all()
+        return [self.read_schema(**r.dictionary) for r in recipes]
+
+    async def get_all_since(self, session: Session, since: datetime) -> List[Recipe]:
+        recipes = session.scalars(
+            select(self.read_schema.Meta.orm_model)
+            .filter(RecipeDb.updated_at >= since)
         ).all()
         return [self.read_schema(**r.dictionary) for r in recipes]
 

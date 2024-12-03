@@ -1,7 +1,7 @@
 from typing import List
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, Table, create_engine, \
-    Engine
+    Engine, DateTime, func
 from sqlalchemy.orm import mapped_column, relationship, DeclarativeBase, Mapped
 
 from chef.settings import settings
@@ -40,6 +40,8 @@ def _dictify(obj, depth=100):
 
 class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
+    created_at = Column(DateTime, default=func.now(), server_default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), server_onupdate=func.now())
 
     def _get_attributes(self, exclude: List[str] = None) -> dict:
         """Get model attributes to be parsed into JSON response"""
@@ -91,14 +93,14 @@ category_tags = Table(
 
 
 class Unit(Base):
-    __items__ = ["id", "name", "grams"]
+    __items__ = ["id", "name", "grams", "created_at", "updated_at"]
     __tablename__ = "unit"
     name = mapped_column(String(80), nullable=False, unique=True)
     grams = mapped_column(Float, default=0)
 
 
 class Tag(Base):
-    __items__ = ["id", "name"]
+    __items__ = ["id", "name", "created_at", "updated_at"]
     __tablename__ = "tag"
     name = mapped_column(String(80), nullable=False)
     categories: Mapped[List['Category']] = relationship(
@@ -116,7 +118,7 @@ class Ingredient(Base):
     __items__ = [
         "id", "name", "energy", "fats",
         "carbs", "proteins", "fibres", "salt",
-        "is_liquid", "density"
+        "is_liquid", "density", "created_at", "updated_at"
     ]
 
     name = mapped_column(String(80), nullable=False)
@@ -141,11 +143,11 @@ class IngredientItem(Base):
     -> [x] 400 g tomatoes (roughly chopped)
     """
     __tablename__ = "ingredient_item"
-    __items__ = ["id", "ingredient", "amount", "unit", "note", "order"]
+    __items__ = ["id", "ingredient", "amount", "unit", "note", "order", "created_at", "updated_at"]
 
     ingredient_id = Column(Integer, ForeignKey(Ingredient.id))
     ingredient = relationship(Ingredient, uselist=False, back_populates="ingredients_items")
-    amount = Column(Float, nullable=True)
+    amount = Column(Float, nullable=True, default=0)
     unit_id = Column(Integer, ForeignKey('unit.id'), nullable=True)
     unit = relationship("Unit")
     order = Column(Integer, default=0)
@@ -158,7 +160,7 @@ class IngredientItem(Base):
 
 class Category(Base):
     __tablename__ = "category"
-    __items__ = ["id", "name", "tags"]
+    __items__ = ["id", "name", "tags", "created_at", "updated_at"]
     name = Column(String(80), nullable=False)
     tags: Mapped[List[Tag]] = relationship(
         secondary=category_tags,
@@ -181,6 +183,8 @@ class Recipe(Base):
         "portions",
         "detail_image",
         "thumbnail_image",
+        "created_at",
+        "updated_at"
     ]
 
     title = Column(String(80), nullable=False)

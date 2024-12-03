@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, validator, Field, ConfigDict
@@ -162,6 +163,8 @@ class Recipe(Base, RecipeDetail):
     title: str
     thumbnail_image: Union[str, None]
     detail_image: Union[str, None]
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     class Meta:
         orm_model = RecipeDb

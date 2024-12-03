@@ -5,16 +5,16 @@ import { API_URL } from '@/constants';
 
 import type { Unit } from '@/types';
 import { mande } from 'mande';
+import { useLocalStorage } from '@vueuse/core';
 
 
 const recipesApi = mande(API_URL + "/units")
 
+const all = useLocalStorage<Unit[]>("units", [])
 
 export const useUnitsStore = defineStore('unit', () => {
   
   const loading = ref<boolean>(false);
-  
-  const all = ref<Unit[]>([]);
 
   async function fetch() {
     loading.value = true

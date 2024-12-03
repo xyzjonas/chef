@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { computed, ref } from "vue";
 
@@ -12,15 +11,15 @@ import type {
 } from "@/types";
 import { mande } from "mande";
 
-import { useEventBus } from "@vueuse/core";
+import { useEventBus, useLocalStorage } from "@vueuse/core";
 
 const api = mande(API_URL + "/ingredients");
 const currentId = ref<number>()
 
+const all = useLocalStorage<IngredientFull[]>("ingredients", []);
+
 export const useIngredientStore = defineStore("ingredient", () => {
   const loading = ref<boolean>(false);
-
-  const all = ref<IngredientFull[]>([]);
 
   const current = computed(() => all.value.find(i => i.id === currentId.value))
 

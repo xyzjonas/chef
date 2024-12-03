@@ -14,12 +14,12 @@
                 <Suspense>
                   <component :is="Component"></component>
                   <template #fallback>
-                      <div class="spinner">
-                        <div class="flex flex-col items-center gap-2">
-                          <q-spinner color="primary" size="4rem" :thickness="1" ></q-spinner>
-                          <h1 class="uppercase text-xl text-primary">Loading</h1>
-                        </div>
-                    </div>
+                    <q-page class="grid justify-center items-center">
+                      <div class="flex flex-col items-center gap-2">
+                        <q-spinner color="primary" size="4rem" :thickness="1" ></q-spinner>
+                        <h1 class="uppercase text-xl text-primary">Loading</h1>
+                      </div>
+                  </q-page>
                   </template>
                 </Suspense>
               <!-- </KeepAlive> -->

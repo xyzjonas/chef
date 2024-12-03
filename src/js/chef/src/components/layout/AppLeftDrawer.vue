@@ -72,6 +72,33 @@
           <q-item-section> Add a Category </q-item-section>
         </q-item>
 
+        
+
+        <q-item
+          clickable
+          v-ripple
+          @click="store.fetch(true)"
+        >
+          <q-item-section avatar>
+            <q-icon name="refresh" />
+          </q-item-section>
+
+          <q-item-section> Reload All Recipes </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          href="/docs"
+          target="_blank"
+        >
+          <q-item-section avatar>
+            <q-icon name="data_object" />
+          </q-item-section>
+
+          <q-item-section> API documentation </q-item-section>
+        </q-item>
+
         <q-separator />
         <q-item-label header v-if="showRecipeControls" class="uppercase font-bold mt-3"
           >{{ current?.title ?? 'Recipe' }}</q-item-label

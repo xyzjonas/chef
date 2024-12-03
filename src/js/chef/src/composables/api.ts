@@ -2,6 +2,8 @@ import type { Category, Ingredient, Recipe, Tag, Unit } from '@/types'
 import { ofetch, type FetchContext } from 'ofetch'
 import { useQuasar } from 'quasar'
 
+type QueryArgs = {[key: string]: any}
+
 export const useChefApi = () => {
   const $q = useQuasar()
 
@@ -31,14 +33,22 @@ export const useChefApi = () => {
   }
 
   function getList<T>(path: string) {
-    return async () => {
-      return await chefFetch<T[]>(path)
+    return async (query?: QueryArgs) => {
+      let p = path
+      if (query && Object.keys(query).length > 0) {
+        p += "?"
+        for(const [k, v] of Object.entries(query)) {
+          p += `${k}=${v}`
+        }
+      }
+
+      return await chefFetch<T[]>(p)
     }
   }
 
   const api = {
     recipes: {
-      get: getList<Recipe>("recipes/details"),
+      get: getList<Recipe>("recipes"),
       getOne: getOne<Recipe>("recipes")
     },
     categories: {

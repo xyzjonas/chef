@@ -13,12 +13,13 @@ import type {
 } from "@/types";
 import { useTagStore } from "./tags";
 import { useUnitsStore } from "./units";
-import { useEventBus } from "@vueuse/core";
+import { useEventBus, useLocalStorage } from "@vueuse/core";
 import { useChefApi } from "@/composables/api";
 
 const recipesApi = mande(API_URL + "/recipes");
 const currentId = ref<number>()
 
+const recipes = useLocalStorage<Recipe[]>("recipes", []);
 
 export const useRecipeStore = defineStore("recipe", () => {
   const { api } = useChefApi()
@@ -27,8 +28,6 @@ export const useRecipeStore = defineStore("recipe", () => {
   const unitsStore = useUnitsStore();
 
   const loading = ref(false);
-
-  const recipes = ref<Recipe[]>([]);
 
   const all = computed(() => recipes);
   const favorites = computed(() => recipes.value.filter((rec) => rec.favorite));
@@ -47,16 +46,22 @@ export const useRecipeStore = defineStore("recipe", () => {
     recipes.value = recipes.value.filter((rec) => rec.id !== id);
   }
 
-  async function fetch(force: boolean = true) {
+  async function fetch(force: boolean = false) {
+    loading.value = true;
+    let result = []
     if (recipes.value.length > 0 && !force) {
-      return;
+      const latestUpdate = recipes.value.sort((a, b) => new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()).reduce((a, b) => b)
+      console.info(`LATEST: ${latestUpdate.title} @ ${latestUpdate.updated_at}`)
+      result = await api.recipes.get({ since: latestUpdate.updated_at })
+    } else {
+      result = await api.recipes.get()
+    }
+    
+    for (const recipe of result) {
+      replaceRecipe(recipe)
     }
 
-    loading.value = true;
-    const result = await api.recipes.get()
-    recipes.value = result.sort((a: Recipe, b: Recipe) =>
-      a.title > b.title ? 1 : -1
-    );
+    recipes.value = recipes.value.sort((a: Recipe, b: Recipe) => a.title > b.title ? 1 : -1);
     setTimeout(() => {
       loading.value = false;
     }, 300);

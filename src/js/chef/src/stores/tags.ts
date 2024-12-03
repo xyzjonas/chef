@@ -6,16 +6,16 @@ import { API_URL } from '@/constants';
 
 import type { Tag } from '@/types';
 import { mande } from 'mande';
+import { useLocalStorage } from '@vueuse/core';
 
 
 const recipesApi = mande(API_URL + "/tags")
 
+const all = useLocalStorage<Tag[]>("tags", [])
 
 export const useTagStore = defineStore('tag', () => {
   
   const loading = ref<boolean>(false);
-  
-  const all = ref<Tag[]>([]);
 
   const getById = computed(() => {
     return (ingredientId: number) => { all.value.find(r => r.id === ingredientId) };

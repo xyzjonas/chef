@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pytest
 from sqlalchemy.orm import Session
 
@@ -89,6 +91,21 @@ def test_get_recipes(http_client, simple_test_data):
     assert type(response.json()) is list
     assert len(response.json()) == 1
     assert response.json()[0] == RecipeSchema(**recipe.dictionary)
+
+
+def test_get_recipes_since(http_client, simple_test_data):
+    r, ii, i, t = simple_test_data
+
+    rec = RecipeSchema(**r.dictionary)
+    assert rec.updated_at
+    before = (rec.updated_at - timedelta(seconds=1))
+    after = (rec.updated_at + timedelta(seconds=1))
+
+    response = http_client.get(f"/api/recipes?since={before}")
+    assert len(response.json()) == 1
+
+    response = http_client.get(f"/api/recipes?since={after}")
+    assert len(response.json()) == 0
 
 
 def test_add_recipe_minimal(db_session, http_client):
