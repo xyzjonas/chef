@@ -70,18 +70,18 @@ import RecipeGridItem from "@/components/recipe/RecipeGridItem.vue";
 import UiInput from "@/components/ui/UiInput.vue";
 import Search from "@/components/icons/Search.vue";
 import Rocket from "@/components/icons/Rocket.vue";
+import { useLocalStorage } from "@vueuse/core";
 
 const props = defineProps<{
+  storageId: string
   allRecipes: Recipe[];
   title?: string;
   hideSearch?: boolean;
   hideFilters?: boolean;
   loading?: boolean
 }>();
-
-const activeTags = ref<string[]>([]);
-// const activeTags = useLocalStorage('active-tags', [])
-const search = ref<string>("");
+const activeTags = useLocalStorage<string[]>(`${props.storageId}-active-tags`, [])
+const search = useLocalStorage<string>(`${props.storageId}-search`, "")
 
 const tagNames = computed<string[]>(() => {
   return [

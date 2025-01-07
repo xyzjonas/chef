@@ -18,16 +18,22 @@
         </g>
       </svg>
     </a>
-    <span class="font-100">© 2024 Chef™</span>
-    <!-- <div>
-      <router-link :to="{ name: 'newcategory' }"
-        >Add a new category</router-link
-      >
-      <router-link :to="{ name: 'new' }">Add a new recipe</router-link>
-      <router-link :to="{ name: 'ingredients' }">All ingredients</router-link>
-    </div> -->
+    <span class="font-100">
+      <span>© 2024 Chef™</span>
+      <span v-if="version">
+        <span class="mx-2">|</span><strong>v{{ version }}</strong>
+      </span>
+    </span>
   </div>
 </template>
+
+<script setup lang="ts">
+import { getServerInfo } from '@/utils';
+import { ref } from 'vue';
+
+const version = ref<string>("")
+getServerInfo().then(res => version.value = res.version)
+</script>
 
 <style lang="css" scoped>
 #footer {

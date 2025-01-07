@@ -1,3 +1,5 @@
+import { mande } from "mande";
+import { API_URL } from "./constants";
 
 export function deepCopy(obj: object) {
     return JSON.parse(JSON.stringify(obj));
@@ -42,3 +44,12 @@ export function generateUUID() {
     return uuid;
   }
   
+
+type ServerInfo = {
+  version: string
+}
+
+export async function getServerInfo() {
+  const info = mande(API_URL);
+  return await info.get<ServerInfo>("/info")
+}

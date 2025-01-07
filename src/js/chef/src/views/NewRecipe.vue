@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <h1>Add a new recipe</h1>
+  <q-page padding class="flex flex-col">
+    <h1 class="text-4xl mb-3">Add a new recipe</h1>
 
     <RecipeForm
       :data="blankRecipe"
+      id="blank"
       @posted="routeToNewRecipe"
       @cancel="$router.push({ name: 'recipes' })"
+      class="flex-1"
     />
-  </div>
+  </q-page>
 </template>
 
 <script setup lang="ts">
 import RecipeForm from "@/components/RecipeForm.vue";
 import type { CreateRecipe, Recipe } from "@/types";
 import { useRouter } from "vue-router";
+
+
 
 const blankRecipe: CreateRecipe = {
   title: "",

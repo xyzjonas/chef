@@ -86,19 +86,6 @@
           <q-item-section> Reload All Recipes </q-item-section>
         </q-item>
 
-        <q-item
-          clickable
-          v-ripple
-          href="/docs"
-          target="_blank"
-        >
-          <q-item-section avatar>
-            <q-icon name="data_object" />
-          </q-item-section>
-
-          <q-item-section> API documentation </q-item-section>
-        </q-item>
-
         <q-separator />
         <q-item-label header v-if="showRecipeControls" class="uppercase font-bold mt-3"
           >{{ current?.title ?? 'Recipe' }}</q-item-label
@@ -169,10 +156,10 @@ import { useRecipeStore } from "@/stores/recipe";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
-import ImageUpload from "@/components/ui/ImageUpload.vue";
 import RecipeDeleteDialog from "@/components/recipe/RecipeDeleteDialog.vue";
-import { computed, ref } from "vue";
+import ImageUpload from "@/components/ui/ImageUpload.vue";
 import { useQuasar } from "quasar";
+import { computed, ref } from "vue";
 
 const store = useRecipeStore();
 const { current } = storeToRefs(store);

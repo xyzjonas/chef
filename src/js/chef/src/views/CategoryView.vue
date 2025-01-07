@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="categories.current">
     <CategoryTile
       :category="categories.current"
       editable
@@ -8,8 +8,9 @@
       class="h-[12rem] mb-3"
     />
 
-    <RecipeList :allRecipes="categories.recipes"/>
+    <RecipeList :storage-id="`${categories.current.id}`" :allRecipes="categories.recipes"/>
   </div>
+  <NotFound v-else />
 </template>
 
 <script setup lang="ts">
@@ -17,6 +18,7 @@ import RecipeList from "@/components/RecipeList.vue";
 import CategoryTile from "@/components/CategoryTile.vue";
 import { useCategoryStore } from "@/stores/categories";
 import { useRoute } from "vue-router";
+import NotFound from "@/components/NotFound.vue";
 
 const categories = useCategoryStore();
 

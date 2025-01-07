@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <recipe-list :allRecipes="recipes" :loading="loading"/>
+    <recipe-list storage-id="recipes" :allRecipes="recipes" :loading="loading"/>
   </q-page>
 </template>
 

@@ -1,3 +1,4 @@
+from importlib.metadata import version
 from fastapi import APIRouter
 
 from chef.api.categories import router as category_router
@@ -7,7 +8,18 @@ from chef.api.tags import router as tag_router
 from chef.api.images import router as image_router
 from chef.api.units import router as units_router
 
+
+VERSION = version("chef-recipes")
+
 api_router = APIRouter(prefix='/api')
+
+
+@api_router.get("/info")
+def get_server_info():
+    return {
+        "version": VERSION
+    }
+
 api_router.include_router(recipe_router, prefix="/recipes")
 api_router.include_router(category_router, prefix="/categories")
 api_router.include_router(ingredient_router, prefix="/ingredients")

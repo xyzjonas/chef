@@ -15,15 +15,18 @@ import { useTagStore } from "./tags";
 import { useUnitsStore } from "./units";
 import { useEventBus, useLocalStorage } from "@vueuse/core";
 import { useChefApi } from "@/composables/api";
+import { useQuasar } from "quasar";
 
 const recipesApi = mande(API_URL + "/recipes");
-const currentId = ref<number>()
+const currentId = ref<number>();
 
 const recipes = useLocalStorage<Recipe[]>("recipes", []);
 
 export const useRecipeStore = defineStore("recipe", () => {
-  const { api } = useChefApi()
-  
+  const $q = useQuasar();
+
+  const { api } = useChefApi();
+
   const tagsStore = useTagStore();
   const unitsStore = useUnitsStore();
 
@@ -32,7 +35,9 @@ export const useRecipeStore = defineStore("recipe", () => {
   const all = computed(() => recipes);
   const favorites = computed(() => recipes.value.filter((rec) => rec.favorite));
 
-  const current = computed(() => recipes.value.find(r => r.id === currentId.value))
+  const current = computed(() =>
+    recipes.value.find((r) => r.id === currentId.value)
+  );
 
   const bus = useEventBus<ChefNotification>("notifications");
 
@@ -48,20 +53,29 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   async function fetch(force: boolean = false) {
     loading.value = true;
-    let result = []
+    let result = [];
     if (recipes.value.length > 0 && !force) {
-      const latestUpdate = recipes.value.sort((a, b) => new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()).reduce((a, b) => b)
-      console.info(`LATEST: ${latestUpdate.title} @ ${latestUpdate.updated_at}`)
-      result = await api.recipes.get({ since: latestUpdate.updated_at })
+      const latestUpdate = recipes.value
+        .sort(
+          (a, b) =>
+            new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+        )
+        .reduce((a, b) => b);
+      console.info(
+        `LATEST: ${latestUpdate.title} @ ${latestUpdate.updated_at}`
+      );
+      result = await api.recipes.get({ since: latestUpdate.updated_at });
     } else {
-      result = await api.recipes.get()
-    }
-    
-    for (const recipe of result) {
-      replaceRecipe(recipe)
+      result = await api.recipes.get();
     }
 
-    recipes.value = recipes.value.sort((a: Recipe, b: Recipe) => a.title > b.title ? 1 : -1);
+    for (const recipe of result) {
+      replaceRecipe(recipe);
+    }
+
+    recipes.value = recipes.value.sort((a: Recipe, b: Recipe) =>
+      a.title > b.title ? 1 : -1
+    );
     setTimeout(() => {
       loading.value = false;
     }, 300);
@@ -71,8 +85,8 @@ export const useRecipeStore = defineStore("recipe", () => {
     loading.value = true;
     try {
       const newRecipe = await api.recipes.getOne(recipeId);
-      recipes.value.filter(r => r.id !== newRecipe.id)
-      recipes.value.push(newRecipe)
+      recipes.value.filter((r) => r.id !== newRecipe.id);
+      recipes.value.push(newRecipe);
       loading.value = false;
       return newRecipe;
     } finally {
@@ -85,7 +99,7 @@ export const useRecipeStore = defineStore("recipe", () => {
 
     if (recipeData.ingredients) {
       for (let index = 0; index < recipeData.ingredients.length; index++) {
-        recipeData.ingredients[index].order = index;      
+        recipeData.ingredients[index].order = index;
       }
     }
 
@@ -94,9 +108,9 @@ export const useRecipeStore = defineStore("recipe", () => {
       recipe = await recipesApi.post<Recipe>(recipeData);
     } catch (e: unknown) {
       const err = e as ServerErrorResponse;
-      bus.emit({
-        level: "ERROR",
-        message: err.body?.detail ?? err.message,
+      $q.notify({
+        color: "negative",
+        message: `Failed to create a new recipe: ${err.body?.detail ?? err.message}`,
       });
       throw e;
     } finally {
@@ -114,27 +128,27 @@ export const useRecipeStore = defineStore("recipe", () => {
 
   async function update(recipeData: Recipe): Promise<Recipe | undefined> {
     loading.value = true;
-    const data = JSON.parse(JSON.stringify(recipeData))
-    
+    const data = JSON.parse(JSON.stringify(recipeData));
+
     if (data.ingredients) {
       for (let index = 0; index < data.ingredients.length; index++) {
-        data.ingredients[index].order = index;      
+        data.ingredients[index].order = index;
       }
     }
 
     let result;
     try {
       result = await recipesApi.put<Recipe>(data.id, data);
-      replaceRecipe(result)
+      replaceRecipe(result);
     } catch (e: unknown) {
       const err = e as ServerErrorResponse;
-      bus.emit({
-        level: "ERROR",
-        message: err.body?.detail ?? err.message,
+      $q.notify({
+        color: "negative",
+        message: `Failed update recipe: ${err.body?.detail ?? err.message}`,
       });
       throw e;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
     // Let's update other stores in case new items were added.
     tagsStore.fetch();
@@ -146,7 +160,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     loading.value = true;
     try {
       await recipesApi.delete(recipeId);
-      removeRecipe(recipeId)
+      removeRecipe(recipeId);
     } finally {
       loading.value = false;
     }

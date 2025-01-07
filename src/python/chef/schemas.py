@@ -109,6 +109,8 @@ class IngredientItemBase(BaseModel):
     note: Union[str, None] = None
     exclude: bool = False  # todo: remove?
 
+    model_config = ConfigDict(coerce_numbers_to_str=True)
+
 
 class IngredientItem(IngredientItemBase, Base):
     """

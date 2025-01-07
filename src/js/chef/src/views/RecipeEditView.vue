@@ -1,12 +1,16 @@
 <template>
-  <main>
-    <h1 id="edit-title">Edit recipe</h1>
+  <q-page padding class="flex flex-col">
+    <h1 class="text-4xl mb-3">Edit recipe</h1>
     <RecipeForm
+      v-if="current"
+      :id="`${current.id}`"
       :data="current"
       @posted="routeback"
       @cancel="routeback"
+      class="flex-1"
     />
-  </main>
+    <NotFound v-else />
+  </q-page>
 </template>
 
 <script setup lang="ts">
@@ -15,6 +19,7 @@ import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 
 import RecipeForm from '@/components/RecipeForm.vue';
+import NotFound from '@/components/NotFound.vue';
 
 const recipes = useRecipeStore();
 const { current, currentId } = storeToRefs(recipes);
