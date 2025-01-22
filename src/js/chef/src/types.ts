@@ -93,8 +93,14 @@ export type ChefNotification = {
     action?: NotificationAction
 }
 
+type ErrorDetail = {
+    type: string
+    msg: string
+    input: string
+}
+
 export type ServerErrorResponse = {
-    body: { detail: string }
+    body: { detail:  ErrorDetail[]}
     response: {
         body: any
         bodyUsed: boolean

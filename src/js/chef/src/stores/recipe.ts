@@ -1,21 +1,17 @@
-import { defineStore, acceptHMRUpdate } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { mande } from "mande";
 
 import { API_URL } from "@/constants";
 
-import type {
-  CreateRecipe,
-  ChefNotification,
-  Recipe,
-  ServerErrorResponse,
-} from "@/types";
+import { useChefApi } from "@/composables/api";
+import type { ChefNotification, CreateRecipe, Recipe } from "@/types";
+import { catchError } from "@/utils";
+import { useEventBus, useLocalStorage } from "@vueuse/core";
+import { useQuasar } from "quasar";
 import { useTagStore } from "./tags";
 import { useUnitsStore } from "./units";
-import { useEventBus, useLocalStorage } from "@vueuse/core";
-import { useChefApi } from "@/composables/api";
-import { useQuasar } from "quasar";
 
 const recipesApi = mande(API_URL + "/recipes");
 const currentId = ref<number>();
@@ -107,11 +103,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     try {
       recipe = await recipesApi.post<Recipe>(recipeData);
     } catch (e: unknown) {
-      const err = e as ServerErrorResponse;
-      $q.notify({
-        color: "negative",
-        message: `Failed to create a new recipe: ${err.body?.detail ?? err.message}`,
-      });
+      catchError(e, $q);
       throw e;
     } finally {
       loading.value = false;
@@ -141,11 +133,7 @@ export const useRecipeStore = defineStore("recipe", () => {
       result = await recipesApi.put<Recipe>(data.id, data);
       replaceRecipe(result);
     } catch (e: unknown) {
-      const err = e as ServerErrorResponse;
-      $q.notify({
-        color: "negative",
-        message: `Failed update recipe: ${err.body?.detail ?? err.message}`,
-      });
+      catchError(e, $q);
       throw e;
     } finally {
       loading.value = false;

@@ -18,15 +18,28 @@
       color="secondary"
     />
 
-    <div class="flex flex-row flex-nowrap gap-2 p-2 flex-1">      
-      <!-- <ui-input class="amount" v-model="model.amount" size="small" label="amount" /> -->
-      <q-input v-model="model.amount" borderless label="Amount" class="m-0 sm:ml-3"/>
-      
-      <!-- <ui-input class="unit" v-model="model.unit.name" label="unit" size="small" /> -->
-      <q-select v-model="model.unit.name" borderless :options="units.map((u) => u.name)" />
-        
-        <!-- <ui-input class="ingredient" v-model="model.ingredient.name" label="ingredient" size="small" :success="ingredientExists" /> -->
-        <q-select
+    <div class="flex flex-row flex-nowrap gap-2 p-2 flex-1">
+      <q-input
+        v-model="model.amount"
+        inputmode="numeric"
+        borderless
+        label="Amount"
+        class="m-0 sm:ml-3"
+        :rules="[
+          (val) => !!`${val}` || 'Amount can not be empty',
+          (val) => !isNaN(Number(val)) || 'Amount must be number',
+          (val) => Number(val) >= 0 || 'Amount can not be less than zero'
+          ]"
+        @update:model-value="replaceDecimal"
+      />
+
+      <q-select
+        v-model="model.unit.name"
+        borderless
+        :options="units.map((u) => u.name)"
+      />
+
+      <q-select
         v-model="model.ingredient.name"
         label="Ingredient"
         :options="ingredientOptionsStrigs"
@@ -38,7 +51,7 @@
         new-value-mode="add-unique"
         borderless
         :rules="[(val) => !!val || 'Ingredient name is required']"
-        >
+      >
         <template v-slot:no-option>
           <q-item>
             <q-item-section class="text-grey">
@@ -47,10 +60,9 @@
           </q-item>
         </template>
       </q-select>
-      
-      <q-input borderless v-model="model.note" label="note" class="flex-1"/>
-    </div>
 
+      <q-input borderless v-model="model.note" label="note" class="flex-1" />
+    </div>
   </q-card>
 </template>
 <script setup lang="ts">
@@ -63,7 +75,7 @@ import { storeToRefs } from "pinia";
 
 const model = defineModel<IngredientItem>({ required: true });
 
-const props = defineProps<{ index?: number }>()
+const props = defineProps<{ index?: number }>();
 
 const emit = defineEmits(["update:ingredient", "delete", "up", "down"]);
 
@@ -92,20 +104,27 @@ function filterFn(val: string, update: any, abort: any) {
   });
 }
 
-function abortFilterFn() {
-  // console.log('delayed filter aborted')
-}
-
-
-watch(model.value.ingredient, (old, n3w) => {
-  console.info(n3w)
-  if (!n3w || !n3w.name) {
-    model.value.ingredient.id = undefined;
+function replaceDecimal() {
+  if (`${model.value.amount}`.indexOf(',') < 0) {
     return
   }
 
-  n3w.name = n3w.name.toLocaleLowerCase();
-  const match = ingredients.value.find((ing) => n3w.name === ing.name);
+  if (model.value.amount && !`${model.value.amount}`.endsWith(',')) {
+    const newNumber = parseFloat(`${model.value.amount}`.replace(',', '.'))
+    if (!isNaN(newNumber)) {
+      model.value.amount = newNumber
+    }
+  }
+}
+
+watch(model.value, (old, n3w) => {
+  if (!n3w?.ingredient || !n3w?.ingredient?.name) {
+    model.value.ingredient.id = undefined;
+    return;
+  }
+
+  n3w.ingredient.name = n3w.ingredient.name.toLocaleLowerCase();
+  const match = ingredients.value.find((ing) => n3w.ingredient.name === ing.name);
   if (match) {
     model.value.ingredient.id = match.id;
     ingredientExists.value = true;

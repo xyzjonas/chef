@@ -1,11 +1,14 @@
 import os.path
+from pathlib import Path
 
 import typer
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.models import Response
 from loguru import logger
+from starlette.requests import Request
+from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
 from chef.api import api_router
@@ -131,6 +134,11 @@ def serve(hostname: str = settings.uvicorn_host, port: int = settings.uvicorn_po
             return
         app.mount("/images", StaticFilesCache(directory=settings.images_folder))
         app.mount("/", StaticFiles(directory=settings.serve_frontend_path, html=True))
+
+
+    @app.exception_handler(404)
+    async def redirect_all_requests_to_frontend(request: Request, exc: HTTPException):
+        return HTMLResponse(open(Path(settings.serve_frontend_path) / 'index.html').read())
 
     uvicorn.run(app, host=hostname, port=port)
 

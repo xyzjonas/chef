@@ -225,6 +225,8 @@ const postRecipe = async () => {
     console.debug("Creating new recipe.");
     recipeStore.create(recipe.value).then((r) => emit("posted", r));
   }
+
+  recipe.value = undefined
 };
 </script>
 

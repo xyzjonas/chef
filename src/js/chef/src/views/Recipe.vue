@@ -30,7 +30,7 @@
           />
         </div>
 
-        <div class="text-xs text-gray-5 flex items-center gap-1">
+        <div v-if="!readerMode" class="text-xs text-gray-5 flex items-center gap-1">
           <q-icon name="schedule" />
           Last update {{ new Date(recipe.updated_at).toLocaleDateString() }} at <strong>{{ new Date(recipe.updated_at).toLocaleTimeString() }}</strong></div>
 

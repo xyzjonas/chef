@@ -66,6 +66,8 @@ tags.fetch();
 
 const units = useUnitsStore();
 units.fetch();
+
+document.body.classList.add('font-sans')
 </script>
 
 <style lang="css">
