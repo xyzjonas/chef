@@ -1,5 +1,8 @@
 <template>
-  <q-layout view="hHh lpR fff" class="font-sans light:text-[#273440] dark:text-white">
+  <q-layout
+    view="hHh lpR fff"
+    class="font-sans light:text-[#273440] dark:text-white"
+  >
     <q-header class="bg-primary text-white py-1">
       <app-header />
     </q-header>
@@ -8,26 +11,29 @@
 
     <q-page-container class="max-w-[1200px] mx-auto">
       <RouterView v-slot="{ Component }" class="p-2">
-          <template v-if="Component">
-            <!-- <Transition mode="out-in" name="blur"> -->
-              <!-- <KeepAlive> -->
-                <Suspense>
-                  <component :is="Component"></component>
-                  <template #fallback>
-                    <q-page class="grid justify-center items-center">
-                      <div class="flex flex-col items-center gap-2">
-                        <q-spinner color="primary" size="4rem" :thickness="1" ></q-spinner>
-                        <h1 class="uppercase text-xl text-primary">Loading</h1>
-                      </div>
-                  </q-page>
-                  </template>
-                </Suspense>
-              <!-- </KeepAlive> -->
-            <!-- </Transition> -->
-          </template>
-        </RouterView>
+        <template v-if="Component">
+          <!-- <Transition mode="out-in" name="blur"> -->
+          <KeepAlive>
+            <Suspense>
+              <component :is="Component"></component>
+              <template #fallback>
+                <q-page class="grid justify-center items-center">
+                  <div class="flex flex-col items-center gap-2">
+                    <q-spinner
+                      color="primary"
+                      size="4rem"
+                      :thickness="1"
+                    ></q-spinner>
+                    <h1 class="uppercase text-xl text-primary">Loading</h1>
+                  </div>
+                </q-page>
+              </template>
+            </Suspense>
+          </KeepAlive>
+          <!-- </Transition> -->
+        </template>
+      </RouterView>
     </q-page-container>
-
 
     <Notificaton />
 
@@ -67,7 +73,7 @@ tags.fetch();
 const units = useUnitsStore();
 units.fetch();
 
-document.body.classList.add('font-sans')
+document.body.classList.add("font-sans");
 </script>
 
 <style lang="css">
@@ -134,7 +140,8 @@ document.body.classList.add('font-sans')
 
 /* ----------------- */
 
-.blur-leave-to, .blur-enter {
+.blur-leave-to,
+.blur-enter {
   filter: blur(50px);
 }
 
@@ -144,7 +151,6 @@ document.body.classList.add('font-sans')
 }
 
 /* ----------------- */
-
 
 .slide-leave-active,
 .slide-enter-active {

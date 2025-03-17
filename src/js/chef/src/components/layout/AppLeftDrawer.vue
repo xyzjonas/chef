@@ -1,5 +1,5 @@
 <template>
-  <q-drawer v-model="isOpened" bordered side="left" :width="280" persistent>
+  <q-drawer v-model="isOpened" bordered side="left" :width="280">
     <q-scroll-area class="h-full flex flex-col">
       <q-list separator>
         <q-item
@@ -72,13 +72,7 @@
           <q-item-section> Add a Category </q-item-section>
         </q-item>
 
-        
-
-        <q-item
-          clickable
-          v-ripple
-          @click="store.fetch(true)"
-        >
+        <q-item clickable v-ripple @click="store.fetch(true)">
           <q-item-section avatar>
             <q-icon name="refresh" />
           </q-item-section>
@@ -87,22 +81,33 @@
         </q-item>
 
         <q-separator />
-        <q-item-label header v-if="showRecipeControls" class="uppercase font-bold mt-3"
-          >{{ current?.title ?? 'Recipe' }}</q-item-label
+        <q-item-label
+          header
+          v-if="showRecipeControls"
+          class="uppercase font-bold mt-3"
+          >{{ current?.title ?? "Recipe" }}</q-item-label
         >
 
         <q-item v-if="showRecipeControls" clickable>
           <q-item-section avatar>
             <q-icon name="image" />
           </q-item-section>
-          <ImageUpload type="thumbnail" :recipe="current" @upload-success="close" />
+          <ImageUpload
+            type="thumbnail"
+            :recipe="current"
+            @upload-success="close"
+          />
         </q-item>
 
         <q-item v-if="showRecipeControls" clickable>
           <q-item-section avatar>
             <q-icon name="image" />
           </q-item-section>
-          <ImageUpload type="detail" :recipe="current" @upload-success="close" />
+          <ImageUpload
+            type="detail"
+            :recipe="current"
+            @upload-success="close"
+          />
         </q-item>
 
         <q-item
@@ -174,10 +179,10 @@ const showRecipeControls = computed(
 );
 const toggleDeleteDialog = ref(false);
 
-const $q = useQuasar()
+const $q = useQuasar();
 const close = () => {
   if ($q.screen.lt.md) {
-    isOpened.value = false
+    isOpened.value = false;
   }
 };
 </script>

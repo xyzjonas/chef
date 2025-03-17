@@ -73,15 +73,15 @@ import Rocket from "@/components/icons/Rocket.vue";
 import { useLocalStorage } from "@vueuse/core";
 
 const props = defineProps<{
-  storageId: string
+  storageId: string;
   allRecipes: Recipe[];
   title?: string;
   hideSearch?: boolean;
   hideFilters?: boolean;
-  loading?: boolean
+  loading?: boolean;
 }>();
-const activeTags = useLocalStorage<string[]>(`${props.storageId}-active-tags`, [])
-const search = useLocalStorage<string>(`${props.storageId}-search`, "")
+const activeTags = ref<string[]>([]);
+const search = ref("");
 
 const tagNames = computed<string[]>(() => {
   return [
