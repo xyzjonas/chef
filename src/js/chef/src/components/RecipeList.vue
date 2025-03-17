@@ -32,6 +32,7 @@
       icon-before="search"
       placeholder="Search"
       style="margin-block: 0.8rem"
+      clearable
     />
 
     <!-- LIST -->

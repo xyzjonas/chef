@@ -21,7 +21,8 @@
     <span class="font-100">
       <span>© 2024 Chef™</span>
       <span v-if="version">
-        <span class="mx-2">|</span><strong>v{{ version }}</strong>
+        <span class="mx-2">|</span
+        ><strong>v{{ version }}-{{ appVersion }}</strong>
       </span>
     </span>
   </div>
@@ -31,6 +32,7 @@
 import { getServerInfo } from "@/utils";
 import { ref } from "vue";
 
+const appVersion = 52;
 const version = ref<string>("");
 getServerInfo().then((res) => (version.value = res.version));
 </script>
