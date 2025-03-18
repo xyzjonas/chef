@@ -32,7 +32,7 @@
 import { getServerInfo } from "@/utils";
 import { ref } from "vue";
 
-const appVersion = 54;
+const appVersion = 55;
 const version = ref<string>("");
 getServerInfo().then((res) => (version.value = res.version));
 </script>

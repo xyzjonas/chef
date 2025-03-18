@@ -8,7 +8,7 @@
       width="5rem"
       class="dark:text-white light:text-dark mb-5"
     />
-    <h1 class="text-[3rem] line-height-[3rem]">
+    <h1 class="text-[3rem] line-height-[3rem] my-0">
       {{ title ?? "No assets created yet" }}
     </h1>
     <h2 class="text-2xl">{{ subtitle ?? "This is really really empty" }}</h2>
@@ -28,7 +28,7 @@ defineProps<{
 }>();
 </script>
 <style lang="css" scoped>
-.link {  
+.link {
   text-decoration: none;
 }
 

@@ -9,15 +9,22 @@
 }
 
 .ProseMirror h1 {
-  margin: 0;
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+
+.ProseMirror > * > h1:first-of-type {
+  margin-top: 0;
 }
 
 .ProseMirror h2 {
-  margin-block: 0.6rem;
+  margin-top: 1.3rem;
+  margin-bottom: 0;
 }
 
 .ProseMirror h3 {
-  margin-block: 0.5rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0;
 }
 
 .ProseMirror blockquote {
@@ -36,18 +43,7 @@
 
 .ProseMirror ol,
 .ProseMirror ul {
-  margin: 0;
-  margin-block: 0.5rem;
-  padding: 0;
-  padding-left: 0;
-}
-
-.ProseMirror ol {
-  padding-left: 1rem;
-}
-
-.ProseMirror ul {
-  padding-left: 1rem;
+  padding-left: 2rem;
 }
 
 .ProseMirror a {
@@ -57,4 +53,8 @@
 
 .ProseMirror > p {
   font-size: large;
+}
+
+.ProseMirror > * > hr {
+  margin-block: 1.5rem;
 }

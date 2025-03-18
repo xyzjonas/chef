@@ -1,7 +1,7 @@
 <template>
   <tr :class="isSeparator ? 'text-transparent' : ''">
     <td class="flex items-baseline gap-1 px-2 py-1">
-      <h1 class="m-0 line-height-snug text-3xl">{{ amount }}</h1>
+      <h1 class="m-0 line-height-snug text-2xl">{{ amount }}</h1>
       <small>{{ ingredient.unit.name.replace("pcs", "ks") }}</small>
     </td>
     <td class="ingredient-link px-2 py-1">

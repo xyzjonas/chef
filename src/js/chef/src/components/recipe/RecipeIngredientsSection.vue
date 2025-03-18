@@ -11,16 +11,17 @@
       <q-card>
         <q-card-section>
           <table class="w-full">
-            <tr>
+            <tr style="background-color: transparent">
               <th class="w-[8rem]"></th>
               <th></th>
             </tr>
             <tbody class="ing-body">
               <Component
                 v-for="ingredient in recipe.ingredients"
-                :is="RecipeIngredientTableRow"
-                :class="
-                  ingredient.ingredient.name.endsWith('--') ? '' : 'ing-row'
+                :is="
+                  ingredient.ingredient.name.endsWith('--')
+                    ? RecipeIngredientTableSeparator
+                    : RecipeIngredientTableRow
                 "
                 :ingredient="ingredient"
                 :portions="portions"
@@ -45,6 +46,7 @@ import { computed, onMounted, ref } from "vue";
 
 import Counter from "@/components/Counter.vue";
 import RecipeIngredientTableRow from "./RecipeIngredientTableRow.vue";
+import RecipeIngredientTableSeparator from "./RecipeIngredientTableSeparator.vue";
 
 const props = defineProps<{
   recipe: Recipe;
@@ -71,11 +73,11 @@ onMounted(() => {
 </script>
 
 <style lang="css" scoped>
-.body--light .ing-row:nth-of-type(odd) {
+.body--light tr:nth-of-type(odd) {
   background-color: rgba(233, 233, 233, 0.4);
 }
 
-.body--dark .ing-row:nth-of-type(odd) {
+.body--dark tr:nth-of-type(odd) {
   background-color: rgba(43, 43, 43, 0.3);
 }
 </style>
