@@ -2,7 +2,7 @@
   <div class="wrapper">
     <!-- RECIPE COUNT -->
     <div v-if="allRecipes.length > 0" class="flex justify-between items-center">
-      <h4 class="my-1 uppercase">
+      <h4 class="title-sm mt-1">
         {{ displayedRecipes.length }}
         {{ title || `Recipe${displayedRecipes.length === 1 ? "" : "s"}` }}
       </h4>
@@ -62,16 +62,15 @@
 </template>
 
 <script setup lang="ts">
+import Rocket from "@/components/icons/Rocket.vue";
+import Search from "@/components/icons/Search.vue";
+import RecipeGridItem from "@/components/recipe/RecipeGridItem.vue";
 import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Pin from "@/components/ui/Pin.vue";
+import UiInput from "@/components/ui/UiInput.vue";
 import type { Recipe } from "@/types";
 import { replaceUnicode } from "@/utils";
 import { computed, ref } from "vue";
-import RecipeGridItem from "@/components/recipe/RecipeGridItem.vue";
-import UiInput from "@/components/ui/UiInput.vue";
-import Search from "@/components/icons/Search.vue";
-import Rocket from "@/components/icons/Rocket.vue";
-import { useLocalStorage } from "@vueuse/core";
 
 const props = defineProps<{
   storageId: string;

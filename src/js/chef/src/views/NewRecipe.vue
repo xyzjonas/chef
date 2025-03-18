@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="flex flex-col">
-    <h1 class="text-4xl mb-3">Add a new recipe</h1>
+    <h1 class="title-sm my-5">Add a new recipe</h1>
 
     <RecipeForm
       :data="blankRecipe"
@@ -16,8 +16,6 @@
 import RecipeForm from "@/components/RecipeForm.vue";
 import type { CreateRecipe, Recipe } from "@/types";
 import { useRouter } from "vue-router";
-
-
 
 const blankRecipe: CreateRecipe = {
   title: "",

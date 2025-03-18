@@ -10,7 +10,7 @@
       />
       <div class="flex-1 flex flex-col gap-5 min-w-[10rem]">
         <div v-if="!readerMode" class="overflow-hidden max-w-[100%]">
-          <h1 class="recipe-title">{{ recipe.title }}</h1>
+          <h1 class="title">{{ recipe.title }}</h1>
           <h2
             v-if="recipe.subtitle"
             class="text-[1.5rem] font-400 uppercase color-gray m-0 line-height-snug"
@@ -205,9 +205,9 @@ img {
   outline-width: 0px !important;
 }
 
-.recipe-title {
-  --size: 3.5rem;
-  font-size: var(--size);
-  line-height: calc(var(--size) * 0.95);
-}
+// .recipe-title {
+//   --size: 3.5rem;
+//   font-size: var(--size);
+//   line-height: calc(var(--size) * 0.95);
+// }
 </style>

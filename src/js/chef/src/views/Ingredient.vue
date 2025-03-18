@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="ingredient">
-      <h1>{{ ingredient.name }}</h1>
-      <h3 class="m-0 text-[1rem] line-height-[1rem] opacity-[0.9]">
-        Ingredient Detail
+      <h1 class="title-sm">{{ ingredient.name }}</h1>
+      <h3 class="mt-0 text-[1rem] line-height-[1rem] opacity-[0.9] uppercase">
+        Nutritional Values
       </h3>
       <div class="flex flex-row items-center justify-end mt-5 gap-1 mb-3">
         <q-btn
