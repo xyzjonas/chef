@@ -1,37 +1,34 @@
 <template>
-  <q-card flat bordered class="hover:cursor-pointer hover:border-primary transition" @click="router.push({ name: 'recipe', params: { id: recipe.id } })">
-      <q-img :src="recipe.thumbnail_image ?? 'none'" error-src="@/assets/notfound.jpg" :ratio="1.6" />
+  <q-card
+    flat
+    bordered
+    class="hover:cursor-pointer hover:border-primary transition"
+    @click="router.push({ name: 'recipe', params: { id: recipe.id } })"
+  >
+    <q-img
+      :src="recipe.thumbnail_image ?? 'none'"
+      error-src="@/assets/notfound.jpg"
+      :ratio="1.6"
+    />
 
-      <q-card-section>
-        <div class="text-lg uppercase line-height-snug">{{ recipe.title }}</div>
-        <div class="text-xs uppercase text-gray-7 dark:text-gray-4">{{ recipe.subtitle }}</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none flex gap-1">
+    <q-card-section class="flex flex-col">
+      <div class="text-lg uppercase line-height-snug">{{ recipe.title }}</div>
+      <div class="text-xs uppercase text-gray-7 dark:text-gray-4">
+        {{ recipe.subtitle }}
+      </div>
+      <div class="flex gap-1 mt-3">
         <q-badge rounded v-for="tag in recipe.tags">{{ tag.name }}</q-badge>
-      </q-card-section>
-      
-    </q-card>
-
+      </div>
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup lang="ts">
 import type { Recipe } from "@/types";
-import { computed } from "vue";
-import { useRouter } from "vue-router";
 
-import Card from "@/components/ui/Card.vue";
-import Pin from "@/components/ui/Pin.vue";
 import router from "@/router";
 
-const { push } = useRouter();
-
-interface Props {
-  recipe: Recipe;
-}
-const props = defineProps<Props>();
-
-const image = computed(() => props.recipe.thumbnail_image ?? "@/assets/notfound.jpg");
+defineProps<{ recipe: Recipe }>();
 </script>
 
 <style lang="css" scoped>

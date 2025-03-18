@@ -19,9 +19,16 @@
           </h2>
         </div>
 
-        <recipe-external-link v-if="!readerMode && recipe.source" :href="recipe.source" :label="recipe.source_name" />
+        <recipe-external-link
+          v-if="!readerMode && recipe.source"
+          :href="recipe.source"
+          :label="recipe.source_name"
+        />
 
-        <div v-if="!readerMode" class="flex flex-wrap gap-1 pointer-events-none select-none">
+        <div
+          v-if="!readerMode"
+          class="flex flex-wrap gap-1 pointer-events-none select-none"
+        >
           <pin
             v-for="tag in recipe.tags"
             :key="tag.name"
@@ -30,9 +37,16 @@
           />
         </div>
 
-        <div v-if="!readerMode" class="text-xs text-gray-5 flex items-center gap-1">
+        <div
+          v-if="!readerMode"
+          class="text-xs text-gray-5 flex items-center gap-1"
+        >
           <q-icon name="schedule" />
-          Last update {{ new Date(recipe.updated_at).toLocaleDateString() }} at <strong>{{ new Date(recipe.updated_at).toLocaleTimeString() }}</strong></div>
+          Last update {{ new Date(recipe.updated_at).toLocaleDateString() }} at
+          <strong>{{
+            new Date(recipe.updated_at).toLocaleTimeString()
+          }}</strong>
+        </div>
 
         <div class="flex mt-auto items-center">
           <q-toggle
@@ -46,7 +60,6 @@
             <span>Cooking mode</span>
             <span class="text-[.6rem] text-gray-4">Keep display turned on</span>
           </div>
-
         </div>
       </div>
     </div>
@@ -69,23 +82,18 @@
 
 <script setup lang="ts">
 import Pot from "@/components/icons/Pot.vue";
+import RecipeExternalLink from "@/components/recipe/RecipeExternalLink.vue";
 import RecipeIngredientsSection from "@/components/recipe/RecipeIngredientsSection.vue";
 import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Pin from "@/components/ui/Pin.vue";
-import RecipeExternalLink from "@/components/recipe/RecipeExternalLink.vue";
 
-import { IMAGES_HOST } from "@/constants";
 import { useRecipeStore } from "@/stores/recipe";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useLayoutDrawer } from "@/composables/drawer";
-import type { ChefNotification, Recipe } from "@/types";
-import {
-  useEventBus,
-  useLocalStorage,
-  useWakeLock
-} from "@vueuse/core";
+import type { Recipe } from "@/types";
+import { useWakeLock, useWindowScroll } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 const recipes = useRecipeStore();
@@ -129,15 +137,17 @@ function exitReaderMode() {
 
 watch(readerMode, (value) => {
   if (value) {
-    enterReaderMode()
+    enterReaderMode();
   } else {
-    exitReaderMode()
+    exitReaderMode();
   }
-})
+});
+
+const { y } = useWindowScroll();
+onMounted(() => (y.value = 0));
 </script>
 
 <style lang="scss" scoped>
-
 .tag {
   margin-bottom: 0%;
   padding-top: 1px;

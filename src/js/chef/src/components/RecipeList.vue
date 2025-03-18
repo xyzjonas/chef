@@ -108,7 +108,7 @@ const displayedRecipes = computed<Recipe[]>(() => {
       return true;
     })
     .sort((a, b) => {
-      if (a.title > b.title) {
+      if (a.title.toLowerCase() > b.title.toLowerCase()) {
         return 1;
       } else {
         return -1;

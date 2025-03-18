@@ -1,6 +1,6 @@
 <template>
   <q-layout
-    view="hHh lpR fff"
+    view="hhh LpR fff"
     class="font-sans light:text-[#273440] dark:text-white"
   >
     <q-header class="bg-primary text-white py-1">
@@ -13,7 +13,9 @@
       <RouterView v-slot="{ Component }" class="p-2">
         <template v-if="Component">
           <!-- <Transition mode="out-in" name="blur"> -->
-          <KeepAlive>
+          <KeepAlive
+            exclude="Recipe,RecipeEditView,NewRecipe,Ingredient,CategoryView"
+          >
             <Suspense>
               <component :is="Component"></component>
               <template #fallback>
