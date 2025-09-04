@@ -2,12 +2,12 @@ import os.path
 from enum import StrEnum
 from pathlib import Path
 from typing import Union, Optional
-from distutils.sysconfig import get_python_lib
 from loguru import logger
 
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
+from chef.frontend import get_default_frontend_path
 
 HOME_DIR = Path.home() / '.chef'
 
@@ -18,22 +18,6 @@ class StorageType(StrEnum):
 
 class ImageFormat(StrEnum):
     AVIF = 'AVIF'
-
-
-def get_bundled_frontend_path():
-    site_packages = get_python_lib()
-    frontend_root = os.path.join(site_packages, "src", "js", "chef", "dist")
-    logger.info(frontend_root)
-    if os.path.isdir(frontend_root):
-        return frontend_root
-
-
-def get_locally_build_frontend_path():
-    return "./src/js/chef/dist" if os.path.isdir("./src/js/chef/dist") else None
-
-
-def get_default_frontend_path() -> str:
-    return get_bundled_frontend_path() or get_locally_build_frontend_path()
 
 
 class Settings(BaseSettings):
