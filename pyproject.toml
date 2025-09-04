@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chef-recipes"
-version = "2.5.4"
+version = "2.5.5"
 description = "Personal recipe management app."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -32,7 +32,7 @@ alembic = "^1.11.1"
 python-multipart = "*"
 pillow = "^10.2.0"
 pillow-avif-plugin = "^1.4.2"
-typer = {extras = ["all"], version = "^0.9.0"}
+typer = {extras = ["all"], version = "*"}
 pydantic-settings = "^2.1.0"
 httpx = "^0.27.0"
 sentry-sdk = {extras = ["fastapi"], version = "^2.12.0"}
