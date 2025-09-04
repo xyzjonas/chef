@@ -14,3 +14,12 @@ docker-push:
 
 docker: docker-build-prod
   docker push scotch3840/chef
+
+build:
+    cd src/js/chef && npm run build
+    poetry build
+
+build-and-publish:
+    cd src/js/chef && npm run build
+    poetry build
+    poetry publish

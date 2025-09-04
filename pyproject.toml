@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chef-recipes"
-version = "2.5.3"
+version = "2.5.4"
 description = "Personal recipe management app."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
