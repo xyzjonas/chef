@@ -84,13 +84,6 @@ tags = Table(
     Column("tag_id", Integer, ForeignKey("tag.id"), primary_key=True)
 )
 
-category_tags = Table(
-    'category_tags',
-    Base.metadata,
-    Column("category_id", Integer, ForeignKey("category.id"), primary_key=True),
-    Column("tag_id", Integer, ForeignKey("tag.id"), primary_key=True)
-)
-
 
 class Unit(Base):
     __items__ = ["id", "name", "grams", "created_at", "updated_at"]
@@ -100,13 +93,10 @@ class Unit(Base):
 
 
 class Tag(Base):
-    __items__ = ["id", "name", "created_at", "updated_at"]
+    __items__ = ["id", "name", "icon", "created_at", "updated_at"]
     __tablename__ = "tag"
     name = mapped_column(String(80), nullable=False)
-    categories: Mapped[List['Category']] = relationship(
-        secondary=category_tags,
-        back_populates="tags"
-    )
+    icon = mapped_column(String(80), nullable=True)
     recipes: Mapped[List['Recipe']] = relationship(
         secondary=tags,
         back_populates="tags"
@@ -156,16 +146,6 @@ class IngredientItem(Base):
     exclude = Column(Boolean(), default=False)  # todo: remove?
 
     recipes = relationship('Recipe', secondary=ingredients, back_populates="ingredients")
-
-
-class Category(Base):
-    __tablename__ = "category"
-    __items__ = ["id", "name", "tags", "created_at", "updated_at"]
-    name = Column(String(80), nullable=False)
-    tags: Mapped[List[Tag]] = relationship(
-        secondary=category_tags,
-        back_populates="categories"
-    )
 
 
 class Recipe(Base):

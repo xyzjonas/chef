@@ -16,10 +16,3 @@ def test_upload(http_client, simple_test_data, image):
     data = {"image": ("test_image.jpg", image, "image/jpeg")}
     res = http_client.post(f"/api/images/recipes/{r.id}", files=data)
     assert res.status_code == 200
-
-
-def test_upload_category(http_client, category_with_tag, image):
-    c, t = category_with_tag
-    data = {"image": ("test_image.jpg", image, "image/jpeg")}
-    res = http_client.post(f"/api/images/categories/{c.id}", files=data)
-    assert res.status_code == 200

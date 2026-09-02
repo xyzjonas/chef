@@ -17,14 +17,6 @@
     <!-- <div class="flex flex-row items-center gap-3">
       <ui-button
         color="primary"
-        type="link"
-        text="categories"
-        icon="folder"
-        :to="{ name: 'categories' }"
-      ></ui-button>
-
-      <ui-button
-        color="primary"
         text="recipe"
         icon="add"
         :to="{ name: 'new' }"

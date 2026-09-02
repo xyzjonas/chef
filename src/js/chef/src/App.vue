@@ -9,13 +9,11 @@
 
     <app-left-drawer />
 
-    <q-page-container class="max-w-[1200px] mx-auto">
+    <q-page-container class="max-w-[1920px] mx-auto">
       <RouterView v-slot="{ Component }" class="p-2">
         <template v-if="Component">
           <!-- <Transition mode="out-in" name="blur"> -->
-          <KeepAlive
-            exclude="Recipe,RecipeEditView,NewRecipe,Ingredient,CategoryView"
-          >
+          <KeepAlive exclude="Recipe,RecipeEditView,Ingredient">
             <Suspense>
               <component :is="Component"></component>
               <template #fallback>
@@ -38,6 +36,7 @@
     </q-page-container>
 
     <Notificaton />
+    <NewRecipeDialog />
 
     <q-footer class="bg-grey-8 text-white">
       <app-footer />
@@ -49,8 +48,8 @@
 import AppFooter from "@/components/layout/AppFooter.vue";
 import AppHeader from "@/components/layout/AppHeader.vue";
 import Notificaton from "@/components/ui/Notificaton.vue";
+import NewRecipeDialog from "@/components/recipe/NewRecipeDialog.vue";
 import AppLeftDrawer from "./components/layout/AppLeftDrawer.vue";
-import { useCategoryStore } from "./stores/categories";
 import { useIngredientStore } from "./stores/ingredient";
 import { useRecipeStore } from "./stores/recipe";
 import { useTagStore } from "./stores/tags";
@@ -62,9 +61,6 @@ const { isOpened, toggle } = useLayoutDrawer();
 
 const recipes = useRecipeStore();
 recipes.fetch();
-
-const categories = useCategoryStore();
-categories.fetch();
 
 const ingredients = useIngredientStore();
 ingredients.fetch();

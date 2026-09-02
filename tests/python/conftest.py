@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from chef.main import app
-from chef.models import Base, Tag, Ingredient, IngredientItem, Recipe, Category, Unit
+from chef.models import Base, Tag, Ingredient, IngredientItem, Recipe, Unit
 from chef.settings import settings
 
 
@@ -88,31 +88,12 @@ def recipe():
 
 
 @pytest.fixture()
-def category():
-    def _inner(session, **kwargs):
-        c = Category(**kwargs)
-        session.add(c)
-        session.commit()
-        session.refresh(c)
-        return c
-
-    yield _inner
-
-
-@pytest.fixture()
 def simple_test_data(db_session, tag, ingredient, ingredient_item, recipe):
     i = ingredient(db_session, name="ingredient")
     ii = IngredientItem(ingredient=i, unit=Unit(name="kg", grams=1000.0))
     t = tag(db_session, name="tag")
     r = recipe(db_session, title="recipe_01", ingredients=[ii])
     return r, ii, i, t
-
-
-@pytest.fixture()
-def category_with_tag(db_session, category, tag):
-    t = tag(db_session, name="tag")
-    c = category(db_session, name="italian food", tags=[t])
-    return c, t
 
 
 @pytest.fixture()

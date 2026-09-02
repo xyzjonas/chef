@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter
 
-from chef.api.common import generic_get, generic_get_all, generic_delete, generic_create
+from chef.api.common import generic_get, generic_get_all, generic_delete, generic_create, generic_update
 from chef.controllers import TagController
 from chef.schemas import Tag, UpdateTag
 
@@ -23,6 +23,11 @@ async def get_tag(item_id: int) -> Tag:
 @router.post("", status_code=201)
 async def create_tag(tag_data: UpdateTag) -> Tag:
     return await generic_create(tags, tag_data)
+
+
+@router.put("/{item_id}")
+async def update_tag(item_id: int, update_data: UpdateTag) -> Tag:
+    return await generic_update(tags, item_id, update_data)
 
 
 @router.delete("/{item_id}")

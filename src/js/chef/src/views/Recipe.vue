@@ -10,10 +10,13 @@
       />
       <div class="flex-1 flex flex-col gap-5 min-w-[10rem]">
         <div v-if="!readerMode" class="overflow-hidden max-w-[100%]">
-          <h1 class="title">{{ recipe.title }}</h1>
+          <h1 class="title">
+            {{ recipe.title }}
+            <span><recipe-share-button :title="recipe.title" /></span>
+          </h1>
           <h2
             v-if="recipe.subtitle"
-            class="text-[1.5rem] font-400 uppercase color-gray m-0 line-height-snug"
+            class="text-[1.5rem] font-400 capitalize color-gray m-0 line-height-snug"
           >
             {{ recipe.subtitle }}
           </h2>
@@ -29,15 +32,15 @@
           v-if="!readerMode"
           class="flex flex-wrap gap-1 pointer-events-none select-none"
         >
-          <pin
+          <RecipeTag
             v-for="tag in recipe.tags"
             :key="tag.name"
-            :text="tag.name"
-            active
+            :tag="tag"
+            size="fullsize"
           />
         </div>
 
-        <div
+        <!-- <div
           v-if="!readerMode"
           class="text-xs text-gray-5 flex items-center gap-1"
         >
@@ -46,9 +49,14 @@
           <strong>{{
             new Date(recipe.updated_at).toLocaleTimeString()
           }}</strong>
-        </div>
+        </div> -->
 
         <div class="flex mt-auto items-center">
+          <!-- <recipe-share-button :title="recipe.title" /> -->
+          <recipe-copy-ingredients-button
+            :recipe="recipe"
+            :portions="portions"
+          />
           <q-toggle
             v-model="readerMode"
             color="primary"
@@ -64,7 +72,7 @@
       </div>
     </div>
 
-    <recipe-ingredients-section :recipe="recipe" />
+    <recipe-ingredients-section :recipe="recipe" v-model:portions="portions" />
 
     <!-- HTML body -->
     <section class="ProseMirror mt-3" v-if="recipe.body" ref="reader">
@@ -95,6 +103,9 @@ import { useLayoutDrawer } from "@/composables/drawer";
 import type { Recipe } from "@/types";
 import { useWakeLock, useWindowScroll } from "@vueuse/core";
 import { storeToRefs } from "pinia";
+import RecipeShareButton from "@/components/recipe/RecipeShareButton.vue";
+import RecipeCopyIngredientsButton from "@/components/recipe/RecipeCopyIngredientsButton.vue";
+import RecipeTag from "@/components/recipe/RecipeTag.vue";
 
 const recipes = useRecipeStore();
 const { current, currentId } = storeToRefs(recipes);
@@ -117,6 +128,7 @@ if (!current.value) {
 }
 
 const recipe = computed<Recipe>(() => current.value as Recipe);
+const portions = ref(recipe.value?.portions ?? 1);
 
 const { request, release } = useWakeLock();
 const { isOpened } = useLayoutDrawer();

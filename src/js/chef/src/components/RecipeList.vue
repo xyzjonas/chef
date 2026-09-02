@@ -2,10 +2,12 @@
   <div class="wrapper">
     <!-- RECIPE COUNT -->
     <div v-if="allRecipes.length > 0" class="flex justify-between items-center">
-      <h4 class="title-sm mt-1">
-        {{ displayedRecipes.length }}
-        {{ title || `Recipe${displayedRecipes.length === 1 ? "" : "s"}` }}
-      </h4>
+      <div>
+        <h2 class="my-2">
+          {{ displayedRecipes.length }}
+          {{ title || `Recipe${displayedRecipes.length === 1 ? "" : "s"}` }}
+        </h2>
+      </div>
       <transition>
         <span class="text-primary" v-if="loading">
           <q-spinner />
@@ -14,26 +16,28 @@
       </transition>
     </div>
 
-    <!-- TAGS -->
-    <div v-if="!hideFilters" class="tags">
-      <pin
-        v-for="tag in tagNames"
-        :text="tag"
-        :active="activeTags.includes(tag)"
-        clickable
-        @click="toggleFilter(tag)"
-      />
-    </div>
-
     <!-- SEARCH -->
     <ui-input
       v-if="allRecipes.length > 0"
       v-model="search"
       icon-before="search"
       placeholder="Search"
-      style="margin-block: 0.8rem"
+      class="mb-2"
       clearable
     />
+
+    <!-- TAGS -->
+    <div v-if="!hideFilters" class="tag-grid mb-3">
+      <RecipeTag
+        v-for="tag in allTags"
+        :key="tag.name"
+        :tag="tag"
+        :active="activeTags.includes(tag.name)"
+        clickable
+        size="large"
+        @click="toggleFilter(tag.name)"
+      />
+    </div>
 
     <!-- LIST -->
     <div class="recipe-list" v-if="displayedRecipes.length > 0">
@@ -68,9 +72,10 @@ import RecipeGridItem from "@/components/recipe/RecipeGridItem.vue";
 import EmptyBox from "@/components/ui/EmptyBox.vue";
 import Pin from "@/components/ui/Pin.vue";
 import UiInput from "@/components/ui/UiInput.vue";
-import type { Recipe } from "@/types";
+import type { Recipe, Tag } from "@/types";
 import { replaceUnicode } from "@/utils";
 import { computed, ref } from "vue";
+import RecipeTag from "./recipe/RecipeTag.vue";
 
 const props = defineProps<{
   storageId: string;
@@ -83,12 +88,26 @@ const props = defineProps<{
 const activeTags = ref<string[]>([]);
 const search = ref("");
 
+const allTags = computed<Tag[]>(() => {
+  const seen = new Set<string>();
+  const tags = [];
+  for (const recipe of props.allRecipes) {
+    for (const tag of recipe.tags) {
+      if (!seen.has(tag.name)) {
+        tags.push(tag);
+        seen.add(tag.name);
+      }
+    }
+  }
+  return tags;
+});
+
 const tagNames = computed<string[]>(() => {
   return [
     ...new Set(
       props.allRecipes
         .map((recipe) => recipe.tags.map((tag) => tag.name))
-        .flat()
+        .flat(),
     ),
   ];
 });
@@ -146,24 +165,53 @@ const toggleFilter = (tagName: string) => {
 
 .recipe-list {
   display: grid;
-  gap: 0.3em;
+  gap: 1rem;
   grid-template-columns: 1fr 1fr;
-  // grid-template-rows: auto-fill;
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 
   @media (min-width: 992px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
 
-.tags {
-  display: flex;
-  flex-direction: row;
-  gap: 0.3rem;
-  flex-wrap: wrap;
+.tag-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-columns: min-content;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black calc(100% - 2rem),
+    transparent
+  );
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 768px) {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: repeat(auto-fill, minmax(140px, max-content));
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
 }
 
 .empty-box {

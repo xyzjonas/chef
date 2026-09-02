@@ -16,8 +16,9 @@
   --bg-200:#141414;
   --bg-300:#404040;
   --bg-100: red; */
-  --text-white:#FDF2FA;
-  --text-black:#273440;
+  --text-headline: #202222;
+  --text-white: #FDF2FA;
+  --text-black:#584343;
   --text-over-primary: #ffffff;
   --text-over-danger: #ffffff;
 }

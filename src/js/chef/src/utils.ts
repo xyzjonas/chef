@@ -1,6 +1,6 @@
 import { mande } from "mande";
 import { API_URL } from "./constants";
-import type { ServerErrorResponse } from "./types";
+import type { IngredientItem, ServerErrorResponse } from "./types";
 import type { QVueGlobals } from "quasar";
 
 export function deepCopy(obj: object) {
@@ -60,6 +60,23 @@ type ServerInfo = {
 export async function getServerInfo() {
   const info = mande(API_URL);
   return await info.get<ServerInfo>("/info");
+}
+
+export function ingredientsToText(
+  ingredients: IngredientItem[],
+  portions: number,
+  basePortions: number
+) {
+  return ingredients
+    .filter((ingredient) => !ingredient.ingredient.name.endsWith("--"))
+    .map((ingredient) => {
+      const amount =
+        Math.round(((ingredient.amount * portions) / basePortions) * 10) / 10;
+      const unit = ingredient.unit.name.replace("pcs", "ks");
+      const note = ingredient.note ? ` (${ingredient.note})` : "";
+      return `${amount} ${unit} ${ingredient.ingredient.name}${note}`.trim();
+    })
+    .join("\n");
 }
 
 export function catchError(e: unknown, $q: QVueGlobals) {

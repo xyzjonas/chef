@@ -2,8 +2,11 @@
 runserver:
     poetry run chef serve
 
-[working-directory: 'src/js/chef']
 dev:
+  poetry run chef serve
+
+[working-directory: 'src/js/chef']
+ui:
     npm run dev
 
 docker-build-prod:
@@ -23,3 +26,6 @@ build-and-publish:
     cd src/js/chef && npm run build
     poetry build
     poetry publish
+
+migrate:
+  poetry run chef migrate-db

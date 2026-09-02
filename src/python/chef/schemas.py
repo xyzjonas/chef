@@ -6,7 +6,6 @@ from pydantic import BaseModel, validator, Field, ConfigDict
 from typing import List, Union, Optional
 
 from chef.models import Recipe as RecipeDb
-from chef.models import Category as CategoryDb
 from chef.models import Tag as TagDb
 from chef.models import IngredientItem as IngredientItemDb
 from chef.models import Ingredient as IngredientDb
@@ -40,28 +39,14 @@ class Unit(Named):
 
 
 class Tag(Named):
+    icon: Union[str, None] = None
 
     class Meta:
         orm_model = TagDb
 
 
-class UpdateTag(BaseModel):
+class UpdateTag(Tag):
     id: Union[int, None] = None
-    name: str
-
-
-# ------- Category ------- #
-
-class Category(Named):
-    tags: List[Tag] = Field(default_factory=list)
-
-    class Meta:
-        orm_model = CategoryDb
-
-
-class CreateOrUpdateCategory(BaseModel):
-    tags: List[Base] = Field(default_factory=list)
-    name: str
 
 
 # ------- Ingredient ------- #
@@ -159,6 +144,10 @@ class CreateOrUpdateRecipe(RecipeDetail, BaseModel):
     title: str  # mandatory
     ingredients: List[CreateOrUpdateIngredientItem] = Field(default_factory=list)
     tags: List[UpdateTag] = Field(default_factory=list)
+
+
+class CreateRecipe(BaseModel):
+    title: str = Field(min_length=1)
 
 
 class Recipe(Base, RecipeDetail):

@@ -3,16 +3,12 @@ import {
   createWebHistory,
   createWebHashHistory,
 } from "vue-router";
-import CategoryListingView from "@/views/CategoryListingView.vue";
 import Recipes from "@/views/Recipes.vue";
 import Recipe from "@/views/Recipe.vue";
 import RecipeEditView from "@/views/RecipeEditView.vue";
-import CategoryView from "@/views/CategoryView.vue";
-import CategoryNewView from "@/views/CategoryNewView.vue";
-import CategoryEditView from "@/views/CategoryEditView.vue";
-import NewRecipe from "@/views/NewRecipe.vue";
 import Ingredients from "@/views/Ingredients.vue";
 import Ingredient from "@/views/Ingredient.vue";
+import TagsView from "@/views/TagsView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
@@ -35,9 +31,9 @@ const router = createRouter({
       component: Ingredient,
     },
     {
-      path: "/recipes/new",
-      name: "new",
-      component: NewRecipe,
+      path: "/tags",
+      name: "tags",
+      component: TagsView,
     },
     {
       path: "/recipes/:id",
@@ -48,26 +44,6 @@ const router = createRouter({
       path: "/recipes/:id/edit",
       name: "editrecipe",
       component: RecipeEditView,
-    },
-    {
-      path: "/categories",
-      name: "categories",
-      component: CategoryListingView,
-    },
-    {
-      path: "/categories/:id",
-      name: "category",
-      component: CategoryView,
-    },
-    {
-      path: "/recipes/newcategory",
-      name: "newcategory",
-      component: CategoryNewView,
-    },
-    {
-      path: "/categories/:id/edit",
-      name: "editcategory",
-      component: CategoryEditView,
     },
     {
       path: "/404",

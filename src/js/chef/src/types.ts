@@ -23,6 +23,7 @@ export interface Unit {
 export interface Tag {
     id?: number
     name: string
+    icon?: string | null
 }
 
 export interface IngredientItem {
@@ -36,29 +37,8 @@ export interface IngredientItem {
 }
 
 
-export interface CreateCategory {
-    id?: number
-    name: string
-    tags: Tag[]
-}
-
-
-export interface Category {
-    id: number
-    name: string
-    tags: Tag[]
-}
-
 export interface CreateRecipe {
     title: string
-    subtitle?: string
-    favorite?: boolean
-    source_name?: string
-    source?: string
-    portions: number
-    ingredients?: IngredientItem[]
-    body: string
-    tags: Tag[]
 }
 
 

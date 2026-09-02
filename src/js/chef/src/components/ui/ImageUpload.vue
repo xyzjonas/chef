@@ -15,7 +15,7 @@
       dense
       borderless
       v-model="file"
-      :label="`New ${type ?? ''} Image`"
+      label="Pick Image"
       class="capitalize"
       accept=".jpg,.jpeg,.png,.avif"
     >
@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { API_URL } from "@/constants";
-import type { Category, ChefNotification, Recipe } from "@/types";
+import type { ChefNotification, Recipe } from "@/types";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -49,30 +49,14 @@ const { current } = storeToRefs(store);
 
 const props = defineProps<{
   recipe?: Recipe;
-  category?: Category;
-  type: "thumbnail" | "detail" | "category";
+  type: "recipe";
 }>();
 const file = ref();
 const loading = ref();
 
 const route = useRoute();
 const itemId = parseInt(route.params.id as string);
-const getURL = () => {
-  if (props.category) {
-    return `${API_URL}/images/categories/${itemId}`;
-  }
-
-  if (props.type === "detail") {
-    return `${API_URL}/recipes/${itemId}/detail-image`;
-  }
-
-  if (props.type === "thumbnail") {
-    return `${API_URL}/recipes/${itemId}/thumbnail-image`;
-  }
-
-  return `${API_URL}/recipes/${itemId}/`;
-};
-const url = getURL();
+const url = `${API_URL}/recipes/${itemId}/image`;
 
 // const isExtensionAllowed = (filename: string) => {
 //   return (
@@ -115,12 +99,9 @@ const upload = async () => {
     });
     const data = await result.json();
 
-    if (props.type === "detail" && current.value) {
-      current.value.detail_image = data.detail_image;
-    }
-
-    if (props.type === "thumbnail" && current.value) {
+    if (props.type === "recipe" && current.value) {
       current.value.thumbnail_image = data.thumbnail_image;
+      current.value.detail_image = data.detail_image;
     }
 
     file.value = undefined;

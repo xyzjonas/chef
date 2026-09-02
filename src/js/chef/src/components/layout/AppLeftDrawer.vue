@@ -17,20 +17,6 @@
         </q-item>
 
         <q-item
-          :active="currentRoute.name === 'categories'"
-          clickable
-          v-ripple
-          :to="{ name: 'categories' }"
-          @click="close"
-        >
-          <q-item-section avatar>
-            <q-icon name="apps" />
-          </q-item-section>
-
-          <q-item-section> Categories </q-item-section>
-        </q-item>
-
-        <q-item
           :active="currentRoute.name === 'ingredients'"
           clickable
           v-ripple
@@ -45,31 +31,29 @@
         </q-item>
 
         <q-item
-          :active="currentRoute.name === 'new'"
+          :active="currentRoute.name === 'tags'"
           clickable
           v-ripple
-          :to="{ name: 'new' }"
+          :to="{ name: 'tags' }"
           @click="close"
+        >
+          <q-item-section avatar>
+            <q-icon name="label" />
+          </q-item-section>
+
+          <q-item-section> Tags </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          @click="openNewRecipe"
         >
           <q-item-section avatar>
             <q-icon name="post_add" />
           </q-item-section>
 
           <q-item-section> Add a Recipe </q-item-section>
-        </q-item>
-
-        <q-item
-          :active="currentRoute.name === 'newcategory'"
-          clickable
-          v-ripple
-          :to="{ name: 'newcategory' }"
-          @click="close"
-        >
-          <q-item-section avatar>
-            <q-icon name="new_label" />
-          </q-item-section>
-
-          <q-item-section> Add a Category </q-item-section>
         </q-item>
 
         <q-item clickable v-ripple @click="store.fetch(true)">
@@ -93,18 +77,7 @@
             <q-icon name="image" />
           </q-item-section>
           <ImageUpload
-            type="thumbnail"
-            :recipe="current"
-            @upload-success="close"
-          />
-        </q-item>
-
-        <q-item v-if="showRecipeControls" clickable>
-          <q-item-section avatar>
-            <q-icon name="image" />
-          </q-item-section>
-          <ImageUpload
-            type="detail"
+            type="recipe"
             :recipe="current"
             @upload-success="close"
           />
@@ -157,6 +130,7 @@
 <script setup lang="ts">
 import { useDarkmode } from "@/composables/darkmode";
 import { useLayoutDrawer } from "@/composables/drawer";
+import { useNewRecipeDialog } from "@/composables/newRecipeDialog";
 import { useRecipeStore } from "@/stores/recipe";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
@@ -184,6 +158,12 @@ const close = () => {
   if ($q.screen.lt.md) {
     isOpened.value = false;
   }
+};
+
+const { open: openNewRecipeDialog } = useNewRecipeDialog();
+const openNewRecipe = () => {
+  openNewRecipeDialog();
+  close();
 };
 </script>
 

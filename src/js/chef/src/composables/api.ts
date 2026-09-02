@@ -1,4 +1,4 @@
-import type { Category, Ingredient, Recipe, Tag, Unit } from '@/types'
+import type { Ingredient, Recipe, Tag, Unit } from '@/types'
 import { ofetch, type FetchContext } from 'ofetch'
 import { useQuasar } from 'quasar'
 
@@ -50,9 +50,6 @@ export const useChefApi = () => {
     recipes: {
       get: getList<Recipe>("recipes"),
       getOne: getOne<Recipe>("recipes")
-    },
-    categories: {
-      get: getList<Category>("categories")
     },
     ingredients: {
       get: getList<Ingredient>("ingredients")

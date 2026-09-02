@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chef-recipes"
-version = "2.5.5"
+version = "2.6.0"
 description = "Personal recipe management app."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
@@ -23,7 +23,7 @@ include = [
 chef = "chef.main:app_entrypoint"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 fastapi = "0.*"
 uvicorn = "^0.22.0"
 loguru = "^0.7.0"

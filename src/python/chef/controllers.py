@@ -7,9 +7,9 @@ from pydantic import BaseModel
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from chef.models import Category as CategoryDb, Recipe as RecipeDb
-from chef.schemas import Recipe, Tag, Category, Ingredient, CreateOrUpdateRecipe, \
-    IngredientItem, Unit, UpdateIngredient, CreateOrUpdateCategory
+from chef.models import Recipe as RecipeDb
+from chef.schemas import Recipe, Tag, Ingredient, CreateOrUpdateRecipe, \
+    IngredientItem, Unit, UpdateIngredient, CreateRecipe
 
 from chef.image.thumbnailer import compress_and_store
 from chef.settings import settings
@@ -17,6 +17,24 @@ from chef.settings import settings
 C = TypeVar('C', bound=BaseModel)
 R = TypeVar('R', bound=BaseModel)
 U = TypeVar('U', bound=BaseModel)
+
+
+def resolve_recipe_updated_at(recipe: RecipeDb) -> datetime:
+    """Most recent `updated_at` across a recipe and everything it references.
+
+    A recipe's own row isn't touched when e.g. an ingredient's name or a tag's
+    icon changes, so callers relying on `Recipe.updated_at` alone (cache
+    invalidation via `since`) would miss those edits.
+    """
+    timestamps = [recipe.updated_at]
+    for item in recipe.ingredients:
+        timestamps.append(item.updated_at)
+        if item.ingredient:
+            timestamps.append(item.ingredient.updated_at)
+        if item.unit:
+            timestamps.append(item.unit.updated_at)
+    timestamps.extend(tag.updated_at for tag in recipe.tags)
+    return max(t for t in timestamps if t is not None)
 
 
 class Controller(Generic[C, R, U]):
@@ -128,22 +146,6 @@ class IngredientsController(Controller[UpdateIngredient, Ingredient, UpdateIngre
         return await super().delete_single(session, item_id)
 
 
-class CategoriesController(Controller[CreateOrUpdateCategory, Category, CreateOrUpdateCategory]):
-
-    async def _fill_model(self,  session: Session, model: CategoryDb, data: CreateOrUpdateCategory):
-        tags = []
-        for tag in data.tags:
-            item = session.get(Tag.Meta.orm_model, tag.id)
-            if not item:
-                raise HTTPException(
-                    status_code=400, detail=f"Tag id={tag.id} not found"
-                )
-            tags.append(item)
-        for attr, value in data.dict(exclude_none=True, exclude={"tags": True}).items():
-            setattr(model, attr, value)
-        model.tags = tags
-
-
 class UnitsController(Controller[Unit, Unit, Unit]):
 
     async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
@@ -232,17 +234,6 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         model.ingredients = updated_ingredients
         model.tags = updated_tags
 
-    async def get_by_category(self, session: Session, category_id: int = None) -> List[Recipe]:
-        cat = session.scalars(
-            select(Category.Meta.orm_model)
-            .filter_by(id=category_id)
-            .limit(1)
-        ).first()
-        if cat:
-            result = [recipe for tag in cat.tags for recipe in tag.recipes]
-            return [self.read_schema(**r.dictionary) for r in result]
-        return []
-
     async def get_all_and_filter(self, session: Session, **filters: typing.Any) -> List[Recipe]:
         recipes = session.scalars(
             select(self.read_schema.Meta.orm_model)
@@ -251,55 +242,31 @@ class RecipesController(Controller[CreateOrUpdateRecipe, Recipe, CreateOrUpdateR
         return [self.read_schema(**r.dictionary) for r in recipes]
 
     async def get_all_since(self, session: Session, since: datetime) -> List[Recipe]:
-        recipes = session.scalars(
-            select(self.read_schema.Meta.orm_model)
-            .filter(RecipeDb.updated_at >= since)
-        ).all()
-        return [self.read_schema(**r.dictionary) for r in recipes]
+        recipes = session.scalars(select(self.read_schema.Meta.orm_model)).all()
+        return [
+            self.read_schema(**r.dictionary)
+            for r in recipes
+            if resolve_recipe_updated_at(r) >= since
+        ]
 
     async def create_or_update(self, session: Session, data: Union[U, C]) -> R:
         raise ValueError("Not allowed on this controller!")
 
-    def update_thumbnail(self, session: Session, recipe_id: int, image: any):
-        url = compress_and_store(image, is_thumbnail=True)
-        # recipe = (
-        #     session
-        #     .query(self.read_schema.Meta.orm_model)
-        #     .filter_by(id=recipe_id)
-        #     .first()
-        # )
-        # recipe.thumbnail_image = url
-        # session.add(recipe)
-        # try:
-        #     session.commit()
-        # except:
-        #     session.rollback()
-        #     raise
-        stmt = (
-            update(self.read_schema.Meta.orm_model)
-            .where(self.read_schema.Meta.orm_model.id == recipe_id)
-            .values(thumbnail_image=url)
-        )
-        session.execute(statement=stmt)
+    async def create(self, session: Session, data: CreateRecipe) -> Recipe:
+        new_model = self.orm(title=data.title)
+        session.add(new_model)
+        session.commit()
+        return await self.get_single(session, item_id=new_model.id)
 
     def update_image(self, session: Session, recipe_id: int, image: any):
-        url = compress_and_store(image, is_thumbnail=False)
-        # recipe = (
-        #     session
-        #     .query(self.read_schema.Meta.orm_model)
-        #     .filter_by(id=recipe_id)
-        #     .first()
-        # )
-        # recipe.detail_image = url
-        # session.add(recipe)
-        # try:
-        #     session.commit()
-        # except:
-        #     session.rollback()
-        #     raise
+        thumbnail_url = compress_and_store(image, is_thumbnail=True)
+        if hasattr(image, "seek"):
+            image.seek(0)
+        detail_url = compress_and_store(image, is_thumbnail=False)
+
         stmt = (
             update(self.read_schema.Meta.orm_model)
             .where(self.read_schema.Meta.orm_model.id == recipe_id)
-            .values(detail_image=url)
+            .values(thumbnail_image=thumbnail_url, detail_image=detail_url)
         )
         session.execute(statement=stmt)

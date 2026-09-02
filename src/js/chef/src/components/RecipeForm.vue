@@ -75,20 +75,17 @@
         <small class="message-body p-2">no tags created yet</small>
       </article>
 
-      <q-select
-        filled
-        v-model="recipe.tags"
-        multiple
-        :options="availableTags"
-        :option-label="(opt) => opt.name"
-        use-chips
-        use-input
-        @new-value="addTag"
-        stack-label
-        label="Recipe Labels"
-        hint="Select labels to help define recipe's category"
-        class="mb-5"
-      />
+      <div v-else class="flex flex-wrap gap-2 mb-5">
+        <RecipeTag
+          v-for="tag in availableTags"
+          :key="tag.id"
+          :tag="tag"
+          size="fullsize"
+          clickable
+          :active="isTagSelected(tag)"
+          @click="toggleTag(tag)"
+        />
+      </div>
 
       <div class="flex mt-auto gap-2 h-[3rem]">
         <q-btn
@@ -118,13 +115,14 @@ import TextEditor from "@/components/TextEditor.vue";
 import UiButton from "@/components/ui/UiButton.vue";
 import { useRecipeStore } from "@/stores/recipe";
 import { useTagStore } from "@/stores/tags";
-import type { CreateRecipe, IngredientItem, Recipe, Tag } from "@/types";
+import type { IngredientItem, Recipe, Tag } from "@/types";
 import { deepCopy, generateUUID } from "@/utils";
 import { useLocalStorage } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import { QForm } from "quasar";
 import { ref, useTemplateRef } from "vue";
 import KeepDraftDialog from "./recipe/KeepDraftDialog.vue";
+import RecipeTag from "./recipe/RecipeTag.vue";
 
 const recipeStore = useRecipeStore();
 const tagStore = useTagStore();
@@ -134,7 +132,7 @@ const $form = useTemplateRef("$form");
 
 const props = defineProps<{
   id: string;
-  data: Recipe | CreateRecipe;
+  data: Recipe;
 }>();
 const recipe = useLocalStorage<Recipe>(
   `autosave-${props.id}`,
@@ -199,32 +197,24 @@ const down = (index: number) => {
   setTimeout(() => recipe.value.ingredients.splice(index + 1, 0, item), 300);
 };
 
+const isTagSelected = (tag: Tag) => {
+  return recipe.value.tags.some((t) => t.name === tag.name);
+};
+
 const toggleTag = (tag: Tag) => {
-  var tagNames = recipe.value.tags.map((t) => t.name);
-  if (!tagNames.includes(tag.name)) {
+  if (!isTagSelected(tag)) {
     recipe.value.tags.push(tag);
   } else {
     recipe.value.tags = recipe.value.tags.filter((t) => t.name != tag.name);
   }
 };
 
-const addTag = (value: string, done: (val: any) => void) => {
-  const newTag = { name: value };
-  done(newTag);
-};
-
-const emit = defineEmits(["posted", "created", "cancel"]);
+const emit = defineEmits(["posted", "cancel"]);
 const postRecipe = async () => {
   if (!(await $form.value?.validate())) {
     return;
   }
-  if (recipe.value.id) {
-    console.debug("Updating existing recipe.");
-    recipeStore.update(recipe.value).then((r) => emit("posted", r));
-  } else {
-    console.debug("Creating new recipe.");
-    recipeStore.create(recipe.value).then((r) => emit("posted", r));
-  }
+  recipeStore.update(recipe.value).then((r) => emit("posted", r));
 
   recipe.value = undefined
 };

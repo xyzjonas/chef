@@ -52,7 +52,7 @@ const props = defineProps<{
   recipe: Recipe;
 }>();
 
-const portions = ref(props.recipe.portions);
+const portions = defineModel<number>("portions");
 
 const title = computed(() => {
   if (props.recipe.ingredients.length === 0) {

@@ -90,18 +90,12 @@ export const useRecipeStore = defineStore("recipe", () => {
     }
   }
 
-  async function create(recipeData: CreateRecipe): Promise<Recipe> {
+  async function create(title: string): Promise<Recipe> {
     loading.value = true;
-
-    if (recipeData.ingredients) {
-      for (let index = 0; index < recipeData.ingredients.length; index++) {
-        recipeData.ingredients[index].order = index;
-      }
-    }
 
     let recipe: Recipe;
     try {
-      recipe = await recipesApi.post<Recipe>(recipeData);
+      recipe = await recipesApi.post<Recipe>({ title } as CreateRecipe);
     } catch (e: unknown) {
       catchError(e, $q);
       throw e;

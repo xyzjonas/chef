@@ -30,7 +30,6 @@ def run():
             recipe_id = int(recipe_folder.split("/")[-1])
             image_path = os.path.join(recipe_folder, 'medium.jpeg')
 
-            recipes.update_thumbnail(db_session, recipe_id, image_path)
             recipes.update_image(db_session, recipe_id, image_path)
 
         db_session.commit()

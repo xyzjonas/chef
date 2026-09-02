@@ -108,6 +108,22 @@ def test_get_recipes_since(http_client, simple_test_data):
     assert len(response.json()) == 0
 
 
+def test_get_recipes_since_related_ingredient_updated(db_session, http_client, simple_test_data):
+    r, ii, i, t = simple_test_data
+
+    future = r.updated_at + timedelta(days=1)
+    i.updated_at = future
+    db_session.add(i)
+    db_session.commit()
+
+    since = r.updated_at + timedelta(seconds=1)
+    response = http_client.get(f"/api/recipes?since={since}")
+    assert len(response.json()) == 1
+
+    response = http_client.get(f"/api/recipes?since={future + timedelta(seconds=1)}")
+    assert len(response.json()) == 0
+
+
 def test_add_recipe_minimal(db_session, http_client):
     response = http_client.post("/api/recipes", json={"title": "spaghetti"})
     assert response.status_code == 201
@@ -131,9 +147,13 @@ def test_add_recipe_invalid_type(db, http_client, data):
 def test_add_recipe(db_session, http_client, data: dict):
 
     for recipe in data:
-        response = http_client.post("/api/recipes", json=recipe)
+        response = http_client.post("/api/recipes", json={"title": recipe["title"]})
         response.raise_for_status()
         assert response.status_code == 201
+        recipe_id = response.json()["id"]
+
+        response = http_client.put(f"/api/recipes/{recipe_id}", json=recipe)
+        response.raise_for_status()
 
     for recipe in data:
         _assert_recipe_matches(db_session, recipe)
@@ -150,8 +170,12 @@ def test_create_recipe_no_unit(db_session, http_client, first_unit):
     if first_unit:
         data["ingredients"][0]["unit"] = first_unit
 
-    response = http_client.post("/api/recipes", json=data)
+    response = http_client.post("/api/recipes", json={"title": data["title"]})
     assert response.status_code == 201
+    recipe_id = response.json()["id"]
+
+    response = http_client.put(f"/api/recipes/{recipe_id}", json=data)
+    assert response.status_code == 200
 
     r = db_session.query(Recipe).filter_by(title=data["title"]).first()
     assert r
@@ -176,9 +200,12 @@ def test_create_recipe_no_unit(db_session, http_client, first_unit):
 
 
 def test_edit_recipe(db_session, http_client):
-    response = http_client.post("/api/recipes", json=R1)
+    response = http_client.post("/api/recipes", json={"title": R1["title"]})
     response.raise_for_status()
     recipe_id = response.json()["id"]
+
+    response = http_client.put(f"/api/recipes/{recipe_id}", json=R1)
+    response.raise_for_status()
     _assert_recipe_matches(db_session, R1)
 
     response = http_client.put(f"/api/recipes/{recipe_id}", json=R2)
@@ -199,7 +226,7 @@ def test_delete_recipe(db_session, http_client, simple_test_data):
 async def test_upload_image(db_session, http_client, simple_test_data, dummy_image, image):
     r, _, _, _ = simple_test_data
 
-    path = f"/api/recipes/{r.id}/{image.replace('_', '-')}"
+    path = f"/api/recipes/{r.id}/image"
     response = http_client.post(
         path,
         files={

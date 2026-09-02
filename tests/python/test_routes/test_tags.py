@@ -27,13 +27,33 @@ def test_get_tag(db_session, http_client, tag, name):
 
 def test_create_tag(db_session, http_client):
     tag_name = "foobar"
-    response = http_client.post("/api/tags", json={"name": tag_name, 'foo': 'br'})
+    response = http_client.post("/api/tags", json={"name": tag_name, "icon": "local_pizza", 'foo': 'br'})
     response.raise_for_status()
     assert response.status_code == 201
     tag = response.json()
+    assert tag["icon"] == "local_pizza"
 
     t = db_session.query(Tag).filter_by(name=tag_name).first()
     assert t.id == tag["id"]
+    assert t.icon == "local_pizza"
+
+
+def test_update_tag(db_session, http_client, tag):
+    t = tag(db_session, name="soup", icon="soup_kitchen")
+
+    response = http_client.put(
+        f"/api/tags/{t.id}", json={"name": "stew", "icon": "outdoor_grill"}
+    )
+    response.raise_for_status()
+    assert response.status_code == 200
+    updated = response.json()
+    assert updated["name"] == "stew"
+    assert updated["icon"] == "outdoor_grill"
+
+    db_session.expire_all()
+    t = db_session.query(Tag).filter_by(id=t.id).first()
+    assert t.name == "stew"
+    assert t.icon == "outdoor_grill"
 
 
 def test_delete_tag(db_session, http_client, tag):
