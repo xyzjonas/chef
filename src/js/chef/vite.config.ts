@@ -1,24 +1,24 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import UnoCSS from 'unocss/vite'
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
-import { VitePWA } from 'vite-plugin-pwa'
-
+import UnoCSS from "unocss/vite";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { quasar, transformAssetUrls } from "@quasar/vite-plugin";
+import { VitePWA } from "vite-plugin-pwa";
+import { join } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue({
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
     }),
     quasar({
-      sassVariables: 'src/quasar-variables.scss'
+      sassVariables: join(import.meta.dirname, "src/quasar-variables.scss"),
     }),
     UnoCSS(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: "autoUpdate",
       devOptions: {
         enabled: true,
       },
@@ -46,23 +46,23 @@ export default defineConfig({
           },
         ],
       },
-    })
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
+      "/api": {
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
-      '/images': {
-        target: 'http://localhost:8000',
+      "/images": {
+        target: "http://localhost:8000",
         changeOrigin: true,
-      }
-    }
-  }
-})
+      },
+    },
+  },
+});
