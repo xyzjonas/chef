@@ -1,4 +1,7 @@
 FROM node:20-alpine AS fe-build-stage
+WORKDIR /fe
+COPY ./src/js/chef/package.json ./src/js/chef/package-lock.json ./
+RUN npm ci
 COPY ./src/js/chef .
 RUN npm run build
 
@@ -30,7 +33,7 @@ RUN mkdir -p $IMAGES_FOLDER
 COPY --from=be-build-stage dist/*.whl wheels/
 RUN pip install --no-cache-dir wheels/*
 
-COPY --from=fe-build-stage dist ./static
+COPY --from=fe-build-stage /fe/dist ./static
 
 COPY entrypoint.sh .
 
