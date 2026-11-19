@@ -11,10 +11,12 @@
       <q-card>
         <q-card-section>
           <table class="w-full">
-            <tr style="background-color: transparent">
-              <th class="w-[8rem]"></th>
-              <th></th>
-            </tr>
+            <thead>
+              <tr style="background-color: transparent">
+                <th class="w-[8rem]"></th>
+                <th></th>
+              </tr>
+            </thead>
             <tbody class="ing-body">
               <Component
                 v-for="ingredient in recipe.ingredients"
